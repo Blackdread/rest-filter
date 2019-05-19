@@ -50,6 +50,20 @@ public class ShortFilterTest {
     }
 
     @Test
+    public void testCopy() {
+        final ShortFilter copy = filter.copy();
+        Assertions.assertNotSame(copy, filter);
+        Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getGreaterThan());
+        Assertions.assertNull(copy.getGreaterOrEqualThan());
+        Assertions.assertNull(copy.getLessThan());
+        Assertions.assertNull(copy.getLessOrEqualThan());
+        Assertions.assertNull(copy.getSpecified());
+        Assertions.assertNull(copy.getIn());
+        Assertions.assertEquals("ShortFilter []", copy.toString());
+    }
+
+    @Test
     public void testSetEquals() {
         Filter<Short> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);

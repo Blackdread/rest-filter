@@ -46,6 +46,16 @@ public class BooleanFilterTest {
     }
 
     @Test
+    public void testCopy() {
+        final BooleanFilter copy = filter.copy();
+        Assertions.assertNotSame(copy, filter);
+        Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getSpecified());
+        Assertions.assertNull(copy.getIn());
+        Assertions.assertEquals("BooleanFilter []", copy.toString());
+    }
+
+    @Test
     public void testSetEquals() {
         Filter<Boolean> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);

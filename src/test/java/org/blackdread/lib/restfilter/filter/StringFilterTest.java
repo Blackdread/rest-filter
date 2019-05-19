@@ -48,6 +48,17 @@ public class StringFilterTest {
     }
 
     @Test
+    public void testCopy() {
+        final StringFilter copy = filter.copy();
+        Assertions.assertNotSame(copy, filter);
+        Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getContains());
+        Assertions.assertNull(copy.getSpecified());
+        Assertions.assertNull(copy.getIn());
+        Assertions.assertEquals("StringFilter []", copy.toString());
+    }
+
+    @Test
     public void testSetEquals() {
         Filter<String> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);

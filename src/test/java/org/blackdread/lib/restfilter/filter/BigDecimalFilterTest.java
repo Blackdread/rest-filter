@@ -51,6 +51,20 @@ public class BigDecimalFilterTest {
     }
 
     @Test
+    public void testCopy() {
+        final BigDecimalFilter copy = filter.copy();
+        Assertions.assertNotSame(copy, filter);
+        Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getGreaterThan());
+        Assertions.assertNull(copy.getGreaterOrEqualThan());
+        Assertions.assertNull(copy.getLessThan());
+        Assertions.assertNull(copy.getLessOrEqualThan());
+        Assertions.assertNull(copy.getSpecified());
+        Assertions.assertNull(copy.getIn());
+        Assertions.assertEquals("BigDecimalFilter []", copy.toString());
+    }
+
+    @Test
     public void testSetEquals() {
         Filter<BigDecimal> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);
