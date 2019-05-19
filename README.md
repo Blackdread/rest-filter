@@ -9,4 +9,4 @@ It tries to make use of Spring Framework optional but filters already have some 
 
 Will add later more functionality.
 
-If Spring Framework is used, it will added only in specific package and dependencies will be made optional (true) to limit impact if not used.
+If Spring Framework is used, it will be added only in specific package and dependencies will be made optional (true) to limit impact if not used.
