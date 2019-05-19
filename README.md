@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/Blackdread/rest-filter.svg?branch=master)](https://travis-ci.org/Blackdread/rest-filter)
+[![Coverage Status](https://coveralls.io/repos/github/Blackdread/rest-filter/badge.svg?branch=master)](https://coveralls.io/github/Blackdread/rest-filter?branch=master)
+
 # rest-filter
 Repository to separate filter/criteria classes to reduce dependencies (and spring related auto-configuration from jhipster)
 
