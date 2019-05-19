@@ -8,7 +8,7 @@ language: java
 #            secure: ""
 
 jdk:
-    - oraclejdk8
+#    - oraclejdk8 might want to customize build sequence to manually compile with 1.8 then 11
     - oraclejdk11
 
 before_install:
