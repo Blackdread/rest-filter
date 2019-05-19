@@ -1,7 +1,7 @@
 # rest-filter
 Repository to separate filter/criteria classes to reduce dependencies (and spring related auto-configuration from jhipster)
 
-It also makes use of Spring Framework optional.
+It tries to make use of Spring Framework optional but filters already have some annotations from Spring.
 
 Will add later more functionality.
 
