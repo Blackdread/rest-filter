@@ -9,6 +9,14 @@
 
     <name>Rest filter</name>
     <description>Lib to around simplifying rest filtering</description>
+    <url>https://github.com/Blackdread/rest-filter</url>
+
+    <scm>
+        <connection>scm:git:https://github.com/blackdread/rest-filter.git</connection>
+        <developerConnection>scm:git:https://github.com/blackdread/rest-filter.git</developerConnection>
+        <url>https://github.com/blackdread/rest-filter</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <licenses>
         <license>
