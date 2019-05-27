@@ -50,6 +50,20 @@ public class DurationFilterTest {
     }
 
     @Test
+    public void testCopy() {
+        final DurationFilter copy = filter.copy();
+        Assertions.assertNotSame(copy, filter);
+        Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getGreaterThan());
+        Assertions.assertNull(copy.getGreaterOrEqualThan());
+        Assertions.assertNull(copy.getLessThan());
+        Assertions.assertNull(copy.getLessOrEqualThan());
+        Assertions.assertNull(copy.getSpecified());
+        Assertions.assertNull(copy.getIn());
+        Assertions.assertEquals("DurationFilter []", copy.toString());
+    }
+
+    @Test
     public void testSetEquals() {
         Filter<Duration> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);

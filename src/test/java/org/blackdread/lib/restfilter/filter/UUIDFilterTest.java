@@ -46,6 +46,16 @@ public class UUIDFilterTest {
     }
 
     @Test
+    public void testCopy() {
+        final UUIDFilter copy = filter.copy();
+        Assertions.assertNotSame(copy, filter);
+        Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getSpecified());
+        Assertions.assertNull(copy.getIn());
+        Assertions.assertEquals("UUIDFilter []", copy.toString());
+    }
+
+    @Test
     public void testSetEquals() {
         Filter<UUID> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);
