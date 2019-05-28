@@ -147,6 +147,15 @@
         </dependency>
 
         <dependency>
+            <!-- Used for NotNull and Nullable annotation, see if this dependency is really desired, many issues with jdk8 and jdk9+ due to split packages, used to use javax.annotation.*-->
+            <!-- Used for CriteriaUtil-->
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId>
+            <version>3.0.2</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.jupiter.version}</version>
