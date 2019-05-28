@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-package org.blackdread.lib.restfilter.spring;
+package org.blackdread.lib.restfilter.spring.filter;
 
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.filter.RangeFilter;
