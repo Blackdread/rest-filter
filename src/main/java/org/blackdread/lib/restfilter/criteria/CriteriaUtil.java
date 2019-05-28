@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -31,12 +32,18 @@ public final class CriteriaUtil {
 
     protected static <T extends Filter<?>> T createCriteria(final Class<T> criteriaClass) {
         try {
-            return criteriaClass.newInstance();
+            return criteriaClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException e) {
             log.error("Make sure that filters passed can have a default empty constructor", e);
             throw new IllegalStateException(e);
         } catch (IllegalAccessException e) {
             log.error("Cannot instantiate", e);
+            throw new IllegalStateException(e);
+        } catch (NoSuchMethodException e) {
+            log.error("No constructor without parameters", e);
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
+            log.error("Error in constructor", e);
             throw new IllegalStateException(e);
         }
     }
