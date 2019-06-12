@@ -23,6 +23,8 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import java.math.BigDecimal;
+import java.time.Instant;
 
 @MappedSuperclass
 public class BaseEntity {
@@ -32,4 +34,13 @@ public class BaseEntity {
 
     @Column(nullable = false)
     String name;
+
+    @Column(nullable = false)
+    Instant createTime;
+
+    @Column(nullable = false)
+    BigDecimal total;
+
+    @Column(nullable = false)
+    Boolean active;
 }

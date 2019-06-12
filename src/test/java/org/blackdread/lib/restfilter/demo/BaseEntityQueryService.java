@@ -19,8 +19,7 @@
 
 package org.blackdread.lib.restfilter.demo;
 
-import org.blackdread.lib.restfilter.filter.LongFilter;
-import org.blackdread.lib.restfilter.filter.StringFilter;
+import org.blackdread.lib.restfilter.filter.*;
 import org.blackdread.lib.restfilter.spring.filter.QueryService;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -29,6 +28,9 @@ public class BaseEntityQueryService implements QueryService<BaseEntity> {
     static class BaseEntityCriteria {
         LongFilter id;
         StringFilter name;
+        InstantFilter createTime;
+        BigDecimalFilter total;
+        BooleanFilter active;
 
         public LongFilter getId() {
             return id;
@@ -37,6 +39,19 @@ public class BaseEntityQueryService implements QueryService<BaseEntity> {
         public StringFilter getName() {
             return name;
         }
+
+        public InstantFilter getCreateTime() {
+            return createTime;
+        }
+
+        public BigDecimalFilter getTotal() {
+            return total;
+        }
+
+        public BooleanFilter getActive() {
+            return active;
+        }
+
     }
 
     public Specification<BaseEntity> createSpecification(BaseEntityCriteria criteria) {
@@ -47,6 +62,15 @@ public class BaseEntityQueryService implements QueryService<BaseEntity> {
             }
             if (criteria.getName() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getName(), BaseEntity_.name));
+            }
+            if (criteria.getCreateTime() != null) {
+                specification = specification.and(buildSpecification(criteria.getCreateTime(), BaseEntity_.createTime));
+            }
+            if (criteria.getTotal() != null) {
+                specification = specification.and(buildSpecification(criteria.getTotal(), BaseEntity_.total));
+            }
+            if (criteria.getActive() != null) {
+                specification = specification.and(buildSpecification(criteria.getActive(), BaseEntity_.active));
             }
         }
         return specification;
