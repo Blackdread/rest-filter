@@ -60,8 +60,8 @@ public class InstantFilter extends RangeFilter<Instant> {
 
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    public InstantFilter setGreaterOrEqualThan(Instant equals) {
-        super.setGreaterOrEqualThan(equals);
+    public InstantFilter setGreaterThanOrEqual(Instant equals) {
+        super.setGreaterThanOrEqual(equals);
         return this;
     }
 
@@ -74,8 +74,8 @@ public class InstantFilter extends RangeFilter<Instant> {
 
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
-    public InstantFilter setLessOrEqualThan(Instant equals) {
-        super.setLessOrEqualThan(equals);
+    public InstantFilter setLessThanOrEqual(Instant equals) {
+        super.setLessThanOrEqual(equals);
         return this;
     }
 

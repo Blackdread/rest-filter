@@ -42,9 +42,9 @@ public class RangeFilterTest {
     public void testConstructor() {
         Assertions.assertNull(filter.getEquals());
         Assertions.assertNull(filter.getGreaterThan());
-        Assertions.assertNull(filter.getGreaterOrEqualThan());
+        Assertions.assertNull(filter.getGreaterThanOrEqual());
         Assertions.assertNull(filter.getLessThan());
-        Assertions.assertNull(filter.getLessOrEqualThan());
+        Assertions.assertNull(filter.getLessThanOrEqual());
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
         Assertions.assertEquals("RangeFilter []", filter.toString());
@@ -56,9 +56,9 @@ public class RangeFilterTest {
         Assertions.assertNotSame(copy, filter);
         Assertions.assertNull(copy.getEquals());
         Assertions.assertNull(copy.getGreaterThan());
-        Assertions.assertNull(copy.getGreaterOrEqualThan());
+        Assertions.assertNull(copy.getGreaterThanOrEqual());
         Assertions.assertNull(copy.getLessThan());
-        Assertions.assertNull(copy.getLessOrEqualThan());
+        Assertions.assertNull(copy.getLessThanOrEqual());
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
         Assertions.assertEquals("RangeFilter []", copy.toString());
@@ -79,10 +79,10 @@ public class RangeFilterTest {
     }
 
     @Test
-    public void testSetLessOrEqualThan() {
-        Filter<Short> chain = filter.setLessOrEqualThan(value);
+    public void testSetlessThanOrEqual() {
+        Filter<Short> chain = filter.setLessThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
-        Assertions.assertEquals(value, filter.getLessOrEqualThan());
+        Assertions.assertEquals(value, filter.getLessThanOrEqual());
     }
 
     @Test
@@ -93,10 +93,10 @@ public class RangeFilterTest {
     }
 
     @Test
-    public void testSetGreaterOrEqualThan() {
-        Filter<Short> chain = filter.setGreaterOrEqualThan(value);
+    public void testSetgreaterThanOrEqual() {
+        Filter<Short> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
-        Assertions.assertEquals(value, filter.getGreaterOrEqualThan());
+        Assertions.assertEquals(value, filter.getGreaterThanOrEqual());
     }
 
     @Test
@@ -127,8 +127,8 @@ public class RangeFilterTest {
         filter.setLessThan(value);
         filter2.setLessThan(value);
         Assertions.assertEquals(filter2, filter);
-        filter.setGreaterOrEqualThan(value);
-        filter2.setGreaterOrEqualThan(value);
+        filter.setGreaterThanOrEqual(value);
+        filter2.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter2, filter);
         final Filter<Short> filter3 = new Filter<>();
         filter3.setEquals(value);
@@ -151,8 +151,8 @@ public class RangeFilterTest {
         filter.setLessThan(value);
         filter2.setLessThan(value);
         Assertions.assertEquals(filter2.hashCode(), filter.hashCode());
-        filter.setGreaterOrEqualThan(value);
-        filter2.setGreaterOrEqualThan(value);
+        filter.setGreaterThanOrEqual(value);
+        filter2.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter2.hashCode(), filter.hashCode());
         final Filter<Short> filter3 = new Filter<>();
         filter3.setEquals(value);
@@ -166,13 +166,13 @@ public class RangeFilterTest {
     public void testToString() {
         filter.setEquals(value);
         filter.setLessThan(value);
-        filter.setLessOrEqualThan(value);
+        filter.setLessThanOrEqual(value);
         filter.setGreaterThan(value);
-        filter.setGreaterOrEqualThan(value);
+        filter.setGreaterThanOrEqual(value);
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         Assertions.assertEquals("RangeFilter "
-            + "[greaterThan=42, greaterOrEqualThan=42, lessThan=42, "
-            + "lessOrEqualThan=42, equals=42, specified=true, in=[]]", filter.toString());
+            + "[greaterThan=42, greaterThanOrEqual=42, lessThan=42, "
+            + "lessThanOrEqual=42, equals=42, specified=true, in=[]]", filter.toString());
     }
 }

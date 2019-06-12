@@ -191,7 +191,7 @@ public final class CriteriaUtil {
     public static <T extends RangeFilter<?>> boolean isGreaterThanOrEqualDefined(@Nullable final T criteriaPassed) {
         if (criteriaPassed == null)
             return false;
-        return criteriaPassed.getGreaterOrEqualThan() != null;
+        return criteriaPassed.getGreaterThanOrEqual() != null;
     }
 
     /**
@@ -213,7 +213,7 @@ public final class CriteriaUtil {
     public static <T extends RangeFilter<?>> boolean isLessThanOrEqualDefined(@Nullable final T criteriaPassed) {
         if (criteriaPassed == null)
             return false;
-        return criteriaPassed.getLessOrEqualThan() != null;
+        return criteriaPassed.getLessThanOrEqual() != null;
     }
 
     /**
@@ -1279,9 +1279,9 @@ public final class CriteriaUtil {
             throw new IllegalArgumentException("GreaterThanOrEqual value cannot be null");
 
         final T criteria = criteriaPassed == null ? createCriteria(criteriaClass) : criteriaPassed;
-        if (!replaceValue && criteria.getGreaterOrEqualThan() != null && !criteria.getGreaterOrEqualThan().equals(value))
+        if (!replaceValue && criteria.getGreaterThanOrEqual() != null && !criteria.getGreaterThanOrEqual().equals(value))
             throw new IllegalArgumentException("GreaterThanOrEqual filter value is not allowed");
-        criteria.setGreaterOrEqualThan(value);
+        criteria.setGreaterThanOrEqual(value);
         return criteria;
     }
 
@@ -1302,10 +1302,10 @@ public final class CriteriaUtil {
             throw new IllegalArgumentException("GreaterThanOrEqual value cannot be null");
 
         final T criteria = criteriaPassed == null ? createCriteria(criteriaClass) : criteriaPassed;
-        if (criteria.getGreaterOrEqualThan() != null && criteria.getGreaterOrEqualThan().compareTo(value) < 0)
+        if (criteria.getGreaterThanOrEqual() != null && criteria.getGreaterThanOrEqual().compareTo(value) < 0)
             throw new IllegalArgumentException("GreaterThanOrEqual filter value is not allowed");
-        if (criteria.getGreaterOrEqualThan() == null)
-            criteria.setGreaterOrEqualThan(value);
+        if (criteria.getGreaterThanOrEqual() == null)
+            criteria.setGreaterThanOrEqual(value);
         return criteria;
     }
 
@@ -1631,9 +1631,9 @@ public final class CriteriaUtil {
             throw new IllegalArgumentException("LessThanOrEqual value cannot be null");
 
         final T criteria = criteriaPassed == null ? createCriteria(criteriaClass) : criteriaPassed;
-        if (!replaceValue && criteria.getLessOrEqualThan() != null && !criteria.getLessOrEqualThan().equals(value))
+        if (!replaceValue && criteria.getLessThanOrEqual() != null && !criteria.getLessThanOrEqual().equals(value))
             throw new IllegalArgumentException("LessThanOrEqual filter value is not allowed");
-        criteria.setLessOrEqualThan(value);
+        criteria.setLessThanOrEqual(value);
         return criteria;
     }
 
@@ -1654,10 +1654,10 @@ public final class CriteriaUtil {
             throw new IllegalArgumentException("LessThanOrEqual value cannot be null");
 
         final T criteria = criteriaPassed == null ? createCriteria(criteriaClass) : criteriaPassed;
-        if (criteria.getLessOrEqualThan() != null && criteria.getLessOrEqualThan().compareTo(value) > 0)
+        if (criteria.getLessThanOrEqual() != null && criteria.getLessThanOrEqual().compareTo(value) > 0)
             throw new IllegalArgumentException("LessThanOrEqual filter value is not allowed");
-        if (criteria.getLessOrEqualThan() == null)
-            criteria.setLessOrEqualThan(value);
+        if (criteria.getLessThanOrEqual() == null)
+            criteria.setLessThanOrEqual(value);
         return criteria;
     }
 

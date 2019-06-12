@@ -42,9 +42,9 @@ public class LocalDateFilterTest {
     public void testConstructor() {
         Assertions.assertNull(filter.getEquals());
         Assertions.assertNull(filter.getGreaterThan());
-        Assertions.assertNull(filter.getGreaterOrEqualThan());
+        Assertions.assertNull(filter.getGreaterThanOrEqual());
         Assertions.assertNull(filter.getLessThan());
-        Assertions.assertNull(filter.getLessOrEqualThan());
+        Assertions.assertNull(filter.getLessThanOrEqual());
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
         Assertions.assertEquals("LocalDateFilter []", filter.toString());
@@ -56,9 +56,9 @@ public class LocalDateFilterTest {
         Assertions.assertNotSame(copy, filter);
         Assertions.assertNull(copy.getEquals());
         Assertions.assertNull(copy.getGreaterThan());
-        Assertions.assertNull(copy.getGreaterOrEqualThan());
+        Assertions.assertNull(copy.getGreaterThanOrEqual());
         Assertions.assertNull(copy.getLessThan());
-        Assertions.assertNull(copy.getLessOrEqualThan());
+        Assertions.assertNull(copy.getLessThanOrEqual());
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
         Assertions.assertEquals("LocalDateFilter []", copy.toString());
@@ -79,10 +79,10 @@ public class LocalDateFilterTest {
     }
 
     @Test
-    public void testSetLessOrEqualThan() {
-        Filter<LocalDate> chain = filter.setLessOrEqualThan(value);
+    public void testSetlessThanOrEqual() {
+        Filter<LocalDate> chain = filter.setLessThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
-        Assertions.assertEquals(value, filter.getLessOrEqualThan());
+        Assertions.assertEquals(value, filter.getLessThanOrEqual());
     }
 
     @Test
@@ -93,10 +93,10 @@ public class LocalDateFilterTest {
     }
 
     @Test
-    public void testSetGreaterOrEqualThan() {
-        Filter<LocalDate> chain = filter.setGreaterOrEqualThan(value);
+    public void testSetgreaterThanOrEqual() {
+        Filter<LocalDate> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
-        Assertions.assertEquals(value, filter.getGreaterOrEqualThan());
+        Assertions.assertEquals(value, filter.getGreaterThanOrEqual());
     }
 
     @Test
@@ -118,14 +118,14 @@ public class LocalDateFilterTest {
     public void testToString() {
         filter.setEquals(value);
         filter.setLessThan(value);
-        filter.setLessOrEqualThan(value);
+        filter.setLessThanOrEqual(value);
         filter.setGreaterThan(value);
-        filter.setGreaterOrEqualThan(value);
+        filter.setGreaterThanOrEqual(value);
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
         Assertions.assertEquals("LocalDateFilter "
-            + "[greaterThan=" + str + ", greaterOrEqualThan=" + str + ", lessThan=" + str + ", "
-            + "lessOrEqualThan=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
+            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
     }
 }

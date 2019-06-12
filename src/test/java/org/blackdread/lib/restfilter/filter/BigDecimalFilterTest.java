@@ -42,9 +42,9 @@ public class BigDecimalFilterTest {
     public void testConstructor() {
         Assertions.assertNull(filter.getEquals());
         Assertions.assertNull(filter.getGreaterThan());
-        Assertions.assertNull(filter.getGreaterOrEqualThan());
+        Assertions.assertNull(filter.getGreaterThanOrEqual());
         Assertions.assertNull(filter.getLessThan());
-        Assertions.assertNull(filter.getLessOrEqualThan());
+        Assertions.assertNull(filter.getLessThanOrEqual());
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
         Assertions.assertEquals("BigDecimalFilter []", filter.toString());
@@ -56,9 +56,9 @@ public class BigDecimalFilterTest {
         Assertions.assertNotSame(copy, filter);
         Assertions.assertNull(copy.getEquals());
         Assertions.assertNull(copy.getGreaterThan());
-        Assertions.assertNull(copy.getGreaterOrEqualThan());
+        Assertions.assertNull(copy.getGreaterThanOrEqual());
         Assertions.assertNull(copy.getLessThan());
-        Assertions.assertNull(copy.getLessOrEqualThan());
+        Assertions.assertNull(copy.getLessThanOrEqual());
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
         Assertions.assertEquals("BigDecimalFilter []", copy.toString());
@@ -79,10 +79,10 @@ public class BigDecimalFilterTest {
     }
 
     @Test
-    public void testSetLessOrEqualThan() {
-        Filter<BigDecimal> chain = filter.setLessOrEqualThan(value);
+    public void testSetlessThanOrEqual() {
+        Filter<BigDecimal> chain = filter.setLessThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
-        Assertions.assertEquals(value, filter.getLessOrEqualThan());
+        Assertions.assertEquals(value, filter.getLessThanOrEqual());
     }
 
     @Test
@@ -93,10 +93,10 @@ public class BigDecimalFilterTest {
     }
 
     @Test
-    public void testSetGreaterOrEqualThan() {
-        Filter<BigDecimal> chain = filter.setGreaterOrEqualThan(value);
+    public void testSetgreaterThanOrEqual() {
+        Filter<BigDecimal> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
-        Assertions.assertEquals(value, filter.getGreaterOrEqualThan());
+        Assertions.assertEquals(value, filter.getGreaterThanOrEqual());
     }
 
     @Test
@@ -118,14 +118,14 @@ public class BigDecimalFilterTest {
     public void testToString() {
         filter.setEquals(value);
         filter.setLessThan(value);
-        filter.setLessOrEqualThan(value);
+        filter.setLessThanOrEqual(value);
         filter.setGreaterThan(value);
-        filter.setGreaterOrEqualThan(value);
+        filter.setGreaterThanOrEqual(value);
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
         Assertions.assertEquals("BigDecimalFilter "
-            + "[greaterThan=" + str + ", greaterOrEqualThan=" + str + ", lessThan=" + str + ", "
-            + "lessOrEqualThan=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
+            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
     }
 }
