@@ -1,6 +1,7 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.filter.*;
+import org.blackdread.lib.restfilter.spring.filter.QueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,10 +16,10 @@ import java.util.List;
 
 /**
  * Allow to build or erase parts of criteria received in REST API, often we want to make sure that for getAll or getOne we filter on specific data that user can only get and not others.
- * <p>The logic follow: equals &gt; in &gt; contains &gt; specified = gt = gte = lt = lte. It is similar to order of {@linkplain org.blackdread.lib.restfilter.spring.filter.QueryService}</p>
+ * <p>The logic follow: equals &gt; in &gt; contains &gt; specified = gt = gte = lt = lte. It is similar to order of {@linkplain QueryService}</p>
  * <p>If further checks are required like when building equals criteria that "IN" must be empty or only contain the equal value passed, you can extends this class.</p>
  * <p>Some methods may be "useless" but it is provided as is, user can decide to use or not.</p>
- * <p>Created on 2018/2/6.</p>
+ * <p>Created on 2018/02/06.</p>
  *
  * @author Yoann CAPLAIN
  */

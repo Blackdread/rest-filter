@@ -24,7 +24,7 @@ import org.blackdread.lib.restfilter.filter.StringFilter;
 import org.blackdread.lib.restfilter.spring.filter.QueryService;
 import org.springframework.data.jpa.domain.Specification;
 
-public class BaseEntityQueryService extends QueryService<BaseEntity> {
+public class BaseEntityQueryService implements QueryService<BaseEntity> {
 
     static class BaseEntityCriteria {
         LongFilter id;

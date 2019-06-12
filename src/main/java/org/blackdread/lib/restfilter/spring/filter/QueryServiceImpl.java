@@ -21,14 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.criteria;
+package org.blackdread.lib.restfilter.spring.filter;
+
+import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Implementation should usually contain fields of Filter instances.
+ * An empty implementation of QueryService, can be used as composition instead of inheritance.
+ *
+ * @param <ENTITY> the type of the entity which is queried.
  */
-public interface Criteria {
-    /**
-     * @return a new criteria with copied filters
-     */
-    Criteria copy();
+@Transactional(readOnly = true)
+public class QueryServiceImpl<ENTITY> implements QueryService<ENTITY> {
+
 }

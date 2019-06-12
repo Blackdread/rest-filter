@@ -26,7 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 /**
  * This class is just a compile - test.
  */
-public class ChildEntityQueryService extends QueryService<ChildEntity> {
+public class ChildEntityQueryService implements QueryService<ChildEntity> {
 
     static class ChildEntityCriteria extends BaseEntityQueryService.BaseEntityCriteria {
         LongFilter parentId;
