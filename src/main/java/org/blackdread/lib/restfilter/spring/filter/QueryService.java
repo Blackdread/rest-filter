@@ -243,7 +243,9 @@ public interface QueryService<ENTITY> {
                                                                                      Function<SetJoin<MISC, OTHER>, Expression<X>> entityToColumn) {
         if (filter.getEquals() != null) {
             return equalsSpecification(functionToEntity.andThen(entityToColumn), filter.getEquals());
-        } else if (filter.getSpecified() != null) {
+        } else if (filter.getIn() != null) {
+            return valueIn(functionToEntity.andThen(entityToColumn), filter.getIn());
+        }else if (filter.getSpecified() != null) {
             // Interestingly, 'functionToEntity' doesn't work, we need the longer lambda formula
             return byFieldSpecified(root -> functionToEntity.apply(root), filter.getSpecified());
         }
