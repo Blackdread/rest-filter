@@ -28,4 +28,12 @@ public class ChildEntity extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private ParentEntity parent;
+
+    public ParentEntity getParent() {
+        return parent;
+    }
+
+    public void setParent(ParentEntity parent) {
+        this.parent = parent;
+    }
 }

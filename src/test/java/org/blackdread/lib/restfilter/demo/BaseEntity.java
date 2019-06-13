@@ -43,4 +43,6 @@ public class BaseEntity {
 
     @Column(nullable = false)
     Boolean active;
+
+
 }
