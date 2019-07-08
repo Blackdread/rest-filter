@@ -19,6 +19,7 @@
 package org.blackdread.lib.restfilter.filter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * Filter class for {@link BigDecimal} type attributes.
@@ -40,4 +41,45 @@ public class BigDecimalFilter extends RangeFilter<BigDecimal> {
         return new BigDecimalFilter(this);
     }
 
+    @Override
+    public BigDecimalFilter setEquals(BigDecimal equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public BigDecimalFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public BigDecimalFilter setIn(List<BigDecimal> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
+    public BigDecimalFilter setGreaterThan(BigDecimal greaterThan) {
+        super.setGreaterThan(greaterThan);
+        return this;
+    }
+
+    @Override
+    public BigDecimalFilter setGreaterThanOrEqual(BigDecimal greaterThanOrEqual) {
+        super.setGreaterThanOrEqual(greaterThanOrEqual);
+        return this;
+    }
+
+    @Override
+    public BigDecimalFilter setLessThan(BigDecimal lessThan) {
+        super.setLessThan(lessThan);
+        return this;
+    }
+
+    @Override
+    public BigDecimalFilter setLessThanOrEqual(BigDecimal lessThanOrEqual) {
+        super.setLessThanOrEqual(lessThanOrEqual);
+        return this;
+    }
 }

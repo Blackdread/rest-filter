@@ -19,6 +19,8 @@
 
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
+
 /**
  * Filter class for {@link Long} type attributes.
  *
@@ -39,4 +41,45 @@ public class LongFilter extends RangeFilter<Long> {
         return new LongFilter(this);
     }
 
+    @Override
+    public LongFilter setEquals(Long equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public LongFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public LongFilter setIn(List<Long> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
+    public LongFilter setGreaterThan(Long greaterThan) {
+        super.setGreaterThan(greaterThan);
+        return this;
+    }
+
+    @Override
+    public LongFilter setGreaterThanOrEqual(Long greaterThanOrEqual) {
+        super.setGreaterThanOrEqual(greaterThanOrEqual);
+        return this;
+    }
+
+    @Override
+    public LongFilter setLessThan(Long lessThan) {
+        super.setLessThan(lessThan);
+        return this;
+    }
+
+    @Override
+    public LongFilter setLessThanOrEqual(Long lessThanOrEqual) {
+        super.setLessThanOrEqual(lessThanOrEqual);
+        return this;
+    }
 }

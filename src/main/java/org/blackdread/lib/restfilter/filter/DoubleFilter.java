@@ -18,6 +18,8 @@
  */
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
+
 /**
  * Filter class for {@link Double} type attributes.
  *
@@ -38,4 +40,45 @@ public class DoubleFilter extends RangeFilter<Double> {
         return new DoubleFilter(this);
     }
 
+    @Override
+    public DoubleFilter setEquals(Double equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public DoubleFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public DoubleFilter setIn(List<Double> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
+    public DoubleFilter setGreaterThan(Double greaterThan) {
+        super.setGreaterThan(greaterThan);
+        return this;
+    }
+
+    @Override
+    public DoubleFilter setGreaterThanOrEqual(Double greaterThanOrEqual) {
+        super.setGreaterThanOrEqual(greaterThanOrEqual);
+        return this;
+    }
+
+    @Override
+    public DoubleFilter setLessThan(Double lessThan) {
+        super.setLessThan(lessThan);
+        return this;
+    }
+
+    @Override
+    public DoubleFilter setLessThanOrEqual(Double lessThanOrEqual) {
+        super.setLessThanOrEqual(lessThanOrEqual);
+        return this;
+    }
 }

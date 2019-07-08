@@ -18,6 +18,8 @@
  */
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
+
 /**
  * Filter class for {@link Float} type attributes.
  *
@@ -38,4 +40,45 @@ public class FloatFilter extends RangeFilter<Float> {
         return new FloatFilter(this);
     }
 
+    @Override
+    public FloatFilter setEquals(Float equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public FloatFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public FloatFilter setIn(List<Float> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
+    public FloatFilter setGreaterThan(Float greaterThan) {
+        super.setGreaterThan(greaterThan);
+        return this;
+    }
+
+    @Override
+    public FloatFilter setGreaterThanOrEqual(Float greaterThanOrEqual) {
+        super.setGreaterThanOrEqual(greaterThanOrEqual);
+        return this;
+    }
+
+    @Override
+    public FloatFilter setLessThan(Float lessThan) {
+        super.setLessThan(lessThan);
+        return this;
+    }
+
+    @Override
+    public FloatFilter setLessThanOrEqual(Float lessThanOrEqual) {
+        super.setLessThanOrEqual(lessThanOrEqual);
+        return this;
+    }
 }

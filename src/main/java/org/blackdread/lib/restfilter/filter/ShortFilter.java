@@ -19,6 +19,8 @@
 
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
+
 /**
  * Filter class for {@link Short} type attributes.
  *
@@ -39,4 +41,45 @@ public class ShortFilter extends RangeFilter<Short> {
         return new ShortFilter(this);
     }
 
+    @Override
+    public ShortFilter setEquals(Short equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public ShortFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public ShortFilter setIn(List<Short> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
+    public ShortFilter setGreaterThan(Short greaterThan) {
+        super.setGreaterThan(greaterThan);
+        return this;
+    }
+
+    @Override
+    public ShortFilter setGreaterThanOrEqual(Short greaterThanOrEqual) {
+        super.setGreaterThanOrEqual(greaterThanOrEqual);
+        return this;
+    }
+
+    @Override
+    public ShortFilter setLessThan(Short lessThan) {
+        super.setLessThan(lessThan);
+        return this;
+    }
+
+    @Override
+    public ShortFilter setLessThanOrEqual(Short lessThanOrEqual) {
+        super.setLessThanOrEqual(lessThanOrEqual);
+        return this;
+    }
 }

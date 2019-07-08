@@ -53,6 +53,12 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
     }
 
     @Override
+    public LocalDateFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
     @DateTimeFormat(iso = ISO.DATE)
     public LocalDateFilter setGreaterThan(LocalDate equals) {
         super.setGreaterThan(equals);

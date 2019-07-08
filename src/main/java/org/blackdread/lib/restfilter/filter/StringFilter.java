@@ -19,6 +19,7 @@
 
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -48,6 +49,24 @@ public class StringFilter extends Filter<String> {
 
     public StringFilter copy() {
         return new StringFilter(this);
+    }
+
+    @Override
+    public StringFilter setEquals(String equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public StringFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public StringFilter setIn(List<String> in) {
+        super.setIn(in);
+        return this;
     }
 
     public String getContains() {

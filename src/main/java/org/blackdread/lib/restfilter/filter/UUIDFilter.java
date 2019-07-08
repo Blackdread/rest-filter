@@ -18,6 +18,7 @@
  */
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,4 +41,21 @@ public class UUIDFilter extends Filter<UUID> {
         return new UUIDFilter(this);
     }
 
+    @Override
+    public UUIDFilter setEquals(UUID equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public UUIDFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public UUIDFilter setIn(List<UUID> in) {
+        super.setIn(in);
+        return this;
+    }
 }

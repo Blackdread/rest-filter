@@ -18,6 +18,8 @@
  */
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
+
 /**
  * Class for filtering attributes with {@link Boolean} type. It can be added to a criteria class as a member, to support
  * the following query parameters:
@@ -43,4 +45,21 @@ public class BooleanFilter extends Filter<Boolean> {
         return new BooleanFilter(this);
     }
 
+    @Override
+    public BooleanFilter setEquals(Boolean equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public BooleanFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public BooleanFilter setIn(List<Boolean> in) {
+        super.setIn(in);
+        return this;
+    }
 }

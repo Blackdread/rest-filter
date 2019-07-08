@@ -23,6 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import java.time.Instant;
+import java.util.List;
 
 /**
  * Filter class for {@link Instant} type attributes.
@@ -48,6 +49,18 @@ public class InstantFilter extends RangeFilter<Instant> {
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public InstantFilter setEquals(Instant equals) {
         super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public InstantFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public InstantFilter setIn(List<Instant> in) {
+        super.setIn(in);
         return this;
     }
 

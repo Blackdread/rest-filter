@@ -19,6 +19,7 @@
 
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -67,6 +68,24 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
 
     public RangeFilter<FIELD_TYPE> copy() {
         return new RangeFilter<>(this);
+    }
+
+    @Override
+    public RangeFilter<FIELD_TYPE> setEquals(FIELD_TYPE equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public RangeFilter<FIELD_TYPE> setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public RangeFilter<FIELD_TYPE> setIn(List<FIELD_TYPE> in) {
+        super.setIn(in);
+        return this;
     }
 
     public FIELD_TYPE getGreaterThan() {

@@ -19,6 +19,8 @@
 
 package org.blackdread.lib.restfilter.filter;
 
+import java.util.List;
+
 /**
  * Filter class for {@link Integer} type attributes.
  *
@@ -39,4 +41,45 @@ public class IntegerFilter extends RangeFilter<Integer> {
         return new IntegerFilter(this);
     }
 
+    @Override
+    public IntegerFilter setEquals(Integer equals) {
+        super.setEquals(equals);
+        return this;
+    }
+
+    @Override
+    public IntegerFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    public IntegerFilter setIn(List<Integer> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
+    public IntegerFilter setGreaterThan(Integer greaterThan) {
+        super.setGreaterThan(greaterThan);
+        return this;
+    }
+
+    @Override
+    public IntegerFilter setGreaterThanOrEqual(Integer greaterThanOrEqual) {
+        super.setGreaterThanOrEqual(greaterThanOrEqual);
+        return this;
+    }
+
+    @Override
+    public IntegerFilter setLessThan(Integer lessThan) {
+        super.setLessThan(lessThan);
+        return this;
+    }
+
+    @Override
+    public IntegerFilter setLessThanOrEqual(Integer lessThanOrEqual) {
+        super.setLessThanOrEqual(lessThanOrEqual);
+        return this;
+    }
 }

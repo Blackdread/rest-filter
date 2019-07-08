@@ -53,6 +53,19 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
     }
 
     @Override
+    public ZonedDateTimeFilter setSpecified(Boolean specified) {
+        super.setSpecified(specified);
+        return this;
+    }
+
+    @Override
+    @DateTimeFormat(iso = ISO.DATE_TIME)
+    public ZonedDateTimeFilter setIn(List<ZonedDateTime> in) {
+        super.setIn(in);
+        return this;
+    }
+
+    @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setGreaterThan(ZonedDateTime equals) {
         super.setGreaterThan(equals);
@@ -77,13 +90,6 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setLessThanOrEqual(ZonedDateTime equals) {
         super.setLessThanOrEqual(equals);
-        return this;
-    }
-
-    @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
-    public ZonedDateTimeFilter setIn(List<ZonedDateTime> in) {
-        super.setIn(in);
         return this;
     }
 }
