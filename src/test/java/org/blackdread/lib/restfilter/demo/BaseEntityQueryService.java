@@ -31,6 +31,11 @@ public class BaseEntityQueryService implements QueryService<BaseEntity> {
         InstantFilter createTime;
         BigDecimalFilter total;
         BooleanFilter active;
+        IntegerFilter count;
+        LocalDateFilter localDate;
+        ShortFilter aShort;
+        UUIDFilter uuid;
+        DurationFilter duration;
 
         public LongFilter getId() {
             return id;
@@ -52,6 +57,25 @@ public class BaseEntityQueryService implements QueryService<BaseEntity> {
             return active;
         }
 
+        public IntegerFilter getCount() {
+            return count;
+        }
+
+        public LocalDateFilter getLocalDate() {
+            return localDate;
+        }
+
+        public ShortFilter getaShort() {
+            return aShort;
+        }
+
+        public UUIDFilter getUuid() {
+            return uuid;
+        }
+
+        public DurationFilter getDuration() {
+            return duration;
+        }
     }
 
     public Specification<BaseEntity> createSpecification(BaseEntityCriteria criteria) {
@@ -71,6 +95,21 @@ public class BaseEntityQueryService implements QueryService<BaseEntity> {
             }
             if (criteria.getActive() != null) {
                 specification = specification.and(buildSpecification(criteria.getActive(), BaseEntity_.active));
+            }
+            if (criteria.getCount() != null) {
+                specification = specification.and(buildSpecification(criteria.getCount(), BaseEntity_.count));
+            }
+            if (criteria.getLocalDate() != null) {
+                specification = specification.and(buildSpecification(criteria.getLocalDate(), BaseEntity_.localDate));
+            }
+            if (criteria.getaShort() != null) {
+                specification = specification.and(buildSpecification(criteria.getaShort(), BaseEntity_.aShort));
+            }
+            if (criteria.getUuid() != null) {
+                specification = specification.and(buildSpecification(criteria.getUuid(), BaseEntity_.uuid));
+            }
+            if (criteria.getDuration() != null) {
+                specification = specification.and(buildSpecification(criteria.getDuration(), BaseEntity_.duration));
             }
         }
         return specification;

@@ -38,8 +38,25 @@ public class ChildEntityQueryService implements QueryService<ChildEntity> {
 
     public Specification<ChildEntity> createSpecification(ChildEntityCriteria criteria) {
         Specification<ChildEntity> specification = Specification.where(null);
-        if (criteria.getParentId() != null) {
-            specification = specification.and(buildReferringEntitySpecification(criteria.getParentId(), ChildEntity_.parent, ParentEntity_.id));
+        if (criteria != null) {
+            if (criteria.getId() != null) {
+                specification = specification.and(buildSpecification(criteria.getId(), BaseEntity_.id));
+            }
+            if (criteria.getName() != null) {
+                specification = specification.and(buildStringSpecification(criteria.getName(), BaseEntity_.name));
+            }
+            if (criteria.getCreateTime() != null) {
+                specification = specification.and(buildSpecification(criteria.getCreateTime(), BaseEntity_.createTime));
+            }
+            if (criteria.getTotal() != null) {
+                specification = specification.and(buildSpecification(criteria.getTotal(), BaseEntity_.total));
+            }
+            if (criteria.getActive() != null) {
+                specification = specification.and(buildSpecification(criteria.getActive(), BaseEntity_.active));
+            }
+            if (criteria.getParentId() != null) {
+                specification = specification.and(buildReferringEntitySpecification(criteria.getParentId(), ChildEntity_.parent, ParentEntity_.id));
+            }
         }
         return specification;
     }

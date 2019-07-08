@@ -1,10 +1,11 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.filter.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 /**
  * <p>Created on 2019/05/28.</p>
@@ -54,18 +55,76 @@ class CriteriaUtilTest {
 
     @Test
     void createCriteria() {
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(Filter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(RangeFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(ShortFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(IntegerFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(LongFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(DoubleFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(FloatFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(BigDecimalFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(DurationFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(InstantFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(LocalDateFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(ZonedDateTimeFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(StringFilter.class));
+        Assertions.assertNotNull(CriteriaUtil.createCriteria(UUIDFilter.class));
     }
 
     @Test
-    void isCriteriaOverlap() {
+    void isCriteriaOverlapForFilterFalseForNothing() {
+        Assertions.assertFalse(CriteriaUtil.isCriteriaOverlap(filterLong));
     }
 
     @Test
-    void isCriteriaOverlap1() {
+    void isCriteriaOverlapForFilterFalseForNull() {
+        Assertions.assertFalse(CriteriaUtil.isCriteriaOverlap((Filter) null));
     }
 
     @Test
-    void isCriteriaOverlap2() {
+    void isCriteriaOverlapForFilterFalseForEquals() {
+        filterLong.setEquals(1L);
+        Assertions.assertFalse(CriteriaUtil.isCriteriaOverlap(filterLong));
+    }
+
+    @Test
+    void isCriteriaOverlapForFilterFalseForIn() {
+        filterLong.setIn(List.of(1L, 2L));
+        Assertions.assertFalse(CriteriaUtil.isCriteriaOverlap(filterLong));
+    }
+
+    @Test
+    void isCriteriaOverlapForFilterWithEqIn() {
+        filterLong.setEquals(1L);
+        filterLong.setIn(List.of(1L, 2L));
+
+        Assertions.assertTrue(CriteriaUtil.isCriteriaOverlap(filterLong));
+    }
+
+    @Test
+    void isCriteriaOverlapForFilterWithEqSpecified() {
+        filterLong.setEquals(1L);
+        filterLong.setSpecified(true);
+
+        Assertions.assertTrue(CriteriaUtil.isCriteriaOverlap(filterLong));
+    }
+
+    @Test
+    void isCriteriaOverlapForFilterWithInSpecified() {
+        filterLong.setIn(List.of(1L, 2L));
+        filterLong.setSpecified(true);
+
+        Assertions.assertTrue(CriteriaUtil.isCriteriaOverlap(filterLong));
+    }
+
+    @Test
+    void isCriteriaOverlapForRangeFilter() {
+
+    }
+
+    @Test
+    void isCriteriaOverlapForStringFilter() {
+
     }
 
     @Test

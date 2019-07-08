@@ -24,7 +24,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @MappedSuperclass
 public class BaseEntity {
@@ -42,7 +45,22 @@ public class BaseEntity {
     BigDecimal total;
 
     @Column(nullable = false)
+    Integer count;
+
+    @Column(nullable = false)
+    LocalDate localDate;
+
+    @Column(nullable = false)
+    Short aShort;
+
+    @Column(nullable = false)
     Boolean active;
+
+    @Column(nullable = false)
+    UUID uuid;
+
+    @Column(nullable = false)
+    Duration duration;
 
 
 }
