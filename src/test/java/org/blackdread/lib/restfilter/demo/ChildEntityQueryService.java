@@ -22,17 +22,19 @@ package org.blackdread.lib.restfilter.demo;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 import org.blackdread.lib.restfilter.spring.filter.QueryService;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 /**
  * This class is just a compile - test.
  */
+@Service
 public class ChildEntityQueryService implements QueryService<ChildEntity> {
 
     static class ChildEntityCriteria extends BaseEntityQueryService.BaseEntityCriteria {
         LongFilter parentId;
 
         public LongFilter getParentId() {
-            return id;
+            return parentId;
         }
     }
 

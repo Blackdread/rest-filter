@@ -43,8 +43,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <!--        <java.version>1.8</java.version>-->
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
+        <!--        <java.version>11</java.version>-->
 
         <spring-context.version>5.1.6.RELEASE</spring-context.version>
         <spring-data-jpa.version>2.1.8.RELEASE</spring-data-jpa.version>
@@ -185,6 +185,27 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <!-- Only in test for now -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>2.1.6.RELEASE</version>
+            <!--            <version>${spring-data-jpa.version}</version>-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>2.1.6.RELEASE</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

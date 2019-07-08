@@ -22,7 +22,9 @@ package org.blackdread.lib.restfilter.demo;
 import org.blackdread.lib.restfilter.filter.*;
 import org.blackdread.lib.restfilter.spring.filter.QueryService;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BaseEntityQueryService implements QueryService<BaseEntity> {
 
     static class BaseEntityCriteria {
