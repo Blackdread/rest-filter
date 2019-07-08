@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * <p>Created on 2019/05/28.</p>
@@ -89,14 +89,14 @@ class CriteriaUtilTest {
 
     @Test
     void isCriteriaOverlapForFilterFalseForIn() {
-        filterLong.setIn(List.of(1L, 2L));
+        filterLong.setIn(Arrays.asList(1L, 2L));
         Assertions.assertFalse(CriteriaUtil.isCriteriaOverlap(filterLong));
     }
 
     @Test
     void isCriteriaOverlapForFilterWithEqIn() {
         filterLong.setEquals(1L);
-        filterLong.setIn(List.of(1L, 2L));
+        filterLong.setIn(Arrays.asList(1L, 2L));
 
         Assertions.assertTrue(CriteriaUtil.isCriteriaOverlap(filterLong));
     }
@@ -111,7 +111,7 @@ class CriteriaUtilTest {
 
     @Test
     void isCriteriaOverlapForFilterWithInSpecified() {
-        filterLong.setIn(List.of(1L, 2L));
+        filterLong.setIn(Arrays.asList(1L, 2L));
         filterLong.setSpecified(true);
 
         Assertions.assertTrue(CriteriaUtil.isCriteriaOverlap(filterLong));
