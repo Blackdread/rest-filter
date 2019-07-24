@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.blackdread.lib.restfilter.demo.jooq.Tables.PARENT_ENTITY;
 import static org.blackdread.lib.restfilter.demo.jooq.tables.ChildEntity.CHILD_ENTITY;
-import static org.jooq.generated.tables.ParentEntity.PARENT_ENTITY;
 
 @Service
 @Transactional(readOnly = true)
