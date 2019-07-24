@@ -34,6 +34,16 @@ public class ChildCriteria implements Criteria {
 
     LongFilter parentId;
 
+    /*
+     * Below with filtering on fields of other table
+     */
+
+    StringFilter parentName;
+
+    BigDecimalFilter parentTotal;
+
+    BooleanFilter parentActive;
+
     public ChildCriteria() {
     }
 
@@ -49,6 +59,9 @@ public class ChildCriteria implements Criteria {
         uuid = copy.uuid.copy();
         duration = copy.duration.copy();
         parentId = copy.parentId.copy();
+        parentName = copy.parentName.copy();
+        parentTotal = copy.parentTotal.copy();
+        parentActive = copy.parentActive.copy();
     }
 
     @Override
@@ -144,6 +157,30 @@ public class ChildCriteria implements Criteria {
         this.parentId = parentId;
     }
 
+    public StringFilter getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(StringFilter parentName) {
+        this.parentName = parentName;
+    }
+
+    public BigDecimalFilter getParentTotal() {
+        return parentTotal;
+    }
+
+    public void setParentTotal(BigDecimalFilter parentTotal) {
+        this.parentTotal = parentTotal;
+    }
+
+    public BooleanFilter getParentActive() {
+        return parentActive;
+    }
+
+    public void setParentActive(BooleanFilter parentActive) {
+        this.parentActive = parentActive;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -159,11 +196,14 @@ public class ChildCriteria implements Criteria {
             Objects.equals(active, that.active) &&
             Objects.equals(uuid, that.uuid) &&
             Objects.equals(duration, that.duration) &&
-            Objects.equals(parentId, that.parentId);
+            Objects.equals(parentId, that.parentId) &&
+            Objects.equals(parentName, that.parentName) &&
+            Objects.equals(parentTotal, that.parentTotal) &&
+            Objects.equals(parentActive, that.parentActive);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, createTime, total, count, localDate, aShort, active, uuid, duration, parentId);
+        return Objects.hash(id, name, createTime, total, count, localDate, aShort, active, uuid, duration, parentId, parentName, parentTotal, parentActive);
     }
 }

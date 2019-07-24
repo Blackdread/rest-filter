@@ -71,6 +71,7 @@ public class BaseEntityQueryServiceTest {
         em.detach(childEntity);
         childEntity.id = null;
         em.persist(childEntity);
+        em.flush();
         ids.add(childEntity.id);
 
         final Specification<ChildEntity> spec = childEntityQueryService.createSpecification(childCriteria);
@@ -90,6 +91,7 @@ public class BaseEntityQueryServiceTest {
         em.detach(childEntity);
         childEntity.id = null;
         em.persist(childEntity);
+        em.flush();
         ids.add(childEntity.id);
 
         childCriteria.active = CriteriaUtil.buildEqualsCriteria(false);

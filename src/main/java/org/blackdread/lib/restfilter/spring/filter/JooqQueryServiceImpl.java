@@ -26,12 +26,13 @@ package org.blackdread.lib.restfilter.spring.filter;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * An empty implementation of QueryService, can be used as composition instead of inheritance.
+ * An empty implementation of JooqQueryService, can be used as composition instead of inheritance.
  * (Do not instantiate yourself otherwise Transactional will do nothing, unless you call it from a Transactional service already)
+ * <p>Created on 2019/07/23</p>
  *
- * @param <ENTITY> the type of the entity which is queried.
+ * @author Yoann CAPLAIN
+ * @deprecated not sure of API
  */
 @Transactional(readOnly = true)
-public class QueryServiceImpl<ENTITY> implements QueryService<ENTITY> {
-
+public class JooqQueryServiceImpl implements JooqQueryService {
 }
