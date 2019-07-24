@@ -62,7 +62,7 @@ public class JooqFilterUtil {
         } else if (filter.getIn() != null) {
             return field.in(filter.getIn());
         } else if (filter.getContains() != null) {
-            return field.contains(filter.getContains());
+            return field.containsIgnoreCase(filter.getContains());
         } else if (filter.getSpecified() != null) {
             return filter.getSpecified() ? field.isNotNull() : field.isNull();
         }
