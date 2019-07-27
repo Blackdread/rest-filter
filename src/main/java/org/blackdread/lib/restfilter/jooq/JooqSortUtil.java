@@ -42,13 +42,12 @@ public class JooqSortUtil {
     }
 
     public static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
-        if (fields == null)
+        if (fields == null || fields.length == 0)
             return Collections.emptyList();
         return buildOrderBy(sort, Arrays.asList(fields));
     }
 
     /**
-     *
      * @param sort   the sort to build, property names must match field name (so careful with field alias etc)
      * @param fields fields that are part of the select so can be ordered
      * @return Sort fields to be used in the orderBy query of jooq
@@ -67,7 +66,7 @@ public class JooqSortUtil {
                 final Field<?> field = nameFieldMap.get(order.getProperty());
                 if (field == null) {
                     // todo ignore not found. See if we throw instead
-                    log.warn("Did not find field with name {} in {}",order.getProperty(), fields);
+                    log.warn("Did not find field with name {} in {}", order.getProperty(), fields);
                     return null;
                 }
                 return convertToSortField(field, order);

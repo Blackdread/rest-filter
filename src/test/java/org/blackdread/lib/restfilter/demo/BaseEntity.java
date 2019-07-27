@@ -45,7 +45,7 @@ public class BaseEntity {
     @Column(nullable = false)
     BigDecimal total;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     Integer count;
 
     @Column(nullable = false)
