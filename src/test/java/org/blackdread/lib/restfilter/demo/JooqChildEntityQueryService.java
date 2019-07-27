@@ -1,6 +1,7 @@
 package org.blackdread.lib.restfilter.demo;
 
 import org.blackdread.lib.restfilter.demo.jooq.tables.records.ChildEntityRecord;
+import org.blackdread.lib.restfilter.jooq.JooqSortUtil;
 import org.blackdread.lib.restfilter.spring.filter.JooqQueryServiceImpl;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +64,20 @@ public class JooqChildEntityQueryService {
     /**
      * We return the record directly but you could have your services to return a DTO, using jooq mapper or MapStruct
      */
+    public List<ChildEntityRecord> findAll(ChildCriteria criteria, Sort sort) {
+        Condition condition = createCondition(criteria);
+        // could optionally join parent based on criteria but easier this way
+        return create.select(CHILD_ENTITY.fields())
+            .from(CHILD_ENTITY)
+            .leftJoin(PARENT_ENTITY).on(CHILD_ENTITY.PARENT_ID.eq(PARENT_ENTITY.ID))
+            .where(condition)
+            .orderBy(JooqSortUtil.buildOrderBy(sort, CHILD_ENTITY.fields()))
+            .fetchInto(CHILD_ENTITY);
+    }
+
+    /**
+     * We return the record directly but you could have your services to return a DTO, using jooq mapper or MapStruct
+     */
     public Page<ChildEntityRecord> findAll(ChildCriteria criteria, Pageable pageable) {
         Condition condition = createCondition(criteria);
         // could optionally join parent based on criteria but easier this way
@@ -69,7 +85,7 @@ public class JooqChildEntityQueryService {
             .from(CHILD_ENTITY)
             .leftJoin(PARENT_ENTITY).on(CHILD_ENTITY.PARENT_ID.eq(PARENT_ENTITY.ID))
             .where(condition)
-            // todo put sort
+            .orderBy(JooqSortUtil.buildOrderBy(pageable.getSort(), CHILD_ENTITY.fields()))
             .limit(pageable.getPageSize())
             .offset((int) pageable.getOffset())
             .fetchInto(CHILD_ENTITY), pageable, count(criteria));
