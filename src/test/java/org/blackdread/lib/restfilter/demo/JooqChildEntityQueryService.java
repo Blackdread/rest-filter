@@ -111,7 +111,6 @@ public class JooqChildEntityQueryService {
             if (criteria.getParentId() != null) {
                 condition = condition.and(jooqQueryService.buildCondition(criteria.getParentId(), CHILD_ENTITY.PARENT_ID));
             }
-            // todo do example for join and filtering
             if (criteria.getParentName() != null) {
                 condition = condition.and(jooqQueryService.buildCondition(criteria.getParentName(), PARENT_ENTITY.NAME));
             }

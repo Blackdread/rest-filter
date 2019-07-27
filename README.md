@@ -3,17 +3,16 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.blackdread.lib/rest-filter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.blackdread.lib/rest-filter)
 
 # rest-filter
-Repository to separate filter/criteria classes to reduce dependencies (and spring related auto-configuration from jhipster)
+Provide consistent functionality to filter/sort for the rest API.
+
+It supports JPA criteria, jOOQ dynamic filtering and sorting.
 
 It tries to make use of Spring Framework optional but filters already have some annotations from Spring.
-
-Will add later more functionality.
 
 If Spring Framework is used, it will be added only in specific package and dependencies will be made optional (true) to limit impact if not used.
 
 # Filter of enum
 When need to filter on an enum, just declare a class or static class like:
-
     
     public static class MyEnumFilter extends Filter<MyEnum> {
     
