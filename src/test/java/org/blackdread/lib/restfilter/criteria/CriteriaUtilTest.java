@@ -1,11 +1,11 @@
 package org.blackdread.lib.restfilter.criteria;
 
-import javafx.util.Duration;
 import org.blackdread.lib.restfilter.filter.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,7 +45,7 @@ class CriteriaUtilTest {
     private static final Instant NOW = Instant.ofEpochSecond(50);
     private static final LocalDate NOW_DATE = LocalDate.ofEpochDay(50);
     private static final LocalDateTime NOW_DATETIME = LocalDateTime.ofInstant(NOW, ZoneOffset.UTC);
-    private static final Duration DURATION = Duration.seconds(50);
+    private static final Duration DURATION = Duration.ofSeconds(50);
     private static final BigDecimal DECIMAL = BigDecimal.valueOf(50L);
     private static final short SHORT = 50;
     private static final double DOUBLE = 50.0;
