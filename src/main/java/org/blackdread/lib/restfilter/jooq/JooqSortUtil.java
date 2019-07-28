@@ -82,8 +82,14 @@ public class JooqSortUtil {
 
         final Field<T> fieldCase;
         if (ignoreCase && String.class.equals(field.getType())) {
+            Field<T> tmp;
             // See https://www.jooq.org/doc/3.11/manual/sql-building/column-expressions/case-sensitivity/
-            fieldCase = (Field<T>) DSL.upper((Field<String>) field);
+            try {
+                tmp = (Field<T>) DSL.upper((Field<String>) field);
+            } catch (ClassCastException e) {
+                tmp = field;
+            }
+            fieldCase = tmp;
         } else {
             fieldCase = field;
         }
