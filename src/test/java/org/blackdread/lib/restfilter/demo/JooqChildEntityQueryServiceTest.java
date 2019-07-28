@@ -552,4 +552,18 @@ public class JooqChildEntityQueryServiceTest {
         Assertions.assertNotEquals(expected, list);
     }
 
+    @Test
+    public void jooqSortingSortWithAlias() {
+
+    }
+
+    @Test
+    public void jooqSortingSortWithNamedParam() {
+
+    }
+
+    @Test
+    public void jooqSortingSortWithInlineParam() {
+
+    }
 }
