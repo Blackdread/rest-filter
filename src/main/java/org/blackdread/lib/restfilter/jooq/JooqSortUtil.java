@@ -87,6 +87,7 @@ public class JooqSortUtil {
             try {
                 tmp = (Field<T>) DSL.upper((Field<String>) field);
             } catch (ClassCastException e) {
+                log.info("Failed to cast {} to Field<String>", field);
                 tmp = field;
             }
             fieldCase = tmp;
