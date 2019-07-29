@@ -92,7 +92,7 @@ public class LongFilterTest {
     }
 
     @Test
-    public void testSetgreaterThanOrEqual() {
+    public void testSetGreaterThanOrEqual() {
         Filter<Long> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getGreaterThanOrEqual());

@@ -93,7 +93,7 @@ public class InstantFilterTest {
     }
 
     @Test
-    public void testSetgreaterThanOrEqual() {
+    public void testSetGreaterThanOrEqual() {
         Filter<Instant> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getGreaterThanOrEqual());

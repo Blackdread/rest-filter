@@ -93,7 +93,7 @@ public class IntegerFilterTest {
     }
 
     @Test
-    public void testSetgreaterThanOrEqual() {
+    public void testSetGreaterThanOrEqual() {
         Filter<Integer> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getGreaterThanOrEqual());

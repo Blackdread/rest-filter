@@ -93,7 +93,7 @@ public class LocalDateFilterTest {
     }
 
     @Test
-    public void testSetgreaterThanOrEqual() {
+    public void testSetGreaterThanOrEqual() {
         Filter<LocalDate> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getGreaterThanOrEqual());

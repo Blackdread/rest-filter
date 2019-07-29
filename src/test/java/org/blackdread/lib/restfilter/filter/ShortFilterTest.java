@@ -92,7 +92,7 @@ public class ShortFilterTest {
     }
 
     @Test
-    public void testSetgreaterThanOrEqual() {
+    public void testSetGreaterThanOrEqual() {
         Filter<Short> chain = filter.setGreaterThanOrEqual(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getGreaterThanOrEqual());
