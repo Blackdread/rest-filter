@@ -424,7 +424,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Boolean> expected = Arrays.asList(false, false, true, true, true);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -441,7 +441,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Boolean> expected = Arrays.asList(true, true, true, false, false);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
