@@ -809,10 +809,98 @@ class CriteriaUtilTest {
 
     @Test
     void buildGreaterThanOrEqualCriteriaOrThrow() {
+        final LongFilter filter1 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(longFilter, 1L);
+        assertEquals(1L, filter1.getGreaterThanOrEqual());
+        assertEquals(longFilter, filter1);
+        assertAllNullExceptGreaterThanOrEqual(filter1);
+
+        final IntegerFilter filter2 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(integerFilter, 1);
+        assertEquals(1, filter2.getGreaterThanOrEqual());
+        assertEquals(integerFilter, filter2);
+        assertAllNullExceptGreaterThanOrEqual(filter2);
+
+        final InstantFilter filter5 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(instantFilter, NOW);
+        assertEquals(NOW, filter5.getGreaterThanOrEqual());
+        assertEquals(instantFilter, filter5);
+        assertAllNullExceptGreaterThanOrEqual(filter5);
+
+        final LocalDateFilter filter6 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(localDateFilter, NOW_DATE);
+        assertEquals(NOW_DATE, filter6.getGreaterThanOrEqual());
+        assertEquals(localDateFilter, filter6);
+        assertAllNullExceptGreaterThanOrEqual(filter6);
+
+        final DoubleFilter filter7 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(doubleFilter, DOUBLE);
+        assertEquals(DOUBLE, filter7.getGreaterThanOrEqual());
+        assertEquals(doubleFilter, filter7);
+        assertAllNullExceptGreaterThanOrEqual(filter7);
+
+        final FloatFilter filter8 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(floatFilter, FLOAT);
+        assertEquals(FLOAT, filter8.getGreaterThanOrEqual());
+        assertEquals(floatFilter, filter8);
+        assertAllNullExceptGreaterThanOrEqual(filter8);
+
+        final BigDecimalFilter filter9 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(bigDecimalFilter, DECIMAL);
+        assertEquals(DECIMAL, filter9.getGreaterThanOrEqual());
+        assertEquals(bigDecimalFilter, filter9);
+        assertAllNullExceptGreaterThanOrEqual(filter9);
+
+        final ShortFilter filter10 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrow(shortFilter, SHORT);
+        assertEquals(SHORT, filter10.getGreaterThanOrEqual());
+        assertEquals(shortFilter, filter10);
+        assertAllNullExceptGreaterThanOrEqual(filter10);
     }
 
     @Test
     void buildGreaterThanOrEqualCriteriaOrThrowOrMore() {
+        final LongFilter filter1 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(longFilter, 1L);
+        assertEquals(1L, filter1.getGreaterThanOrEqual());
+        assertEquals(longFilter, filter1);
+        assertAllNullExceptGreaterThanOrEqual(filter1);
+
+        final IntegerFilter filter2 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(integerFilter, 1);
+        assertEquals(1, filter2.getGreaterThanOrEqual());
+        assertEquals(integerFilter, filter2);
+        assertAllNullExceptGreaterThanOrEqual(filter2);
+
+        final InstantFilter filter5 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(instantFilter, NOW);
+        assertEquals(NOW, filter5.getGreaterThanOrEqual());
+        assertEquals(instantFilter, filter5);
+        assertAllNullExceptGreaterThanOrEqual(filter5);
+
+        final LocalDateFilter filter6 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(localDateFilter, NOW_DATE);
+        assertEquals(NOW_DATE, filter6.getGreaterThanOrEqual());
+        assertEquals(localDateFilter, filter6);
+        assertAllNullExceptGreaterThanOrEqual(filter6);
+
+        final DoubleFilter filter7 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(doubleFilter, DOUBLE);
+        assertEquals(DOUBLE, filter7.getGreaterThanOrEqual());
+        assertEquals(doubleFilter, filter7);
+        assertAllNullExceptGreaterThanOrEqual(filter7);
+
+        final FloatFilter filter8 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(floatFilter, FLOAT);
+        assertEquals(FLOAT, filter8.getGreaterThanOrEqual());
+        assertEquals(floatFilter, filter8);
+        assertAllNullExceptGreaterThanOrEqual(filter8);
+
+        final BigDecimalFilter filter9 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(bigDecimalFilter, DECIMAL);
+        assertEquals(DECIMAL, filter9.getGreaterThanOrEqual());
+        assertEquals(bigDecimalFilter, filter9);
+        assertAllNullExceptGreaterThanOrEqual(filter9);
+
+        final ShortFilter filter10 = CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(shortFilter, SHORT);
+        assertEquals(SHORT, filter10.getGreaterThanOrEqual());
+        assertEquals(shortFilter, filter10);
+        assertAllNullExceptGreaterThanOrEqual(filter10);
+    }
+
+    @Test
+    void buildGreaterThanOrEqualCriteriaOrThrowOrMoreAcceptsHigher() {
+        longFilter.setGreaterThanOrEqual(1L);
+        assertThrows(IllegalArgumentException.class, () -> CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(longFilter, 5L));
+        longFilter.setGreaterThanOrEqual(5L);
+        assertDoesNotThrow(() -> CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(longFilter, 5L));
+        longFilter.setGreaterThanOrEqual(10L);
+        assertDoesNotThrow(() -> CriteriaUtil.buildGreaterThanOrEqualCriteriaOrThrowOrMore(longFilter, 5L));
     }
 
     @Test
@@ -868,10 +956,92 @@ class CriteriaUtilTest {
 
     @Test
     void buildLessThanCriteriaOrThrow() {
+        final LongFilter filter1 = CriteriaUtil.buildLessThanCriteriaOrThrow(longFilter, 1L);
+        assertEquals(1L, filter1.getLessThan());
+        assertEquals(longFilter, filter1);
+        assertAllNullExceptLessThan(filter1);
+
+        final IntegerFilter filter2 = CriteriaUtil.buildLessThanCriteriaOrThrow(integerFilter, 1);
+        assertEquals(1, filter2.getLessThan());
+        assertEquals(integerFilter, filter2);
+        assertAllNullExceptLessThan(filter2);
+
+        final InstantFilter filter5 = CriteriaUtil.buildLessThanCriteriaOrThrow(instantFilter, NOW);
+        assertEquals(NOW, filter5.getLessThan());
+        assertEquals(instantFilter, filter5);
+        assertAllNullExceptLessThan(filter5);
+
+        final LocalDateFilter filter6 = CriteriaUtil.buildLessThanCriteriaOrThrow(localDateFilter, NOW_DATE);
+        assertEquals(NOW_DATE, filter6.getLessThan());
+        assertEquals(localDateFilter, filter6);
+        assertAllNullExceptLessThan(filter6);
+
+        final DoubleFilter filter7 = CriteriaUtil.buildLessThanCriteriaOrThrow(doubleFilter, DOUBLE);
+        assertEquals(DOUBLE, filter7.getLessThan());
+        assertEquals(doubleFilter, filter7);
+        assertAllNullExceptLessThan(filter7);
+
+        final FloatFilter filter8 = CriteriaUtil.buildLessThanCriteriaOrThrow(floatFilter, FLOAT);
+        assertEquals(FLOAT, filter8.getLessThan());
+        assertEquals(floatFilter, filter8);
+        assertAllNullExceptLessThan(filter8);
+
+        final BigDecimalFilter filter9 = CriteriaUtil.buildLessThanCriteriaOrThrow(bigDecimalFilter, DECIMAL);
+        assertEquals(DECIMAL, filter9.getLessThan());
+        assertEquals(bigDecimalFilter, filter9);
+        assertAllNullExceptLessThan(filter9);
+
+        final ShortFilter filter10 = CriteriaUtil.buildLessThanCriteriaOrThrow(shortFilter, SHORT);
+        assertEquals(SHORT, filter10.getLessThan());
+        assertEquals(shortFilter, filter10);
+        assertAllNullExceptLessThan(filter10);
     }
 
     @Test
     void buildLessThanCriteriaOrThrowOrLess() {
+        final LongFilter filter1 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(longFilter, 1L);
+        assertEquals(1L, filter1.getLessThan());
+        assertEquals(longFilter, filter1);
+        assertAllNullExceptLessThan(filter1);
+
+        final IntegerFilter filter2 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(integerFilter, 1);
+        assertEquals(1, filter2.getLessThan());
+        assertEquals(integerFilter, filter2);
+        assertAllNullExceptLessThan(filter2);
+
+        final InstantFilter filter5 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(instantFilter, NOW);
+        assertEquals(NOW, filter5.getLessThan());
+        assertEquals(instantFilter, filter5);
+        assertAllNullExceptLessThan(filter5);
+
+        final LocalDateFilter filter6 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(localDateFilter, NOW_DATE);
+        assertEquals(NOW_DATE, filter6.getLessThan());
+        assertEquals(localDateFilter, filter6);
+        assertAllNullExceptLessThan(filter6);
+
+        final DoubleFilter filter7 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(doubleFilter, DOUBLE);
+        assertEquals(DOUBLE, filter7.getLessThan());
+        assertEquals(doubleFilter, filter7);
+        assertAllNullExceptLessThan(filter7);
+
+        final FloatFilter filter8 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(floatFilter, FLOAT);
+        assertEquals(FLOAT, filter8.getLessThan());
+        assertEquals(floatFilter, filter8);
+        assertAllNullExceptLessThan(filter8);
+
+        final BigDecimalFilter filter9 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(bigDecimalFilter, DECIMAL);
+        assertEquals(DECIMAL, filter9.getLessThan());
+        assertEquals(bigDecimalFilter, filter9);
+        assertAllNullExceptLessThan(filter9);
+
+        final ShortFilter filter10 = CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(shortFilter, SHORT);
+        assertEquals(SHORT, filter10.getLessThan());
+        assertEquals(shortFilter, filter10);
+        assertAllNullExceptLessThan(filter10);
+    }
+
+    @Test
+    void buildLessThanCriteriaOrThrowOrLessThrowsOnNotCorrect() {
         longFilter.setLessThan(1L);
         assertDoesNotThrow(() -> CriteriaUtil.buildLessThanCriteriaOrThrowOrLess(longFilter, 5L));
         longFilter.setLessThan(5L);
@@ -933,10 +1103,92 @@ class CriteriaUtilTest {
 
     @Test
     void buildLessThanOrEqualCriteriaOrThrow() {
+        final LongFilter filter1 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(longFilter, 1L);
+        assertEquals(1L, filter1.getLessThanOrEqual());
+        assertEquals(longFilter, filter1);
+        assertAllNullExceptLessThanOrEqual(filter1);
+
+        final IntegerFilter filter2 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(integerFilter, 1);
+        assertEquals(1, filter2.getLessThanOrEqual());
+        assertEquals(integerFilter, filter2);
+        assertAllNullExceptLessThanOrEqual(filter2);
+
+        final InstantFilter filter5 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(instantFilter, NOW);
+        assertEquals(NOW, filter5.getLessThanOrEqual());
+        assertEquals(instantFilter, filter5);
+        assertAllNullExceptLessThanOrEqual(filter5);
+
+        final LocalDateFilter filter6 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(localDateFilter, NOW_DATE);
+        assertEquals(NOW_DATE, filter6.getLessThanOrEqual());
+        assertEquals(localDateFilter, filter6);
+        assertAllNullExceptLessThanOrEqual(filter6);
+
+        final DoubleFilter filter7 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(doubleFilter, DOUBLE);
+        assertEquals(DOUBLE, filter7.getLessThanOrEqual());
+        assertEquals(doubleFilter, filter7);
+        assertAllNullExceptLessThanOrEqual(filter7);
+
+        final FloatFilter filter8 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(floatFilter, FLOAT);
+        assertEquals(FLOAT, filter8.getLessThanOrEqual());
+        assertEquals(floatFilter, filter8);
+        assertAllNullExceptLessThanOrEqual(filter8);
+
+        final BigDecimalFilter filter9 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(bigDecimalFilter, DECIMAL);
+        assertEquals(DECIMAL, filter9.getLessThanOrEqual());
+        assertEquals(bigDecimalFilter, filter9);
+        assertAllNullExceptLessThanOrEqual(filter9);
+
+        final ShortFilter filter10 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrow(shortFilter, SHORT);
+        assertEquals(SHORT, filter10.getLessThanOrEqual());
+        assertEquals(shortFilter, filter10);
+        assertAllNullExceptLessThanOrEqual(filter10);
     }
 
     @Test
     void buildLessThanOrEqualCriteriaOrThrowOrLess() {
+        final LongFilter filter1 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(longFilter, 1L);
+        assertEquals(1L, filter1.getLessThanOrEqual());
+        assertEquals(longFilter, filter1);
+        assertAllNullExceptLessThanOrEqual(filter1);
+
+        final IntegerFilter filter2 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(integerFilter, 1);
+        assertEquals(1, filter2.getLessThanOrEqual());
+        assertEquals(integerFilter, filter2);
+        assertAllNullExceptLessThanOrEqual(filter2);
+
+        final InstantFilter filter5 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(instantFilter, NOW);
+        assertEquals(NOW, filter5.getLessThanOrEqual());
+        assertEquals(instantFilter, filter5);
+        assertAllNullExceptLessThanOrEqual(filter5);
+
+        final LocalDateFilter filter6 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(localDateFilter, NOW_DATE);
+        assertEquals(NOW_DATE, filter6.getLessThanOrEqual());
+        assertEquals(localDateFilter, filter6);
+        assertAllNullExceptLessThanOrEqual(filter6);
+
+        final DoubleFilter filter7 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(doubleFilter, DOUBLE);
+        assertEquals(DOUBLE, filter7.getLessThanOrEqual());
+        assertEquals(doubleFilter, filter7);
+        assertAllNullExceptLessThanOrEqual(filter7);
+
+        final FloatFilter filter8 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(floatFilter, FLOAT);
+        assertEquals(FLOAT, filter8.getLessThanOrEqual());
+        assertEquals(floatFilter, filter8);
+        assertAllNullExceptLessThanOrEqual(filter8);
+
+        final BigDecimalFilter filter9 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(bigDecimalFilter, DECIMAL);
+        assertEquals(DECIMAL, filter9.getLessThanOrEqual());
+        assertEquals(bigDecimalFilter, filter9);
+        assertAllNullExceptLessThanOrEqual(filter9);
+
+        final ShortFilter filter10 = CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(shortFilter, SHORT);
+        assertEquals(SHORT, filter10.getLessThanOrEqual());
+        assertEquals(shortFilter, filter10);
+        assertAllNullExceptLessThanOrEqual(filter10);
+    }
+
+    @Test
+    void buildLessThanOrEqualCriteriaOrThrowOrLessThrowsOnNotCorrect() {
         longFilter.setLessThanOrEqual(11L);
         assertThrows(IllegalArgumentException.class, () -> CriteriaUtil.buildLessThanOrEqualCriteriaOrThrowOrLess(longFilter, 5L));
         longFilter.setLessThanOrEqual(5L);
