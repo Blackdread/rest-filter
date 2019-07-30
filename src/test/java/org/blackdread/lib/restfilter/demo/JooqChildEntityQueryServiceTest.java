@@ -334,7 +334,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Integer> expected = Arrays.asList(null, 1, 5, 9, 12, 15);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -355,7 +355,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Integer> expected = Arrays.asList(1, 5, 9, 12, 15, null);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -372,7 +372,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Integer> expected = Arrays.asList(5, 9, 15, 12, 1);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -389,7 +389,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Integer> expected = Arrays.asList(1, 5, 9, 12, 15);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -407,7 +407,7 @@ public class JooqChildEntityQueryServiceTest {
         Collections.reverse(expected);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -458,7 +458,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<Instant> expected = Arrays.asList(ofEpochSecond(500), ofEpochSecond(1000), ofEpochSecond(2000), ofEpochSecond(3000), CREATE_TIME);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -476,7 +476,7 @@ public class JooqChildEntityQueryServiceTest {
         Collections.reverse(expected);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -493,7 +493,7 @@ public class JooqChildEntityQueryServiceTest {
         final List<LocalDate> expected = Arrays.asList(ofEpochDay(200), ofEpochDay(500), ofEpochDay(600), ofEpochDay(900), LocalDate.of(2019, 1, 15));
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -511,7 +511,7 @@ public class JooqChildEntityQueryServiceTest {
         Collections.reverse(expected);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -529,7 +529,7 @@ public class JooqChildEntityQueryServiceTest {
         Collections.sort(expected);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
@@ -548,7 +548,7 @@ public class JooqChildEntityQueryServiceTest {
         Collections.reverse(expected);
         Assertions.assertEquals(expected, list);
         Assertions.assertEquals(expected, list2);
-        Collections.shuffle(expected);
+        Collections.reverse(expected);
         Assertions.assertNotEquals(expected, list);
     }
 
