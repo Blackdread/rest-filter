@@ -813,7 +813,54 @@ class CriteriaUtilTest {
 
     @Test
     void buildInCriteriaOrThrowNoReplaceThrowsOnNullValue() {
-        assertThrows(IllegalArgumentException.class, () -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, null));
+        assertThrows(NullPointerException.class, () -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, null));
+    }
+
+    @Test
+    void buildInCriteriaOrThrowNoReplaceThrowsOnEmptyValue() {
+        assertThrows(IllegalArgumentException.class, () -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, Collections.emptyList()));
+    }
+
+    @Test
+    void buildInCriteriaOrThrowThrowsOnInValueNotInAllowed() {
+        longFilter.setIn(Arrays.asList(44949494L, 5494L));
+        final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, longList));
+        assertEquals("Some in filter specified are not allowed", ex.getMessage());
+    }
+
+    @Test
+    void buildInCriteriaOrThrowDoNotThrowsOnInValueInAllowed() {
+        longFilter.setIn(Collections.singletonList(longList.get(0)));
+        assertDoesNotThrow(() -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, longList));
+    }
+
+    @Test
+    void buildInCriteriaOrThrowDoNotThrowsOnEqualValueInAllowed() {
+        longFilter.setEquals(longList.get(0));
+        assertDoesNotThrow(() -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, longList));
+    }
+
+    @Test
+    void buildInCriteriaOrThrowThrowsOnEqualValueNotInAllowed() {
+        longFilter.setEquals(44949494L);
+        final IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, longList));
+        assertEquals("Equals filter specified is not allowed", ex.getMessage());
+    }
+
+    @Test
+    void buildInCriteriaOrThrowChangeToEqualWhenOnlyValueIn() {
+        final LongFilter filter = CriteriaUtil.buildInCriteriaOrThrow(longFilter, Collections.singletonList(55L));
+        assertNotNull(filter.getEquals());
+        assertEquals(55L, filter.getEquals());
+        assertAllNullExceptEquals(filter);
+    }
+
+    @Test
+    void buildInCriteriaOrThrowNoReplaceChangeToEqualWhenOnlyValueIn() {
+        final LongFilter filter = CriteriaUtil.buildInCriteriaOrThrowNoReplace(longFilter, Collections.singletonList(55L));
+        assertNotNull(filter.getEquals());
+        assertEquals(55L, filter.getEquals());
+        assertAllNullExceptEquals(filter);
     }
 
     @Test
