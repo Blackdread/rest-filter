@@ -1,4 +1,4 @@
-package org.blackdread.lib.restfilter.jooq;
+package org.blackdread.lib.restfilter.spring.sort;
 
 import org.jooq.Field;
 import org.jooq.Select;

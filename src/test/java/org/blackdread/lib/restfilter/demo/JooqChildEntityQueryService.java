@@ -1,7 +1,7 @@
 package org.blackdread.lib.restfilter.demo;
 
 import org.blackdread.lib.restfilter.demo.jooq.tables.records.ChildEntityRecord;
-import org.blackdread.lib.restfilter.jooq.JooqSortUtil;
+import org.blackdread.lib.restfilter.spring.sort.JooqSortUtil;
 import org.blackdread.lib.restfilter.spring.filter.JooqQueryServiceImpl;
 import org.jooq.Condition;
 import org.jooq.DSLContext;
