@@ -37,22 +37,35 @@ public class UUIDFilter extends Filter<UUID> {
         super(filter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public UUIDFilter copy() {
         return new UUIDFilter(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUIDFilter setEquals(UUID equals) {
         super.setEquals(equals);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUIDFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public UUIDFilter setIn(List<UUID> in) {
         super.setIn(in);

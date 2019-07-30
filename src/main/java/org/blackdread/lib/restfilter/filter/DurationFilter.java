@@ -37,46 +37,71 @@ public class DurationFilter extends RangeFilter<Duration> {
         super(filter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public DurationFilter copy() {
         return new DurationFilter(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setEquals(Duration equals) {
         super.setEquals(equals);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setIn(List<Duration> in) {
         super.setIn(in);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setGreaterThan(Duration greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setGreaterThanOrEqual(Duration greaterThanOrEqual) {
         super.setGreaterThanOrEqual(greaterThanOrEqual);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setLessThan(Duration lessThan) {
         super.setLessThan(lessThan);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public DurationFilter setLessThanOrEqual(Duration lessThanOrEqual) {
         super.setLessThanOrEqual(lessThanOrEqual);

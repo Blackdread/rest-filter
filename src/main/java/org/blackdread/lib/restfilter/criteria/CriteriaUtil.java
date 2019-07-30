@@ -19,6 +19,7 @@ import java.util.List;
  * <p>The logic follow: equals &gt; in &gt; contains &gt; specified = gt = gte = lt = lte. It is similar to order of {@linkplain QueryService}</p>
  * <p>If further checks are required like when building equals criteria that "IN" must be empty or only contain the equal value passed, you can extends this class.</p>
  * <p>Some methods may be "useless" but it is provided as is, user can decide to use or not.</p>
+ * <p>Implementation is strongly opinionated and might not fit all use-case for everyone</p>
  * <p>Created on 2018/02/06.</p>
  *
  * @author Yoann CAPLAIN
@@ -632,7 +633,13 @@ public final class CriteriaUtil {
         if (criteria.getIn() == null)
             criteria.setIn(new ArrayList<>(values.size()));
 
-        criteria.getIn().retainAll(values);
+        try {
+            criteria.getIn().retainAll(values);
+        } catch (UnsupportedOperationException e) {
+            log.info("Tried to retain elements on a list that does not support it or is immutable");
+            criteria.setIn(new ArrayList<>(criteria.getIn()));
+            criteria.getIn().retainAll(values);
+        }
         if (criteria.getIn().isEmpty())
             criteria.getIn().addAll(values);
 

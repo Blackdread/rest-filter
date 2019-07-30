@@ -41,22 +41,35 @@ public class BooleanFilter extends Filter<Boolean> {
         super(filter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public BooleanFilter copy() {
         return new BooleanFilter(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BooleanFilter setEquals(Boolean equals) {
         super.setEquals(equals);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BooleanFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BooleanFilter setIn(List<Boolean> in) {
         super.setIn(in);

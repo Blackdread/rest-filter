@@ -41,10 +41,17 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         super(filter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ZonedDateTimeFilter copy() {
         return new ZonedDateTimeFilter(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setEquals(ZonedDateTime equals) {
@@ -52,12 +59,18 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ZonedDateTimeFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setIn(List<ZonedDateTime> in) {
@@ -65,6 +78,9 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setGreaterThan(ZonedDateTime equals) {
@@ -72,6 +88,9 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setGreaterThanOrEqual(ZonedDateTime equals) {
@@ -79,6 +98,9 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setLessThan(ZonedDateTime equals) {
@@ -86,6 +108,9 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @DateTimeFormat(iso = ISO.DATE_TIME)
     public ZonedDateTimeFilter setLessThanOrEqual(ZonedDateTime equals) {

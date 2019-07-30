@@ -47,22 +47,35 @@ public class StringFilter extends Filter<String> {
         this.contains = filter.contains;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public StringFilter copy() {
         return new StringFilter(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StringFilter setEquals(String equals) {
         super.setEquals(equals);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StringFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public StringFilter setIn(List<String> in) {
         super.setIn(in);

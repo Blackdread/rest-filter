@@ -76,6 +76,12 @@ public class Filter<FIELD_TYPE> implements Serializable {
         return in;
     }
 
+    /**
+     * Best is to provide a list that will be referenced only by this filter and that is not immutable
+     *
+     * @param in list
+     * @return itself
+     */
     public Filter<FIELD_TYPE> setIn(List<FIELD_TYPE> in) {
         this.in = in;
         return this;

@@ -66,22 +66,35 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
         this.lessThanOrEqual = filter.lessThanOrEqual;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public RangeFilter<FIELD_TYPE> copy() {
         return new RangeFilter<>(this);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RangeFilter<FIELD_TYPE> setEquals(FIELD_TYPE equals) {
         super.setEquals(equals);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RangeFilter<FIELD_TYPE> setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public RangeFilter<FIELD_TYPE> setIn(List<FIELD_TYPE> in) {
         super.setIn(in);
