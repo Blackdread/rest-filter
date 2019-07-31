@@ -37,7 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  * <p>Created on 2019/07/23</p>
  *
  * @author Yoann CAPLAIN
- * @deprecated Will not delete, just API not sure yet
+ * @deprecated Will not delete, just API not sure yet, better to use directly the util class with the static methods
  */
 @Transactional(readOnly = true)
 public interface JooqQueryService {

@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
  * <p>Created on 2019/07/24.</p>
  *
  * @author Yoann CAPLAIN
- * @deprecated not sure of API
  */
 public class JooqSortUtil {
 

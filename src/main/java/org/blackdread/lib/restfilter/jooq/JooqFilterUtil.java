@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * <p>Created on 2019/07/23</p>
  *
  * @author Yoann CAPLAIN
- * @deprecated not sure of API
  */
 public class JooqFilterUtil {
 
