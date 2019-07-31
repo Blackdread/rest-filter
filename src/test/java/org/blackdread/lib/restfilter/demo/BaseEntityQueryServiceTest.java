@@ -1,6 +1,8 @@
 package org.blackdread.lib.restfilter.demo;
 
 import org.blackdread.lib.restfilter.criteria.CriteriaUtil;
+import org.blackdread.lib.restfilter.filter.LongFilter;
+import org.blackdread.lib.restfilter.filter.StringFilter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -45,6 +48,9 @@ public class BaseEntityQueryServiceTest {
 
     private ChildEntityQueryService.ChildEntityCriteria childCriteria;
 
+    private LongFilter longFilter;
+    private StringFilter stringFilter;
+
     @BeforeEach
     public void setup() {
         childEntity = new ChildEntity();
@@ -60,6 +66,26 @@ public class BaseEntityQueryServiceTest {
         childEntity.setParent(null);
 
         childCriteria = new ChildEntityQueryService.ChildEntityCriteria();
+
+        longFilter = new LongFilter();
+        stringFilter = new StringFilter();
+    }
+
+    private static void fillAll(final LongFilter filter) {
+        filter.setEquals(1L);
+        filter.setIn(Arrays.asList(1L, 2L));
+        filter.setSpecified(true);
+        filter.setGreaterThan(1L);
+        filter.setGreaterThanOrEqual(1L);
+        filter.setLessThan(1L);
+        filter.setLessThanOrEqual(1L);
+    }
+
+    private static void fillAll(final StringFilter filter) {
+        filter.setEquals("any");
+        filter.setIn(Arrays.asList("any", "any2"));
+        filter.setSpecified(true);
+        filter.setContains("any");
     }
 
     @Test
@@ -125,6 +151,48 @@ public class BaseEntityQueryServiceTest {
 
         Assertions.assertEquals(1, all.size());
         Assertions.assertEquals(em.find(ChildEntity.class, ids.get(0)), all.get(0));
+    }
+
+    @Test
+    public void testFilterEquals() {
+        childCriteria.id = longFilter;
+        fillAll(longFilter);
+        final Specification<ChildEntity> spec = childEntityQueryService.createSpecification(childCriteria);
+        final List<ChildEntity> all = childRepository.findAll(spec);
+        Assertions.assertEquals(0, all.size());
+    }
+
+
+    @Test
+    public void testFilterIn() {
+        childCriteria.id = longFilter;
+        fillAll(longFilter);
+        longFilter.setEquals(null);
+        final Specification<ChildEntity> spec = childEntityQueryService.createSpecification(childCriteria);
+        final List<ChildEntity> all = childRepository.findAll(spec);
+        Assertions.assertEquals(0, all.size());
+    }
+
+    @Test
+    public void testFilterSpecified() {
+        childCriteria.id = longFilter;
+        fillAll(longFilter);
+        longFilter.setEquals(null);
+        longFilter.setIn(null);
+        final Specification<ChildEntity> spec = childEntityQueryService.createSpecification(childCriteria);
+        final List<ChildEntity> all = childRepository.findAll(spec);
+        Assertions.assertEquals(0, all.size());
+    }
+
+    @Test
+    public void testFilterOthers() {
+        childCriteria.id = longFilter;
+        fillAll(longFilter);
+        longFilter.setEquals(null);
+        longFilter.setIn(null);
+        final Specification<ChildEntity> spec = childEntityQueryService.createSpecification(childCriteria);
+        final List<ChildEntity> all = childRepository.findAll(spec);
+        Assertions.assertEquals(0, all.size());
     }
 
 

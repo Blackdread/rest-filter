@@ -56,6 +56,7 @@ public interface QueryService<ENTITY> {
      * @param field  the JPA static metamodel representing the field.
      * @param <X>    The type of the attribute which is filtered.
      * @return a Specification
+     * @deprecated prefer methods with metaclassFunction
      */
     default <X> Specification<ENTITY> buildSpecification(Filter<X> filter, SingularAttribute<? super ENTITY, X>
         field) {
@@ -125,6 +126,7 @@ public interface QueryService<ENTITY> {
      * @param field  the JPA static metamodel representing the field.
      * @param <X>    The type of the attribute which is filtered.
      * @return a Specification
+     * @deprecated prefer methods with metaclassFunction
      */
     default <X extends Comparable<? super X>> Specification<ENTITY> buildRangeSpecification(RangeFilter<X> filter,
                                                                                             SingularAttribute<? super ENTITY, X> field) {
@@ -185,6 +187,7 @@ public interface QueryService<ENTITY> {
      * @param <OTHER>    The type of the referenced entity.
      * @param <X>        The type of the attribute which is filtered.
      * @return a Specification
+     * @deprecated prefer methods with metaclassFunction
      */
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SingularAttribute<? super ENTITY, OTHER> reference,
@@ -209,6 +212,8 @@ public interface QueryService<ENTITY> {
      * @param <OTHER>    The type of the referenced entity.
      * @param <X>        The type of the attribute which is filtered.
      * @return a Specification
+     * @deprecated prefer methods with metaclassFunction
+     * @deprecated prefer methods with metaclassFunction
      */
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SetAttribute<ENTITY, OTHER> reference,
@@ -237,6 +242,7 @@ public interface QueryService<ENTITY> {
      * @param <MISC>           The type of the entity which is the last before the OTHER in the chain.
      * @param <X>              The type of the attribute which is filtered.
      * @return a Specification
+     * @deprecated prefer methods with metaclassFunction
      */
     default <OTHER, MISC, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                      Function<Root<ENTITY>, SetJoin<MISC, OTHER>> functionToEntity,
@@ -271,6 +277,7 @@ public interface QueryService<ENTITY> {
      * @param <OTHER>    The type of the referenced entity.
      * @param <X>        The type of the attribute which is filtered.
      * @return a Specification
+     * @deprecated prefer methods with metaclassFunction
      */
     default <OTHER, X extends Comparable<? super X>> Specification<ENTITY> buildReferringEntitySpecification(RangeFilter<X> filter,
                                                                                                              SetAttribute<ENTITY, OTHER> reference,
