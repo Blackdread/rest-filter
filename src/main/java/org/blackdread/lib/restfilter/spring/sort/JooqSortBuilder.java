@@ -51,6 +51,7 @@ public class JooqSortBuilder {
         this.fieldByAliasMap.putAll(copy.fieldByAliasMap);
         this.inlineByAliasMap.putAll(copy.inlineByAliasMap);
         this.defaultSort = copy.defaultSort;
+        this.defaultSortFields = copy.defaultSortFields != null ? new ArrayList<>(copy.defaultSortFields) : null;
         this.enableCaseInsensitiveSort = copy.enableCaseInsensitiveSort;
         this.enableNullHandling = copy.enableNullHandling;
         this.throwOnSortPropertyNotFound = copy.throwOnSortPropertyNotFound;
