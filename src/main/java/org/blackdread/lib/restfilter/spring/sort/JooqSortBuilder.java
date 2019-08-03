@@ -2,6 +2,7 @@ package org.blackdread.lib.restfilter.spring.sort;
 
 import org.jooq.Field;
 import org.jooq.Param;
+import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,9 +30,11 @@ public class JooqSortBuilder {
 
     private final Map<String, Collection<Field<?>>> fieldByAliasMap = new HashMap<>();
 
-    private final Map<String, Collection<Param<?>>> inlineByAliasMap = new HashMap<>();
+    private final Map<String, Collection<Param<Integer>>> inlineByAliasMap = new HashMap<>();
 
     private Sort defaultSort;
+
+    private Collection<? extends SortField<?>> defaultSortFields;
 
     private boolean enableCaseInsensitiveSort = true;
 
@@ -52,6 +55,15 @@ public class JooqSortBuilder {
         this.enableNullHandling = copy.enableNullHandling;
         this.throwOnSortPropertyNotFound = copy.throwOnSortPropertyNotFound;
         this.throwOnAliasNotFound = copy.throwOnAliasNotFound;
+    }
+
+    /**
+     * Constructs a new {@code JooqSortBuilder} instance with default settings.
+     *
+     * @return builder
+     */
+    public static JooqSortBuilder newBuilder() {
+        return new JooqSortBuilder();
     }
 
     /**
@@ -120,7 +132,7 @@ public class JooqSortBuilder {
     public JooqSortBuilder addAliasInline(final String alias, final int... indexes) {
         checkAliasNotAlreadyDefined(alias);
         final JooqSortBuilder copy = new JooqSortBuilder(this);
-        copy.inlineByAliasMap.put(alias, Arrays.asList(indexes).stream().map(DSL::inline).collect(Collectors.toList()));
+        copy.inlineByAliasMap.put(alias, Arrays.stream(indexes).mapToObj(DSL::inline).collect(Collectors.toList()));
         return copy;
     }
 
@@ -161,14 +173,42 @@ public class JooqSortBuilder {
     /**
      * Is used when methods from {@link JooqSort} receive parameters that resolve to no sorting.
      * <br/>
+     * The sorting is hard-coded but may be dynamic , in opposite to {@link #withDefaultOrdering(Collection)}.
+     * <br/>
      * When a property/alias is not found, it is possible to default to this ordering, it is applied only if all sort in {@link Sort} passed are not found and appropriate "throws on not found" set to false.
+     * <br/>
+     * It is exclusive with {@link #withDefaultOrdering(Collection)}, will throw if other one was defined.
      *
      * @param defaultSort default sort to use
      * @return new {@code JooqSortBuilder} instance (for chaining)
      */
     public JooqSortBuilder withDefaultOrdering(final Sort defaultSort) {
+        if (this.defaultSortFields != null) {
+            throw new IllegalStateException("Default sort with fields is already defined");
+        }
         final JooqSortBuilder copy = new JooqSortBuilder(this);
         copy.defaultSort = defaultSort;
+        return copy;
+    }
+
+    /**
+     * Is used when methods from {@link JooqSort} receive parameters that resolve to no sorting.
+     * <br/>
+     * The sorting is hard-coded as all SortFields are defined in advance, in opposite to {@link #withDefaultOrdering(Sort)}.
+     * <br/>
+     * When a property/alias is not found, it is possible to default to this ordering, it is applied only if all sort in {@link Sort} passed are not found and appropriate "throws on not found" set to false.
+     * <br/>
+     * It is exclusive with {@link #withDefaultOrdering(Sort)}, will throw if other one was defined.
+     *
+     * @param defaultSortFields default sort fields to use
+     * @return new {@code JooqSortBuilder} instance (for chaining)
+     */
+    public JooqSortBuilder withDefaultOrdering(final Collection<? extends SortField<?>> defaultSortFields) {
+        if (this.defaultSort != null) {
+            throw new IllegalStateException("Default sort is already defined");
+        }
+        final JooqSortBuilder copy = new JooqSortBuilder(this);
+        copy.defaultSortFields = defaultSortFields;
         return copy;
     }
 
@@ -193,6 +233,25 @@ public class JooqSortBuilder {
     }
 
     // todo can pass a custom sort property/field/alias resolver
+
+    /**
+     * This method does not alter the state of this {@code JooqSortBuilder} instance, so it can be
+     * invoked again to create multiple independent JooqSort.
+     *
+     * @return a JooqSort with features specified in this builder
+     */
+    public JooqSort build() {
+        return new JooqSortImpl(
+            fieldByAliasMap,
+            inlineByAliasMap,
+            defaultSort,
+            defaultSortFields,
+            enableCaseInsensitiveSort,
+            enableNullHandling,
+            throwOnSortPropertyNotFound,
+            throwOnAliasNotFound
+        );
+    }
 
     private void checkAliasNotAlreadyDefined(final String alias) {
         if (fieldByAliasMap.containsKey(alias))

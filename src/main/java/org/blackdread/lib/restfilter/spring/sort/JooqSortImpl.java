@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,6 +28,8 @@ public class JooqSortImpl implements JooqSort {
 
     private final Sort defaultSort;
 
+    private final Collection<? extends SortField<?>> defaultSortFields;
+
     private final boolean enableCaseInsensitiveSort;
 
     private final boolean enableNullHandling;
@@ -35,9 +38,10 @@ public class JooqSortImpl implements JooqSort {
 
     private final boolean throwOnAliasNotFound;
 
-    JooqSortImpl(Map<String, Collection<Field<?>>> fieldByAliasMap, Map<String, Collection<Param<Integer>>> inlineByAliasMap, Sort defaultSort, boolean enableCaseInsensitiveSort, boolean enableNullHandling, boolean throwOnSortPropertyNotFound, boolean throwOnAliasNotFound) {
+    JooqSortImpl(Map<String, Collection<Field<?>>> fieldByAliasMap, Map<String, Collection<Param<Integer>>> inlineByAliasMap, Sort defaultSort, Collection<? extends SortField<?>> defaultSortFields, boolean enableCaseInsensitiveSort, boolean enableNullHandling, boolean throwOnSortPropertyNotFound, boolean throwOnAliasNotFound) {
         this.fieldByAliasMap = Collections.unmodifiableMap(new HashMap<>(fieldByAliasMap));
-        this.inlineByAliasMap = Collections.unmodifiableMap(new HashMap<>(inlineByAliasMap));;
+        this.inlineByAliasMap = Collections.unmodifiableMap(new HashMap<>(inlineByAliasMap));
+        this.defaultSortFields = defaultSortFields;
         this.defaultSort = defaultSort;
         this.enableCaseInsensitiveSort = enableCaseInsensitiveSort;
         this.enableNullHandling = enableNullHandling;
@@ -52,12 +56,21 @@ public class JooqSortImpl implements JooqSort {
 
     @Override
     public Collection<? extends SortField<?>> buildOrderBy(Sort sort, Field<?>... fields) {
-        return null;
+        if (fields == null || fields.length == 0) {
+            log.info("Fields null or empty");
+            return getDefaultOrEmpty();
+        }
+        return buildOrderBy(sort, Arrays.asList(fields));
     }
 
     @Override
     public Collection<? extends SortField<?>> buildOrderBy(Sort sort, Collection<Field<?>> fields) {
         return null;
+    }
+
+    private Collection<? extends SortField<?>> getDefaultOrEmpty() {
+        // todo default sort
+        return Collections.emptyList();
     }
 
     private <T> SortField<T> convertToSortField(final Field<T> field, final Sort.Order order) {
