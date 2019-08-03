@@ -28,6 +28,8 @@ public class JooqSortUtil {
     // todo maybe do a immutable builder so can pass default sorting (when no sorting or etc), etc, build once, can be build in each repo/service/etc. And options can be put in the builder so different logic while providing the abstraction of creating dynamic sort
     //   so this util class will create a default builder and use it
 
+    // todo provide alias for fields so Sort can used different name than back-end db name, etc
+
     /**
      * @param sort   sort
      * @param select select
@@ -74,52 +76,68 @@ public class JooqSortUtil {
             .collect(Collectors.toList());
     }
 
+    // todo add support for sort by index (inline)
+
     public static <T> SortField<T> convertToSortField(final Field<T> field, final Sort.Order order) {
         final Sort.Direction direction = order.getDirection();
         final Sort.NullHandling nullHandling = order.getNullHandling();
         final boolean ignoreCase = order.isIgnoreCase();
 
         final Field<T> fieldCase;
-        if (ignoreCase && String.class.equals(field.getType())) {
-            Field<T> tmp;
-            // See https://www.jooq.org/doc/3.11/manual/sql-building/column-expressions/case-sensitivity/
-            try {
-                tmp = (Field<T>) DSL.upper((Field<String>) field);
-            } catch (ClassCastException e) {
-                log.info("Failed to cast {} to Field<String>", field);
-                tmp = field;
-            }
-            fieldCase = tmp;
+        if (ignoreCase) {
+            fieldCase = tryConvertSortIgnoreCase(field);
         } else {
             fieldCase = field;
         }
-        final SortField<T> result;
-        switch (direction) {
-            case ASC:
-                result = fieldCase.asc();
-                break;
-            case DESC:
-                result = fieldCase.desc();
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + direction);
+        final SortField<T> sortField = convertToSortField(fieldCase, direction);
+        applyNullHandling(sortField, nullHandling);
+
+        return sortField;
+    }
+
+    /**
+     * Try to apply a sort that ignore case on the field, if fails then return the field passed
+     *
+     * @param field field to sort on
+     * @param <T>   field type
+     * @return new field with sort ignore case or passed field
+     */
+    static <T> Field<T> tryConvertSortIgnoreCase(final Field<T> field) {
+        if (!String.class.equals(field.getType())) {
+            return field;
         }
+
+        // See https://www.jooq.org/doc/3.11/manual/sql-building/column-expressions/case-sensitivity/
+        try {
+            return (Field<T>) DSL.upper((Field<String>) field);
+        } catch (ClassCastException e) {
+            log.info("Failed to cast {} to Field<String>", field);
+            return field;
+        }
+    }
+
+    /**
+     * jOOQ modifies the field data so no object returned
+     *
+     * @param sortField    sort field to apply null handling
+     * @param nullHandling type to apply
+     * @param <T>          sortField type
+     */
+    static <T> void applyNullHandling(SortField<T> sortField, Sort.NullHandling nullHandling) {
         switch (nullHandling) {
             case NATIVE:
                 // do nothing
                 break;
             case NULLS_FIRST:
-                result.nullsFirst();
+                sortField.nullsFirst();
                 break;
             case NULLS_LAST:
-                result.nullsLast();
+                sortField.nullsLast();
                 break;
         }
-
-        return result;
     }
 
-    private static <T> SortField<T> convertToSortField(final Field<T> field, final Sort.Direction direction) {
+    static <T> SortField<T> convertToSortField(final Field<T> field, final Sort.Direction direction) {
         switch (direction) {
             case ASC:
                 return field.asc();
