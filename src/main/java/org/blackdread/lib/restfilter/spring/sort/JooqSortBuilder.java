@@ -174,7 +174,7 @@ public class JooqSortBuilder {
     /**
      * Is used when methods from {@link JooqSort} receive parameters that resolve to no sorting.
      * <br/>
-     * The sorting is hard-coded but may be dynamic , in opposite to {@link #withDefaultOrdering(Collection)}.
+     * The sorting is hard-coded but may be dynamic, in opposite to {@link #withDefaultOrdering(Collection)}.
      * <br/>
      * When a property/alias is not found, it is possible to default to this ordering, it is applied only if all sort in {@link Sort} passed are not found and appropriate "throws on not found" set to false.
      * <br/>
@@ -182,6 +182,7 @@ public class JooqSortBuilder {
      *
      * @param defaultSort default sort to use
      * @return new {@code JooqSortBuilder} instance (for chaining)
+     * @throws IllegalStateException if {@link #withDefaultOrdering(Collection)} is defined (non null)
      */
     public JooqSortBuilder withDefaultOrdering(final Sort defaultSort) {
         if (this.defaultSortFields != null) {
@@ -203,6 +204,7 @@ public class JooqSortBuilder {
      *
      * @param defaultSortFields default sort fields to use
      * @return new {@code JooqSortBuilder} instance (for chaining)
+     * @throws IllegalStateException if {@link #withDefaultOrdering(Sort)} is defined (non null)
      */
     public JooqSortBuilder withDefaultOrdering(final Collection<? extends SortField<?>> defaultSortFields) {
         if (this.defaultSort != null) {
@@ -256,7 +258,9 @@ public class JooqSortBuilder {
 
     private void checkAliasNotAlreadyDefined(final String alias) {
         if (fieldByAliasMap.containsKey(alias))
-            throw new IllegalArgumentException(String.format("Alias \"%s\" already defined", alias));
+            throw new IllegalStateException(String.format("Field alias \"%s\" already defined", alias));
+        if (inlineByAliasMap.containsKey(alias))
+            throw new IllegalStateException(String.format("Inline alias \"%s\" already defined", alias));
     }
 
     // fallbackOnSortPropertyNotFound
