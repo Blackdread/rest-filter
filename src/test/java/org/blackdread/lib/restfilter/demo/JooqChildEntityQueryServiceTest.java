@@ -5,7 +5,6 @@ import org.blackdread.lib.restfilter.demo.jooq.tables.records.ChildEntityRecord;
 import org.blackdread.lib.restfilter.spring.sort.JooqSortUtil;
 import org.jooq.Condition;
 import org.jooq.Field;
-import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +24,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -299,22 +297,15 @@ public class JooqChildEntityQueryServiceTest {
 
     @Test
     public void buildWithNullSort() {
-        final Collection<? extends SortField<?>> sortFields = JooqSortUtil.buildOrderBy(null, CHILD_ENTITY.fields());
-        final Collection<? extends SortField<?>> sortFields2 = JooqSortUtil.buildOrderBy(null, Arrays.asList(CHILD_ENTITY.fields()));
-
-        Assertions.assertEquals(Collections.emptyList(), sortFields);
-        Assertions.assertEquals(Collections.emptyList(), sortFields2);
+        Assertions.assertThrows(NullPointerException.class, () -> JooqSortUtil.buildOrderBy(null, CHILD_ENTITY.fields()));
+        Assertions.assertThrows(NullPointerException.class, () -> JooqSortUtil.buildOrderBy(null, Arrays.asList(CHILD_ENTITY.fields())));
     }
 
     @Test
     public void buildWithEmptyFields() {
-        final Collection<? extends SortField<?>> sortFields = JooqSortUtil.buildOrderBy(null, (Field<?>) null);
-        final Collection<? extends SortField<?>> sortFields1 = JooqSortUtil.buildOrderBy(null);
-        final Collection<? extends SortField<?>> sortFields2 = JooqSortUtil.buildOrderBy(null, Collections.emptyList());
-
-        Assertions.assertEquals(Collections.emptyList(), sortFields);
-        Assertions.assertEquals(Collections.emptyList(), sortFields1);
-        Assertions.assertEquals(Collections.emptyList(), sortFields2);
+        Assertions.assertThrows(NullPointerException.class, () -> JooqSortUtil.buildOrderBy(null, (Field<?>) null));
+        Assertions.assertThrows(NullPointerException.class, () -> JooqSortUtil.buildOrderBy(null));
+        Assertions.assertThrows(NullPointerException.class, () -> JooqSortUtil.buildOrderBy(null, Collections.emptyList()));
     }
 
     @Test
@@ -360,20 +351,22 @@ public class JooqChildEntityQueryServiceTest {
     }
 
     @Test
-    public void sortOnUnknownFieldIsIgnored() {
+    public void sortOnUnknownFieldThrows() {
         buildDataForSortTest();
 
         final Sort sort = Sort.by("iDoNotExist", "meToo2");
-        final List<ChildEntityRecord> sorted = jooqChildEntityQueryService.findAll(null, sort);
-        final Page<ChildEntityRecord> sorted2 = jooqChildEntityQueryService.findAll(null, PageRequest.of(0, 50, sort));
-        final List<Integer> list = sorted.stream().map(ChildEntityRecord::getCount).collect(Collectors.toList());
-        final List<Integer> list2 = sorted2.stream().map(ChildEntityRecord::getCount).collect(Collectors.toList());
-
-        final List<Integer> expected = Arrays.asList(5, 9, 15, 12, 1);
-        Assertions.assertEquals(expected, list);
-        Assertions.assertEquals(expected, list2);
-        Collections.reverse(expected);
-        Assertions.assertNotEquals(expected, list);
+        Assertions.assertThrows(IllegalArgumentException.class, () -> jooqChildEntityQueryService.findAll(null, sort));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> jooqChildEntityQueryService.findAll(null, PageRequest.of(0, 50, sort)));
+//        final List<ChildEntityRecord> sorted = jooqChildEntityQueryService.findAll(null, sort);
+//        final Page<ChildEntityRecord> sorted2 = jooqChildEntityQueryService.findAll(null, PageRequest.of(0, 50, sort));
+//        final List<Integer> list = sorted.stream().map(ChildEntityRecord::getCount).collect(Collectors.toList());
+//        final List<Integer> list2 = sorted2.stream().map(ChildEntityRecord::getCount).collect(Collectors.toList());
+//
+//        final List<Integer> expected = Arrays.asList(5, 9, 15, 12, 1);
+//        Assertions.assertEquals(expected, list);
+//        Assertions.assertEquals(expected, list2);
+//        Collections.reverse(expected);
+//        Assertions.assertNotEquals(expected, list);
     }
 
     @Test

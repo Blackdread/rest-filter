@@ -66,6 +66,7 @@ public class JooqSortImpl implements JooqSort {
             return result;
         }
 
+        // Below both default sort are supported at the same time
         List<? extends SortField<?>> resultWithDefault = Collections.emptyList();
         if (defaultSort != null) {
             resultWithDefault = getSortFields(defaultSort);
@@ -73,21 +74,21 @@ public class JooqSortImpl implements JooqSort {
         if (defaultSortFields != null && resultWithDefault.isEmpty()) {
             return defaultSortFields;
         }
-        return defaultSortFields;
+        return resultWithDefault;
     }
 
     private List<? extends SortField<?>> getSortFields(final Sort sort) {
         return sort.stream()
             .map(order -> {
                 final String property = order.getProperty();
-                final Collection<Param<Integer>> params = inlineByAliasMap.get(property);
-                final Collection<Field<?>> fields = fieldByAliasMap.get(property);
-                if (params != null) {
-                    return params.stream()
+                final Collection<Param<Integer>> aliasParams = inlineByAliasMap.get(property);
+                final Collection<Field<?>> aliasFields = fieldByAliasMap.get(property);
+                if (aliasParams != null) {
+                    return aliasParams.stream()
                         .map(param -> convertToSortField(param, order))
                         .collect(Collectors.toList());
-                } else if (fields != null) {
-                    return fields.stream()
+                } else if (aliasFields != null) {
+                    return aliasFields.stream()
                         .map(field -> convertToSortField(field, order))
                         .collect(Collectors.toList());
                 } else {
@@ -105,21 +106,67 @@ public class JooqSortImpl implements JooqSort {
 
     @Override
     public Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
-        if (fields == null || fields.length == 0) {
-            log.info("Fields null or empty");
-            return getDefaultOrEmpty();
+        if (fields == null || fields.length == 0 || Arrays.stream(fields).allMatch(Objects::isNull)) {
+            return buildOrderBy(sort, Collections.emptyList());
         }
         return buildOrderBy(sort, Arrays.asList(fields));
     }
 
     @Override
     public Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
-        return null;
+        final List<? extends SortField<?>> result = getSortFields(sort, fields);
+
+        if (!result.isEmpty()) {
+            return result;
+        }
+
+        // Below both default sort are supported at the same time
+        List<? extends SortField<?>> resultWithDefault = Collections.emptyList();
+        if (defaultSort != null) {
+            resultWithDefault = getSortFields(defaultSort, fields);
+        }
+        if (defaultSortFields != null && resultWithDefault.isEmpty()) {
+            return defaultSortFields;
+        }
+        return resultWithDefault;
     }
 
-    private Collection<? extends SortField<?>> getDefaultOrEmpty() {
-        // todo default sort
-        return Collections.emptyList();
+    private List<? extends SortField<?>> getSortFields(final Sort sort, final Collection<Field<?>> fields) {
+        final Map<String, ? extends Field<?>> nameFieldMap = fields.stream()
+            .collect(Collectors.toMap(Field::getName, field -> field));
+
+        return sort.stream()
+            .map(order -> {
+                final String property = order.getProperty();
+                final Collection<Param<Integer>> aliasParams = inlineByAliasMap.get(property);
+                final Collection<Field<?>> aliasFields = fieldByAliasMap.get(property);
+
+                // aliases have priority over fields passed
+                if (aliasParams != null) {
+                    return aliasParams.stream()
+                        .map(param -> convertToSortField(param, order))
+                        .collect(Collectors.toList());
+                } else if (aliasFields != null) {
+                    return aliasFields.stream()
+                        .map(field -> convertToSortField(field, order))
+                        .collect(Collectors.toList());
+                } else if (!fields.isEmpty()) {
+                    final Field<?> field = nameFieldMap.get(order.getProperty());
+                    if (field != null) {
+                        final SortField<?> sortField = convertToSortField(field, order);
+                        return Collections.singletonList(sortField);
+                    }
+                }
+
+                if (throwOnSortPropertyNotFound) {
+                    throw new IllegalArgumentException(String.format("Property '%s' not found", property));
+                }
+                log.info("Property '{}' not found but ignored", property);
+                return null;
+            })
+            .filter(Objects::nonNull)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
     }
 
     private <T> SortField<T> convertToSortField(final Field<T> field, final Sort.Order order) {
@@ -128,13 +175,15 @@ public class JooqSortImpl implements JooqSort {
         final boolean ignoreCase = order.isIgnoreCase();
 
         final Field<T> fieldCase;
-        if (ignoreCase) {
+        if (ignoreCase && enableCaseInsensitiveSort) {
             fieldCase = JooqSortUtil.tryConvertSortIgnoreCase(field);
         } else {
             fieldCase = field;
         }
         final SortField<T> sortField = JooqSortUtil.convertToSortField(fieldCase, direction);
-        JooqSortUtil.applyNullHandling(sortField, nullHandling);
+        if (enableNullHandling) {
+            JooqSortUtil.applyNullHandling(sortField, nullHandling);
+        }
 
         return sortField;
     }

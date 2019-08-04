@@ -8,13 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * <p>Created on 2019/07/24.</p>
@@ -25,27 +20,30 @@ public class JooqSortUtil {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortUtil.class);
 
-    // todo maybe do a immutable builder so can pass default sorting (when no sorting or etc), etc, build once, can be build in each repo/service/etc. And options can be put in the builder so different logic while providing the abstraction of creating dynamic sort
-    //   so this util class will create a default builder and use it
+    private static final JooqSort DEFAULT_JOOQ_SORT = JooqSortBuilder.newBuilder()
+        .build();
 
-    // todo provide alias for fields so Sort can used different name than back-end db name, etc
+    // todo provide a static method to provide alias for fields so Sort can use different property name than back-end db name, etc
 
     /**
-     * @param sort   sort
-     * @param select select
-     * @return sort fields
+     * @param sort   the sort to build, property names must match field name (so careful with field alias etc)
+     * @param select select from which fields can be extracted and used for ordering
+     * @return Sort fields to be used in the orderBy query of jooq
      * @deprecated not sure of that yet
      */
     @Deprecated
     static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Select<?> select) {
         final List<Field<?>> fields = select.getSelect();
-        return buildOrderBy(sort, fields);
+        return DEFAULT_JOOQ_SORT.buildOrderBy(sort, fields);
     }
 
+    /**
+     * @param sort   the sort to build, property names must match field name (so careful with field alias etc)
+     * @param fields fields that are part of the select so can be ordered
+     * @return Sort fields to be used in the orderBy query of jooq
+     */
     public static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
-        if (fields == null || fields.length == 0)
-            return Collections.emptyList();
-        return buildOrderBy(sort, Arrays.asList(fields));
+        return DEFAULT_JOOQ_SORT.buildOrderBy(sort, fields);
     }
 
     /**
@@ -54,29 +52,10 @@ public class JooqSortUtil {
      * @return Sort fields to be used in the orderBy query of jooq
      */
     public static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
-        if (sort == null) {
-            return Collections.emptyList();
-        }
-
-        final Map<String, ? extends Field<?>> nameFieldMap = fields.stream()
-            .collect(Collectors.toMap(Field::getName, field -> field));
-
-        return sort.stream()
-            .filter(Objects::nonNull)
-            .map(order -> {
-                final Field<?> field = nameFieldMap.get(order.getProperty());
-                if (field == null) {
-                    // todo ignore not found. See if we throw instead
-                    log.warn("Did not find field with name {} in {}", order.getProperty(), fields);
-                    return null;
-                }
-                return convertToSortField(field, order);
-            })
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
+        return DEFAULT_JOOQ_SORT.buildOrderBy(sort, fields);
     }
 
-    // todo add support for sort by index (inline)
+    // todo add static support for sort by index (inline)
 
     public static <T> SortField<T> convertToSortField(final Field<T> field, final Sort.Order order) {
         final Sort.Direction direction = order.getDirection();

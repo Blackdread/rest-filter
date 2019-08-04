@@ -66,7 +66,7 @@ class JooqSortTest {
     void buildOrderByDoesNotThrowsIfNoAliasForFieldsPassed() {
         final JooqSort jooqSort = builder.build();
         assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, fieldLong));
-        assertDoesNotThrow(() -> jooqSort.buildOrderBy(SORT_1_2, FIELDS_1_2));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(SORT_1_2, FIELDS_1_2));
     }
 
     @Test
@@ -84,7 +84,7 @@ class JooqSortTest {
     void buildOrderByCanTakeNull() {
         final JooqSort jooqSort = builder.build();
         assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, (Field<?>) null));
-        assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, Collections.singleton(null)));
+        assertThrows(NullPointerException.class, () -> jooqSort.buildOrderBy(UNSORTED, Collections.singleton(null)));
     }
 
     @Test
