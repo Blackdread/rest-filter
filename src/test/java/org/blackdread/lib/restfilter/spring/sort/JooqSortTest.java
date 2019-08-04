@@ -11,9 +11,9 @@ import org.springframework.data.domain.Sort;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * <p>Created on 2019/08/04.</p>
@@ -33,8 +33,10 @@ class JooqSortTest {
 
     private static final Field<Integer> fieldInt = DSL.field(ALIAS_1, Integer.class);
     private static final Field<Integer> fieldInt2 = DSL.field(ALIAS_2, Integer.class);
+    private static final Field<Integer> fieldInt3 = DSL.field(ALIAS_3, Integer.class);
 
     private static final Sort UNSORTED = Sort.unsorted();
+    private static final Sort SORT_1 = Sort.by(Sort.Order.asc(ALIAS_1));
     private static final Sort SORT_1_2 = Sort.by(Sort.Order.asc(ALIAS_1), Sort.Order.desc(ALIAS_2));
     private static final Sort SORT_1_2_3 = Sort.by(Sort.Order.asc(ALIAS_1), Sort.Order.desc(ALIAS_2), Sort.Order.asc(ALIAS_3));
     private static final Sort SORT_IGNORE_CASE = Sort.by(Sort.Order.asc(ALIAS_1).nullsLast(), Sort.Order.desc(ALIAS_2).nullsFirst(), Sort.Order.asc(ALIAS_3));
@@ -88,10 +90,66 @@ class JooqSortTest {
     }
 
     @Test
-    void buildOrderBy() {
+    void buildOrderByWithSort() {
+        final JooqSort jooqSort = builder
+            .addAlias(ALIAS_1, fieldInt)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(SORT_1);
+
+        assertEquals(1, result.size());
+        assertEquals(fieldInt.asc(), result.get(0));
     }
 
     @Test
-    void buildOrderBy1() {
+    void buildOrderByWithSortInline() {
+        final JooqSort jooqSort = builder
+            .addAlias(ALIAS_1, fieldInt)
+            .addAlias("anything", fieldLong)
+            .addAliasInline(ALIAS_2, 5)
+            .addAliasInline(ALIAS_3, 2)
+            .withDefaultOrdering(SORT_1)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(SORT_1_2_3);
+
+        assertEquals(3, result.size());
+        assertEquals(fieldInt.asc(), result.get(0));
+        assertEquals(DSL.inline(5).desc(), result.get(1));
+        assertEquals(DSL.inline(2).asc(), result.get(2));
     }
+
+    @Test
+    void buildOrderByWithDefaultSort() {
+        final JooqSort jooqSort = builder
+            .addAlias(ALIAS_1, fieldInt)
+            .addAlias("anything", fieldLong)
+            .withDefaultOrdering(SORT_1)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(UNSORTED);
+
+        assertEquals(1, result.size());
+        assertEquals(fieldInt.asc(), result.get(0));
+    }
+
+    @Test
+    void buildOrderByWithDefaultSortFields() {
+        final JooqSort jooqSort = builder
+            .addAlias(ALIAS_1, fieldInt)
+            .addAlias("anything", fieldLong)
+            .withDefaultOrdering(SORT_1_2_FIELDS)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(UNSORTED);
+
+        assertEquals(2, result.size());
+        assertEquals(fieldLong.asc(), result.get(0));
+        assertEquals(fieldString.desc(), result.get(1));
+        assertNotSame(SORT_1_2_FIELDS, result);
+    }
+
+    @Test
+    void buildOrderBy() {
+    }
+
+//    @Test
+//    void buildOrderBy() {
+//    }
 }

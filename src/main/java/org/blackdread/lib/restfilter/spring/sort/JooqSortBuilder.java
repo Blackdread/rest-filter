@@ -235,7 +235,7 @@ public class JooqSortBuilder {
             throw new IllegalStateException("Default sort is already defined");
         }
         final JooqSortBuilder copy = new JooqSortBuilder(this);
-        copy.defaultSortFields = defaultSortFields;
+        copy.defaultSortFields = defaultSortFields == null ? null : new ArrayList<>(defaultSortFields);
         return copy;
     }
 

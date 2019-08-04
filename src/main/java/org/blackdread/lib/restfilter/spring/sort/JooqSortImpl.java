@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -56,7 +57,7 @@ public class JooqSortImpl implements JooqSort {
     // Only one of defaultSort/defaultSortFields may be not null -> todo I forgot why, maybe both could be defined
     private final Sort defaultSort;
 
-    private final Collection<? extends SortField<?>> defaultSortFields;
+    private final List<? extends SortField<?>> defaultSortFields;
 
     private final boolean enableCaseInsensitiveSort;
 
@@ -69,7 +70,7 @@ public class JooqSortImpl implements JooqSort {
     JooqSortImpl(Map<String, Collection<Field<?>>> fieldByAliasMap, Map<String, Collection<Param<Integer>>> inlineByAliasMap, @Nullable Sort defaultSort, @Nullable Collection<? extends SortField<?>> defaultSortFields, boolean enableCaseInsensitiveSort, boolean enableNullHandling, boolean throwOnSortPropertyNotFound, boolean throwOnAliasNotFound) {
         this.fieldByAliasMap = Collections.unmodifiableMap(new HashMap<>(fieldByAliasMap));
         this.inlineByAliasMap = Collections.unmodifiableMap(new HashMap<>(inlineByAliasMap));
-        this.defaultSortFields = defaultSortFields;
+        this.defaultSortFields = defaultSortFields == null ? null : new ArrayList<>(defaultSortFields);
         this.defaultSort = defaultSort;
         this.enableCaseInsensitiveSort = enableCaseInsensitiveSort;
         this.enableNullHandling = enableNullHandling;
@@ -78,7 +79,7 @@ public class JooqSortImpl implements JooqSort {
     }
 
     @Override
-    public Collection<? extends SortField<?>> buildOrderBy(final Sort sort) {
+    public List<? extends SortField<?>> buildOrderBy(final Sort sort) {
         if (fieldByAliasMap.isEmpty() && inlineByAliasMap.isEmpty()) {
             throw new IllegalStateException("No alias were defined, method with Sort only is not supported");
         }
@@ -128,7 +129,7 @@ public class JooqSortImpl implements JooqSort {
     }
 
     @Override
-    public Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
+    public List<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
         if (fields == null || fields.length == 0 || Arrays.stream(fields).allMatch(Objects::isNull)) {
             return buildOrderBy(sort, Collections.emptyList());
         }
@@ -136,7 +137,7 @@ public class JooqSortImpl implements JooqSort {
     }
 
     @Override
-    public Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
+    public List<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
         final List<? extends SortField<?>> result = getSortFields(sort, fields);
 
         if (!result.isEmpty()) {

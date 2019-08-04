@@ -55,7 +55,7 @@ public class JooqSortUtil {
      * @deprecated not sure of that yet
      */
     @Deprecated
-    static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Select<?> select) {
+    static List<? extends SortField<?>> buildOrderBy(final Sort sort, final Select<?> select) {
         final List<Field<?>> fields = select.getSelect();
         return DEFAULT_JOOQ_SORT.buildOrderBy(sort, fields);
     }
@@ -65,7 +65,7 @@ public class JooqSortUtil {
      * @param fields fields that are part of the select so can be ordered
      * @return Sort fields to be used in the orderBy query of jooq
      */
-    public static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
+    public static List<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
         return DEFAULT_JOOQ_SORT.buildOrderBy(sort, fields);
     }
 
@@ -74,7 +74,7 @@ public class JooqSortUtil {
      * @param fields fields that are part of the select so can be ordered
      * @return Sort fields to be used in the orderBy query of jooq
      */
-    public static Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
+    public static List<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
         return DEFAULT_JOOQ_SORT.buildOrderBy(sort, fields);
     }
 
