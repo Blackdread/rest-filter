@@ -13,6 +13,11 @@ import java.util.Collection;
  */
 public interface JooqSort {
 
+    /**
+     * @param sort the sort to use (from REST usually), property names must match aliases
+     * @return Sort fields to be used in the orderBy query of jooq
+     * @throws IllegalStateException if this was built without any alias (no alias would always return an empty collection or the default sort if was provided)
+     */
     Collection<? extends SortField<?>> buildOrderBy(final Sort sort);
 
     /**

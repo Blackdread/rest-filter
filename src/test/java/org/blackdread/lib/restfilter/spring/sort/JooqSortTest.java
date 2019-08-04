@@ -11,6 +11,9 @@ import org.springframework.data.domain.Sort;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
  * <p>Created on 2019/08/04.</p>
  *
@@ -37,6 +40,8 @@ class JooqSortTest {
     private static final Sort SORT_NULL_HANDLE = Sort.by(Sort.Order.asc(ALIAS_1).ignoreCase(), Sort.Order.desc(ALIAS_2), Sort.Order.asc(ALIAS_3).ignoreCase());
     private static final Sort SORT_ALL = Sort.by(Sort.Order.asc(ALIAS_1).nullsLast().ignoreCase(), Sort.Order.desc(ALIAS_2).nullsFirst(), Sort.Order.asc(ALIAS_3).ignoreCase());
 
+    private static final Collection<Field<?>> FIELDS_1_2 = Arrays.asList(fieldLong, fieldString);
+
     private static final Collection<SortField<?>> SORT_1_2_FIELDS = Arrays.asList(fieldLong.asc(), fieldString.desc());
     private static final Collection<SortField<?>> SORT_1_2_FIELDS_ALIAS = Arrays.asList(fieldLong.asc().nullsFirst(), fieldString.desc(), fieldInt.asc(), fieldInt2.desc().nullsLast());
 
@@ -50,14 +55,25 @@ class JooqSortTest {
     }
 
     @Test
+    void buildOrderByThrowsIfNoAlias() {
+        final JooqSort jooqSort = builder.build();
+        assertThrows(IllegalStateException.class, () -> jooqSort.buildOrderBy(UNSORTED));
+        assertThrows(IllegalStateException.class, () -> jooqSort.buildOrderBy(SORT_1_2));
+    }
+
+    @Test
+    void buildOrderByDoesNotThrowsIfNoAliasForFieldsPassed() {
+        final JooqSort jooqSort = builder
+            .build();
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, fieldLong));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(SORT_1_2, FIELDS_1_2));
+    }
+
+    @Test
     void buildOrderBy() {
     }
 
     @Test
-    void testBuildOrderBy() {
-    }
-
-    @Test
-    void testBuildOrderBy1() {
+    void buildOrderBy1() {
     }
 }

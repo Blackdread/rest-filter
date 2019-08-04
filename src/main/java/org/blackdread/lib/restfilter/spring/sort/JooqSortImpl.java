@@ -7,11 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>Created on 2019/08/03.</p>
@@ -26,6 +30,7 @@ public class JooqSortImpl implements JooqSort {
 
     private final Map<String, Collection<Param<Integer>>> inlineByAliasMap;
 
+    // Only one of defaultSort/defaultSortFields may be not null
     private final Sort defaultSort;
 
     private final Collection<? extends SortField<?>> defaultSortFields;
@@ -38,7 +43,7 @@ public class JooqSortImpl implements JooqSort {
 
     private final boolean throwOnAliasNotFound;
 
-    JooqSortImpl(Map<String, Collection<Field<?>>> fieldByAliasMap, Map<String, Collection<Param<Integer>>> inlineByAliasMap, Sort defaultSort, Collection<? extends SortField<?>> defaultSortFields, boolean enableCaseInsensitiveSort, boolean enableNullHandling, boolean throwOnSortPropertyNotFound, boolean throwOnAliasNotFound) {
+    JooqSortImpl(Map<String, Collection<Field<?>>> fieldByAliasMap, Map<String, Collection<Param<Integer>>> inlineByAliasMap, @Nullable Sort defaultSort, @Nullable Collection<? extends SortField<?>> defaultSortFields, boolean enableCaseInsensitiveSort, boolean enableNullHandling, boolean throwOnSortPropertyNotFound, boolean throwOnAliasNotFound) {
         this.fieldByAliasMap = Collections.unmodifiableMap(new HashMap<>(fieldByAliasMap));
         this.inlineByAliasMap = Collections.unmodifiableMap(new HashMap<>(inlineByAliasMap));
         this.defaultSortFields = defaultSortFields;
@@ -50,12 +55,69 @@ public class JooqSortImpl implements JooqSort {
     }
 
     @Override
-    public Collection<? extends SortField<?>> buildOrderBy(Sort sort) {
-        return null;
+    public Collection<? extends SortField<?>> buildOrderBy(final Sort sort) {
+        if (fieldByAliasMap.isEmpty() && inlineByAliasMap.isEmpty()) {
+            throw new IllegalStateException("No alias were defined, method with Sort only is not supported");
+        }
+        Sort sortToUse = sort;
+        if (sort.isUnsorted()) {
+            // could simply ignore this part and at the end return
+            if (defaultSort != null) {
+                sortToUse = defaultSort;
+            } else {
+                return defaultSortFields == null ? Collections.emptyList() : defaultSortFields;
+            }
+        }
+
+        final List<? extends SortField<?>> result = getSortFields(sortToUse);
+
+        if (!result.isEmpty()) {
+            return result;
+        }
+
+        final List<? extends SortField<?>> resultWithDefault;
+        if (defaultSort != null) {
+            if (sortToUse != defaultSort) {
+                resultWithDefault = getSortFields(defaultSort);
+            } else {
+                // already tried with default sort
+            }
+        }
+        if (defaultSortFields != null) {
+
+        }
+
+    }
+
+    private List<? extends SortField<?>> getSortFields(final Sort sort) {
+        return sort.stream()
+            .map(order -> {
+                final String property = order.getProperty();
+                final Collection<Param<Integer>> params = inlineByAliasMap.get(property);
+                final Collection<Field<?>> fields = fieldByAliasMap.get(property);
+                if (params != null) {
+                    return params.stream()
+                        .map(param -> convertToSortField(param, order))
+                        .collect(Collectors.toList());
+                } else if (fields != null) {
+                    return fields.stream()
+                        .map(field -> convertToSortField(field, order))
+                        .collect(Collectors.toList());
+                } else {
+                    if (throwOnAliasNotFound) {
+                        throw new IllegalArgumentException(String.format("Property '%s' not found", property));
+                    }
+                    log.info("Property '{}' not found but ignored", property);
+                    return null;
+                }
+            })
+            .filter(Objects::nonNull)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
     }
 
     @Override
-    public Collection<? extends SortField<?>> buildOrderBy(Sort sort, Field<?>... fields) {
+    public Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields) {
         if (fields == null || fields.length == 0) {
             log.info("Fields null or empty");
             return getDefaultOrEmpty();
@@ -64,7 +126,7 @@ public class JooqSortImpl implements JooqSort {
     }
 
     @Override
-    public Collection<? extends SortField<?>> buildOrderBy(Sort sort, Collection<Field<?>> fields) {
+    public Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Collection<Field<?>> fields) {
         return null;
     }
 
