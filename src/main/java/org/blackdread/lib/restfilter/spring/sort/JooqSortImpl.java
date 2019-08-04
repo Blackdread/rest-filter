@@ -30,7 +30,7 @@ public class JooqSortImpl implements JooqSort {
 
     private final Map<String, Collection<Param<Integer>>> inlineByAliasMap;
 
-    // Only one of defaultSort/defaultSortFields may be not null
+    // Only one of defaultSort/defaultSortFields may be not null -> todo I forgot why, maybe both could be defined
     private final Sort defaultSort;
 
     private final Collection<? extends SortField<?>> defaultSortFields;
@@ -59,34 +59,21 @@ public class JooqSortImpl implements JooqSort {
         if (fieldByAliasMap.isEmpty() && inlineByAliasMap.isEmpty()) {
             throw new IllegalStateException("No alias were defined, method with Sort only is not supported");
         }
-        Sort sortToUse = sort;
-        if (sort.isUnsorted()) {
-            // could simply ignore this part and at the end return
-            if (defaultSort != null) {
-                sortToUse = defaultSort;
-            } else {
-                return defaultSortFields == null ? Collections.emptyList() : defaultSortFields;
-            }
-        }
 
-        final List<? extends SortField<?>> result = getSortFields(sortToUse);
+        final List<? extends SortField<?>> result = getSortFields(sort);
 
         if (!result.isEmpty()) {
             return result;
         }
 
-        final List<? extends SortField<?>> resultWithDefault;
+        List<? extends SortField<?>> resultWithDefault = Collections.emptyList();
         if (defaultSort != null) {
-            if (sortToUse != defaultSort) {
-                resultWithDefault = getSortFields(defaultSort);
-            } else {
-                // already tried with default sort
-            }
+            resultWithDefault = getSortFields(defaultSort);
         }
-        if (defaultSortFields != null) {
-
+        if (defaultSortFields != null && resultWithDefault.isEmpty()) {
+            return defaultSortFields;
         }
-
+        return defaultSortFields;
     }
 
     private List<? extends SortField<?>> getSortFields(final Sort sort) {
