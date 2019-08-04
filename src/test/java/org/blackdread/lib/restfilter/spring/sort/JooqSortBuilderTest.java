@@ -23,32 +23,25 @@ class JooqSortBuilderTest {
 
     private JooqSortBuilder builder;
 
-    private Field<Long> fieldLong;
-    private Field<String> fieldString;
-
-    private Field<Integer> fieldInt;
-    private Field<Integer> fieldInt2;
-
     private static final String ALIAS_1 = "any";
     private static final String ALIAS_2 = "any2";
     private static final String ALIAS_3 = "any3";
 
-    private static final Sort UNSORTED = Sort.unsorted();
-    private static final Sort SORT_1_2 = Sort.by(ALIAS_1, ALIAS_2);
+    private static final Field<Long> fieldLong = DSL.field("my_long", Long.class);
+    private static final Field<String> fieldString = DSL.field("my_string", String.class);
 
-    private Collection<SortField<?>> sort_1_2_fields;
+    private static final Field<Integer> fieldInt = DSL.field(ALIAS_1, Integer.class);
+    private static final Field<Integer> fieldInt2 = DSL.field(ALIAS_2, Integer.class);
+
+    private static final Sort UNSORTED = Sort.unsorted();
+    private static final Sort SORT_1_2 = Sort.by(Sort.Order.asc(ALIAS_1), Sort.Order.desc(ALIAS_2));
+    private static final Sort SORT_1_2_3 = Sort.by(Sort.Order.asc(ALIAS_1), Sort.Order.desc(ALIAS_2), Sort.Order.asc(ALIAS_3));
+
+    private static final Collection<SortField<?>> SORT_1_2_FIELDS = Arrays.asList(fieldLong.asc(), fieldString.desc());
 
     @BeforeEach
     void setUp() {
         builder = JooqSortBuilder.newBuilder();
-
-        fieldLong = DSL.field("my_long", Long.class);
-        fieldString = DSL.field("my_string", String.class);
-
-        fieldInt = DSL.field(ALIAS_1, Integer.class);
-        fieldInt = DSL.field(ALIAS_2, Integer.class);
-
-        sort_1_2_fields = Arrays.asList(fieldLong.asc(), fieldString.desc());
     }
 
     @AfterEach
@@ -161,9 +154,9 @@ class JooqSortBuilderTest {
     @Test
     void withDefaultOrderingThrowsIfEitherAlreadyDefined() {
         final JooqSortBuilder withSort = builder.withDefaultOrdering(SORT_1_2);
-        Assertions.assertThrows(IllegalStateException.class, () -> withSort.withDefaultOrdering(sort_1_2_fields));
+        Assertions.assertThrows(IllegalStateException.class, () -> withSort.withDefaultOrdering(SORT_1_2_FIELDS));
 
-        final JooqSortBuilder withSortFields = builder.withDefaultOrdering(sort_1_2_fields);
+        final JooqSortBuilder withSortFields = builder.withDefaultOrdering(SORT_1_2_FIELDS);
         Assertions.assertThrows(IllegalStateException.class, () -> withSortFields.withDefaultOrdering(SORT_1_2));
     }
 
