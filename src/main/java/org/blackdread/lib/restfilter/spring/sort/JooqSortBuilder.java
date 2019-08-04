@@ -28,6 +28,7 @@ public class JooqSortBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortBuilder.class);
 
+    // fieldByAliasMap and inlineByAliasMap are differentiated but in fact could be one single Map
     private final Map<String, Collection<Field<?>>> fieldByAliasMap = new HashMap<>();
 
     private final Map<String, Collection<Param<Integer>>> inlineByAliasMap = new HashMap<>();

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -63,10 +64,27 @@ class JooqSortTest {
 
     @Test
     void buildOrderByDoesNotThrowsIfNoAliasForFieldsPassed() {
-        final JooqSort jooqSort = builder
-            .build();
+        final JooqSort jooqSort = builder.build();
         assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, fieldLong));
         assertDoesNotThrow(() -> jooqSort.buildOrderBy(SORT_1_2, FIELDS_1_2));
+    }
+
+    @Test
+    void buildOrderByThrowsOnNullSort() {
+        final JooqSort jooqSort = builder
+            .addAlias("anything", DSL.inline(1)) // yes it is possible to do
+            .addAlias("anything2", fieldLong)
+            .build();
+        assertThrows(NullPointerException.class, () -> jooqSort.buildOrderBy(null));
+        assertThrows(NullPointerException.class, () -> jooqSort.buildOrderBy(null, fieldLong, fieldString));
+        assertThrows(NullPointerException.class, () -> jooqSort.buildOrderBy(null, FIELDS_1_2));
+    }
+
+    @Test
+    void buildOrderByCanTakeNull() {
+        final JooqSort jooqSort = builder.build();
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, (Field<?>) null));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(UNSORTED, Collections.singleton(null)));
     }
 
     @Test

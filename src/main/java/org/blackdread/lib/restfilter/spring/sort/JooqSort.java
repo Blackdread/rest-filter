@@ -21,7 +21,7 @@ public interface JooqSort {
     Collection<? extends SortField<?>> buildOrderBy(final Sort sort);
 
     /**
-     * If aliases were defined at creation of this {@link JooqSort}, those will match first instead of fields passed.
+     * If aliases were defined at creation of this {@link JooqSort}, those will match first instead of fields passed (may change on implementation).
      *
      * @param sort   the sort to use (from REST usually), property names must match field name (so careful with field alias etc)
      * @param fields fields that are part of the select so can be ordered
@@ -30,7 +30,7 @@ public interface JooqSort {
     Collection<? extends SortField<?>> buildOrderBy(final Sort sort, final Field<?>... fields);
 
     /**
-     * If aliases were defined at creation of this {@link JooqSort}, those will match first instead of fields passed.
+     * If aliases were defined at creation of this {@link JooqSort}, those will match first instead of fields passed (may change on implementation).
      *
      * @param sort   the sort to use (from REST usually), property names must match field name (so careful with field alias etc)
      * @param fields fields that are part of the select so can be ordered
