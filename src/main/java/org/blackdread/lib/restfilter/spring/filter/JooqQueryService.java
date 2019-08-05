@@ -55,6 +55,11 @@ public interface JooqQueryService {
     }
 
     /**
+     *
+     * @param filter filter
+     * @param field field
+     * @param <T> field type
+     * @return condition
      * @deprecated not sure of API, could add a boolean in StringFilter so user of API can specify ignore case in url, would not be another field in a criteria class or other to make the distinction
      */
     default <T extends Field<String>> Condition buildConditionIgnoreCase(final StringFilter filter, final T field) {

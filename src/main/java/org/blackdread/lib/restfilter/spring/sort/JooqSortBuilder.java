@@ -201,11 +201,11 @@ public class JooqSortBuilder {
 
     /**
      * Is used when methods from {@link JooqSort} receive parameters that resolve to no sorting.
-     * <br/>
+     * <br>
      * The sorting is hard-coded but may be dynamic, in opposite to {@link #withDefaultOrdering(Collection)}.
-     * <br/>
+     * <br>
      * When a property/alias is not found, it is possible to default to this ordering, it is applied only if all sort in {@link Sort} passed are not found and appropriate "throws on not found" set to false.
-     * <br/>
+     * <br>
      * It is exclusive with {@link #withDefaultOrdering(Collection)}, will throw if other one was defined.
      *
      * @param defaultSort default sort to use
@@ -223,11 +223,11 @@ public class JooqSortBuilder {
 
     /**
      * Is used when methods from {@link JooqSort} receive parameters that resolve to no sorting.
-     * <br/>
+     * <br>
      * The sorting is hard-coded as all SortFields are defined in advance, in opposite to {@link #withDefaultOrdering(Sort)}.
-     * <br/>
+     * <br>
      * When a property/alias is not found, it is possible to default to this ordering, it is applied only if all sort in {@link Sort} passed are not found and appropriate "throws on not found" set to false.
-     * <br/>
+     * <br>
      * It is exclusive with {@link #withDefaultOrdering(Sort)}, will throw if other one was defined.
      *
      * @param defaultSortFields default sort fields to use
