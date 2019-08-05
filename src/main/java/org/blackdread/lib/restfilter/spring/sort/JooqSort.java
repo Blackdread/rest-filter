@@ -37,6 +37,11 @@ import java.util.List;
  */
 public interface JooqSort {
 
+    // TODO not sure
+//    default List<? extends SortField<?>> buildOrderBy(final Sort sort, final Select<?> select) {
+//        return buildOrderBy(sort, select.getSelect());
+//    }
+
     /**
      * @param sort the sort to use (from REST usually), property names must match aliases
      * @return Sort fields to be used in the orderBy query of jooq
