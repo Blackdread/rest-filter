@@ -118,6 +118,22 @@ class JooqSortTest {
     }
 
     @Test
+    void buildOrderByFieldsWithSortInline() {
+        final JooqSort jooqSort = builder
+            .addAlias(ALIAS_1, fieldAlias1)
+            .addAlias("anything", fieldLong)
+            .addAliasInline(ALIAS_3, 2)
+            .withDefaultOrdering(SORT_1)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(SORT_1_2_3, fieldAlias2);
+
+        assertEquals(3, result.size());
+        assertEquals(fieldAlias1.asc(), result.get(0));
+        assertEquals(fieldAlias2.desc(), result.get(1));
+        assertEquals(DSL.inline(2).asc(), result.get(2));
+    }
+
+    @Test
     void buildOrderByWithDefaultSort() {
         final JooqSort jooqSort = builder
             .addAlias(ALIAS_1, fieldAlias1)
@@ -131,6 +147,18 @@ class JooqSortTest {
     }
 
     @Test
+    void buildOrderByFieldsWithDefaultSort() {
+        final JooqSort jooqSort = builder
+            .addAlias("anything", fieldLong)
+            .withDefaultOrdering(SORT_1)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(UNSORTED, fieldLong, fieldAlias1);
+
+        assertEquals(1, result.size());
+        assertEquals(fieldAlias1.asc(), result.get(0));
+    }
+
+    @Test
     void buildOrderByWithDefaultSortFields() {
         final JooqSort jooqSort = builder
             .addAlias(ALIAS_1, fieldAlias1)
@@ -138,6 +166,20 @@ class JooqSortTest {
             .withDefaultOrdering(SORT_1_2_FIELDS)
             .build();
         final List<? extends SortField<?>> result = jooqSort.buildOrderBy(UNSORTED);
+
+        assertEquals(2, result.size());
+        assertEquals(fieldLong.asc(), result.get(0));
+        assertEquals(fieldString.desc(), result.get(1));
+        assertNotSame(SORT_1_2_FIELDS, result);
+    }
+
+    @Test
+    void buildOrderByFieldsWithDefaultSortFields() {
+        final JooqSort jooqSort = builder
+            .addAlias("anything", fieldLong)
+            .withDefaultOrdering(SORT_1_2_FIELDS)
+            .build();
+        final List<? extends SortField<?>> result = jooqSort.buildOrderBy(UNSORTED, fieldLong, fieldAlias1);
 
         assertEquals(2, result.size());
         assertEquals(fieldLong.asc(), result.get(0));

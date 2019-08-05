@@ -70,6 +70,13 @@ class JooqSortBuilderTest {
     }
 
     @Test
+    void builderFailFastForAliasArray() {
+        final JooqSortBuilder builder = this.builder.addAlias("1", fieldLong);
+        assertThrows(IllegalArgumentException.class, () -> builder.addAlias("1"));
+        assertThrows(IllegalArgumentException.class, () -> builder.addAliasInline("1"));
+    }
+
+    @Test
     void allMethodsReturnsNewInstance() {
         final JooqSortBuilder b1 = builder.addAlias(ALIAS_1, fieldLong);
         final JooqSortBuilder b2 = builder.addAlias(ALIAS_2, fieldLong, fieldString);
@@ -151,21 +158,21 @@ class JooqSortBuilderTest {
         assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", Collections.singleton(3)));
     }
 
-    @Test
-    void addAlias() {
-    }
-
-    @Test
-    void addAliasInline() {
-    }
-
-    @Test
-    void enableCaseInsensitiveSort() {
-    }
-
-    @Test
-    void enableNullHandling() {
-    }
+//    @Test
+//    void addAlias() {
+//    }
+//
+//    @Test
+//    void addAliasInline() {
+//    }
+//
+//    @Test
+//    void enableCaseInsensitiveSort() {
+//    }
+//
+//    @Test
+//    void enableNullHandling() {
+//    }
 
     @Test
     void withDefaultOrderingThrowsIfEitherAlreadyDefined() {
@@ -176,19 +183,19 @@ class JooqSortBuilderTest {
         assertThrows(IllegalStateException.class, () -> withSortFields.withDefaultOrdering(SORT_1_2));
     }
 
-    @Test
-    void withDefaultOrderingSort() {
-    }
-
-    @Test
-    void WithDefaultOrderingFields() {
-    }
-
-    @Test
-    void throwOnSortPropertyNotFound() {
-    }
-
-    @Test
-    void throwOnAliasNotFound() {
-    }
+//    @Test
+//    void withDefaultOrderingSort() {
+//    }
+//
+//    @Test
+//    void WithDefaultOrderingFields() {
+//    }
+//
+//    @Test
+//    void throwOnSortPropertyNotFound() {
+//    }
+//
+//    @Test
+//    void throwOnAliasNotFound() {
+//    }
 }

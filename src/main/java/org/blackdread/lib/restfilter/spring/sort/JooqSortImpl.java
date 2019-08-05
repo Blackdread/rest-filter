@@ -50,6 +50,8 @@ public class JooqSortImpl implements JooqSort {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortImpl.class);
 
+    // todo might in fact need to ignore case of alias and fields params name, could be another option set to true by default, most of the time id == ID or my_column == MY_COLUMN
+
     private final Map<String, Collection<Field<?>>> fieldByAliasMap;
 
     private final Map<String, Collection<Param<Integer>>> inlineByAliasMap;

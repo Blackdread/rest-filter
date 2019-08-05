@@ -51,6 +51,8 @@ public class JooqSortBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortBuilder.class);
 
+    // todo might in fact need to ignore case of alias and fields params name, could be another option set to true by default, most of the time id == ID or my_column == MY_COLUMN
+
     // fieldByAliasMap and inlineByAliasMap are differentiated but in fact could be one single Map
     private final Map<String, Collection<Field<?>>> fieldByAliasMap = new HashMap<>();
 
