@@ -113,6 +113,7 @@ public class JooqSortBuilder {
      * @return new {@code JooqSortBuilder} instance (for chaining)
      */
     public JooqSortBuilder addAlias(final String alias, final Field<?>... fields) {
+        checkNotEmpty(fields);
         checkAliasNotAlreadyDefined(alias);
         final JooqSortBuilder copy = new JooqSortBuilder(this);
         copy.fieldByAliasMap.put(alias, Arrays.asList(fields));
@@ -155,6 +156,7 @@ public class JooqSortBuilder {
      * @return new {@code JooqSortBuilder} instance (for chaining)
      */
     public JooqSortBuilder addAliasInline(final String alias, final int... indexes) {
+        checkNotEmpty(indexes);
         checkAliasNotAlreadyDefined(alias);
         final JooqSortBuilder copy = new JooqSortBuilder(this);
         copy.inlineByAliasMap.put(alias, Arrays.stream(indexes).mapToObj(DSL::inline).collect(Collectors.toList()));
@@ -278,6 +280,16 @@ public class JooqSortBuilder {
             throwOnSortPropertyNotFound,
             throwOnAliasNotFound
         );
+    }
+
+    private void checkNotEmpty(final Field[] fields) {
+        if (fields == null || fields.length == 0)
+            throw new IllegalArgumentException("Fields cannot be null/empty");
+    }
+
+    private void checkNotEmpty(int[] indexes) {
+        if (indexes == null || indexes.length == 0)
+            throw new IllegalArgumentException("Fields cannot be null/empty");
     }
 
     private void checkAliasNotAlreadyDefined(final String alias) {

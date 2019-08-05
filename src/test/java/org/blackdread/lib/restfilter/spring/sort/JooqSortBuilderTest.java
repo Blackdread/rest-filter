@@ -4,7 +4,6 @@ import org.jooq.Field;
 import org.jooq.SortField;
 import org.jooq.impl.DSL;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
@@ -13,6 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * <p>Created on 2019/08/03.</p>
@@ -52,11 +54,19 @@ class JooqSortBuilderTest {
     void newBuilderIsNewInstance() {
         final JooqSortBuilder builder1 = JooqSortBuilder.newBuilder();
         final JooqSortBuilder builder2 = JooqSortBuilder.newBuilder();
-        Assertions.assertNotSame(builder1, builder2);
+        assertNotSame(builder1, builder2);
     }
 
     @Test
     void newBuilderHasDefaults() {
+    }
+
+    @Test
+    void builderFailFastForAlias() {
+        final JooqSortBuilder builder = this.builder.addAlias("1", fieldLong);
+        assertThrows(IllegalStateException.class, () -> builder.addAlias("1", fieldLong));
+        assertThrows(IllegalStateException.class, () -> builder.addAlias("1", fieldString));
+        assertThrows(IllegalStateException.class, () -> builder.addAliasInline("1", 1));
     }
 
     @Test
@@ -77,7 +87,7 @@ class JooqSortBuilderTest {
         Collections.addAll(list, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12);
         for (int i = 0; i < list.size(); i++) {
             for (int j = i + 1; j < list.size() - 1; j++) {
-                Assertions.assertNotSame(list.get(i), list.get(j), String.format("i=%d and j=%d", i, j));
+                assertNotSame(list.get(i), list.get(j), String.format("i=%d and j=%d", i, j));
             }
         }
     }
@@ -86,7 +96,7 @@ class JooqSortBuilderTest {
     void buildIsNewInstance() {
         final JooqSort jooqSort1 = builder.build();
         final JooqSort jooqSort2 = builder.build();
-        Assertions.assertNotSame(jooqSort1, jooqSort2);
+        assertNotSame(jooqSort1, jooqSort2);
     }
 
     @Test
@@ -119,26 +129,26 @@ class JooqSortBuilderTest {
     void addDuplicateAliasThrows() {
         final JooqSortBuilder aa = builder.addAlias("aa", fieldLong);
 
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong, fieldString));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", Collections.singleton(fieldInt)));
+        assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong));
+        assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong, fieldString));
+        assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", Collections.singleton(fieldInt)));
 
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1, 2));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", Collections.singleton(3)));
+        assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1));
+        assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1, 2));
+        assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", Collections.singleton(3)));
     }
 
     @Test
     void addDuplicateAliasInlineThrows() {
         final JooqSortBuilder aa = builder.addAliasInline("aa", 5);
 
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong, fieldString));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", Collections.singleton(fieldInt)));
+        assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong));
+        assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", fieldLong, fieldString));
+        assertThrows(IllegalStateException.class, () -> aa.addAlias("aa", Collections.singleton(fieldInt)));
 
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1, 2));
-        Assertions.assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", Collections.singleton(3)));
+        assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1));
+        assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", 1, 2));
+        assertThrows(IllegalStateException.class, () -> aa.addAliasInline("aa", Collections.singleton(3)));
     }
 
     @Test
@@ -160,10 +170,10 @@ class JooqSortBuilderTest {
     @Test
     void withDefaultOrderingThrowsIfEitherAlreadyDefined() {
         final JooqSortBuilder withSort = builder.withDefaultOrdering(SORT_1_2);
-        Assertions.assertThrows(IllegalStateException.class, () -> withSort.withDefaultOrdering(SORT_1_2_FIELDS));
+        assertThrows(IllegalStateException.class, () -> withSort.withDefaultOrdering(SORT_1_2_FIELDS));
 
         final JooqSortBuilder withSortFields = builder.withDefaultOrdering(SORT_1_2_FIELDS);
-        Assertions.assertThrows(IllegalStateException.class, () -> withSortFields.withDefaultOrdering(SORT_1_2));
+        assertThrows(IllegalStateException.class, () -> withSortFields.withDefaultOrdering(SORT_1_2));
     }
 
     @Test
