@@ -51,7 +51,9 @@ public class JooqSortBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortBuilder.class);
 
-    // todo might in fact need to ignore case of alias and fields params name, could be another option set to true by default, most of the time id == ID or my_column == MY_COLUMN
+    private boolean ignoreJooqPropertyCase;
+
+    private boolean enableJooqFieldExtraLookUp;
 
     // fieldByAliasMap and inlineByAliasMap are differentiated but in fact could be one single Map
     private final Map<String, Collection<Field<?>>> fieldByAliasMap = new HashMap<>();
@@ -91,6 +93,32 @@ public class JooqSortBuilder {
      */
     public static JooqSortBuilder newBuilder() {
         return new JooqSortBuilder();
+    }
+
+    /**
+     * If true, jooq field names are tested ignoring case.
+     * So jooq fields can return true for id == ID or my_column == MY_COLUMN
+     *
+     * @param ignoreJooqPropertyCase enable or not
+     * @return new {@code JooqSortBuilder} instance (for chaining)
+     */
+    public JooqSortBuilder ignoreJooqPropertyCase(final boolean ignoreJooqPropertyCase) {
+        final JooqSortBuilder copy = new JooqSortBuilder(this);
+        copy.ignoreJooqPropertyCase = ignoreJooqPropertyCase;
+        return copy;
+    }
+
+    /**
+     * If true, fields name from jOOQ will be tried with different combination (name extracted, camelCase, etc), depends on implementation.
+     * So jooq fields can return true for myColumn == MY_COLUMN or etc.
+     *
+     * @param enableJooqFieldExtraLookUp enable or not
+     * @return new {@code JooqSortBuilder} instance (for chaining)
+     */
+    public JooqSortBuilder enableJooqFieldExtraLookUp(final boolean enableJooqFieldExtraLookUp) {
+        final JooqSortBuilder copy = new JooqSortBuilder(this);
+        copy.enableJooqFieldExtraLookUp = enableJooqFieldExtraLookUp;
+        return copy;
     }
 
     /**
@@ -273,6 +301,8 @@ public class JooqSortBuilder {
      */
     public JooqSort build() {
         return new JooqSortImpl(
+            ignoreJooqPropertyCase,
+            enableJooqFieldExtraLookUp,
             fieldByAliasMap,
             inlineByAliasMap,
             defaultSort,

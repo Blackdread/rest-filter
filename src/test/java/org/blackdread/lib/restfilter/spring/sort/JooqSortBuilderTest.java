@@ -90,8 +90,10 @@ class JooqSortBuilderTest {
         final JooqSortBuilder b10 = builder.throwOnAliasNotFound(true);
         final JooqSortBuilder b11 = builder.enableCaseInsensitiveSort(true);
         final JooqSortBuilder b12 = builder.enableNullHandling(true);
+        final JooqSortBuilder b13 = builder.enableJooqFieldExtraLookUp(true);
+        final JooqSortBuilder b14 = builder.ignoreJooqPropertyCase(true);
         final ArrayList<JooqSortBuilder> list = new ArrayList<>();
-        Collections.addAll(list, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12);
+        Collections.addAll(list, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14);
         for (int i = 0; i < list.size(); i++) {
             for (int j = i + 1; j < list.size() - 1; j++) {
                 assertNotSame(list.get(i), list.get(j), String.format("i=%d and j=%d", i, j));
@@ -109,6 +111,10 @@ class JooqSortBuilderTest {
     @Test
     void allCanBeDefinedResetManyTimes() {
         builder
+            .ignoreJooqPropertyCase(true)
+            .ignoreJooqPropertyCase(false)
+            .enableJooqFieldExtraLookUp(true)
+            .enableJooqFieldExtraLookUp(false)
             .addAlias(ALIAS_1, fieldLong)
             .addAlias(ALIAS_2, fieldLong, fieldString)
             .addAlias(ALIAS_3, Collections.singleton(fieldLong))
