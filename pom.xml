@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.blackdread.lib</groupId>
@@ -102,6 +103,13 @@
         <!--     <artifactId>commons-lang3</artifactId>-->
         <!--     <version>${commons-lang3.version}</version>-->
         <!-- </dependency>-->
+
+        <dependency>
+            <!-- Only used for camel case, maybe should just copy the code so no dependency on it -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.7</version>
+        </dependency>
 
         <dependency>
             <!-- Used in filters -->
@@ -425,7 +433,7 @@
                 <version>${maven-release-plugin.version}</version>
                 <configuration>
                     <tagNameFormat>@{project.version}</tagNameFormat>
-                    <scmCommentPrefix />
+                    <scmCommentPrefix/>
                     <username>blackdread</username>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>

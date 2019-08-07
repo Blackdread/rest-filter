@@ -40,7 +40,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
@@ -71,9 +70,9 @@ class JooqSortImpl implements JooqSort {
      */
     private final boolean enableJooqFieldExtraLookUp;
 
-    private final Map<String, Collection<Field<?>>> fieldByAliasIgnoreCaseMap;
+//    private final Map<String, Collection<Field<?>>> fieldByAliasIgnoreCaseMap;
 
-    private final Map<String, Collection<Param<Integer>>> inlineByAliasIgnoreCaseMap;
+//    private final Map<String, Collection<Param<Integer>>> inlineByAliasIgnoreCaseMap;
 
     private final Map<String, Collection<Field<?>>> fieldByAliasMap;
 
@@ -96,28 +95,29 @@ class JooqSortImpl implements JooqSort {
         this.ignoreJooqPropertyCase = ignoreJooqPropertyCase;
         this.enableJooqFieldExtraLookUp = enableJooqFieldExtraLookUp;
 
-        if (ignoreJooqPropertyCase) {
-            this.fieldByAliasIgnoreCaseMap = unmodifiableMap(fieldByAliasMap.entrySet().stream()
-                .flatMap(entry -> {
-                    final Collection<Field<?>> fields = unmodifiableList(new ArrayList<>(entry.getValue()));
-                    final Pair<String, Collection<Field<?>>> originalEntry = new Pair<>(entry.getKey(), fields);
-                    final Pair<String, Collection<Field<?>>> entryNoCase = new Pair<>(entry.getKey().toLowerCase(Locale.ENGLISH), fields);
-                    return Stream.of(originalEntry, entryNoCase);
-                })
-                .collect(Collectors.toMap(pair -> pair.left, pair -> pair.right)));
-
-            this.inlineByAliasIgnoreCaseMap = unmodifiableMap(inlineByAliasMap.entrySet().stream()
-                .flatMap(entry -> {
-                    final Collection<Param<Integer>> fields = unmodifiableList(new ArrayList<>(entry.getValue()));
-                    final Pair<String, Collection<Param<Integer>>> originalEntry = new Pair<>(entry.getKey(), fields);
-                    final Pair<String, Collection<Param<Integer>>> entryNoCase = new Pair<>(entry.getKey().toLowerCase(Locale.ENGLISH), fields);
-                    return Stream.of(originalEntry, entryNoCase);
-                })
-                .collect(Collectors.toMap(pair -> pair.left, pair -> pair.right)));
-        } else {
-            this.fieldByAliasIgnoreCaseMap = Collections.emptyMap();
-            this.inlineByAliasIgnoreCaseMap = Collections.emptyMap();
-        }
+// In fact code below is if we use ignoreSortPropertyCase to true and not ignoreJooqPropertyCase, jooq field name logic is done only later
+//        if (ignoreSortPropertyCase) {
+//            this.fieldByAliasIgnoreCaseMap = unmodifiableMap(fieldByAliasMap.entrySet().stream()
+//                .flatMap(entry -> {
+//                    final Collection<Field<?>> fields = unmodifiableList(new ArrayList<>(entry.getValue()));
+//                    final Pair<Collection<Field<?>>> originalEntry = new Pair<>(entry.getKey(), fields);
+//                    final Pair<Collection<Field<?>>> entryNoCase = new Pair<>(entry.getKey().toLowerCase(Locale.ENGLISH), fields);
+//                    return Stream.of(originalEntry, entryNoCase).distinct();
+//                })
+//                .collect(Collectors.toMap(pair -> pair.key, pair -> pair.value)));
+//
+//            this.inlineByAliasIgnoreCaseMap = unmodifiableMap(inlineByAliasMap.entrySet().stream()
+//                .flatMap(entry -> {
+//                    final Collection<Param<Integer>> fields = unmodifiableList(new ArrayList<>(entry.getValue()));
+//                    final Pair<Collection<Param<Integer>>> originalEntry = new Pair<>(entry.getKey(), fields);
+//                    final Pair<Collection<Param<Integer>>> entryNoCase = new Pair<>(entry.getKey().toLowerCase(Locale.ENGLISH), fields);
+//                    return Stream.of(originalEntry, entryNoCase).distinct();
+//                })
+//                .collect(Collectors.toMap(pair -> pair.key, pair -> pair.value)));
+//        } else {
+//            this.fieldByAliasIgnoreCaseMap = Collections.emptyMap();
+//            this.inlineByAliasIgnoreCaseMap = Collections.emptyMap();
+//        }
 
         this.fieldByAliasMap = unmodifiableMap(fieldByAliasMap.entrySet().stream()
             .collect(Collectors.toMap(Map.Entry::getKey, entry -> unmodifiableList(new ArrayList<>(entry.getValue())))));
@@ -212,7 +212,21 @@ class JooqSortImpl implements JooqSort {
 
     private List<? extends SortField<?>> getSortFields(final Sort sort, final Collection<Field<?>> fields) {
         final Map<String, ? extends Field<?>> nameFieldMap = fields.stream()
-            .collect(Collectors.toMap(Field::getName, field -> field));
+            .flatMap(field -> {
+                final List<Pair<Field<?>>> pairs = new ArrayList<>();
+                pairs.add(new Pair<>(field.getName(), field));
+                if (ignoreJooqPropertyCase) {
+                    pairs.add(new Pair<>(field.getName().toLowerCase(Locale.ENGLISH), field));
+                }
+                if (enableJooqFieldExtraLookUp) {
+
+                    if (ignoreJooqPropertyCase) {
+                        // each extra field to be also not case sensitive
+                    }
+                }
+                return pairs.stream().distinct();
+            })
+            .collect(Collectors.toMap(pair -> pair.key, pair -> pair.value));
 
         return sort.stream()
             .map(order -> {
@@ -230,7 +244,8 @@ class JooqSortImpl implements JooqSort {
                         .map(field -> convertToSortField(field, order))
                         .collect(Collectors.toList());
                 } else if (!fields.isEmpty()) {
-                    final Field<?> field = nameFieldMap.get(order.getProperty());
+                    // todo need as well: nameFieldMap.get(property.toLowerCase(Locale.ENGLISH)); if ignoreJooqPropertyCase is true
+                    final Field<?> field = nameFieldMap.get(property);
                     if (field != null) {
                         final SortField<?> sortField = convertToSortField(field, order);
                         return Collections.singletonList(sortField);
@@ -267,13 +282,33 @@ class JooqSortImpl implements JooqSort {
         return sortField;
     }
 
-    private static class Pair<L, R> {
-        final L left;
-        final R right;
+    /**
+     * Just to keep data through the stream, have no access to Map.Entry -> need java > 8
+     * Key is String, no reason to make it generic.
+     * The equals is based on the key only, important when building map that will aggregate potentially on same key, could use the mergeFunction otherwise to not throw on duplicate key
+     *
+     * @param <V> value
+     */
+    private static class Pair<V> {
+        final String key;
+        final V value;
 
-        private Pair(L left, R right) {
-            this.left = left;
-            this.right = right;
+        private Pair(String key, V value) {
+            this.key = Objects.requireNonNull(key);
+            this.value = Objects.requireNonNull(value);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Pair<?> pair = (Pair<?>) o;
+            return key.equals(pair.key);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(key);
         }
     }
 }
