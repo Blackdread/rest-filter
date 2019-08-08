@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -294,12 +295,61 @@ class JooqSortTest {
             .addAlias("missing", fieldLong)
             .throwOnAliasNotFound(false)
             .build();
-        assertDoesNotThrow(() -> jooqSort.buildOrderBy(SORT_1_2));
+        final List<? extends SortField<?>> sortFields = assertDoesNotThrow(() -> jooqSort.buildOrderBy(SORT_1_2));
+        assertTrue(sortFields.isEmpty());
 
         final JooqSort jooqSort2 = builder
             .throwOnSortPropertyNotFound(false)
             .build();
-        assertDoesNotThrow(() -> jooqSort2.buildOrderBy(SORT_1_2, fieldLong));
+        final List<? extends SortField<?>> sortFields2 = assertDoesNotThrow(() -> jooqSort2.buildOrderBy(SORT_1_2, fieldLong));
+        assertTrue(sortFields2.isEmpty());
+    }
+
+    @Test
+    void fieldsCanHideOthers() {
+        final JooqSort jooqSort = builder
+            .build();
+
+        final List<? extends SortField<?>> sortFields = assertDoesNotThrow(() -> jooqSort.buildOrderBy(SORT_1_2, fieldAlias1, fieldAlias2, DSL.field(ALIAS_1, Integer.class)));
+        assertEquals(Arrays.asList(fieldAlias1.asc(), fieldAlias2.desc()), sortFields);
+    }
+
+    @Test
+    void fieldsCanBeMatchedIgnoringCase() {
+        final JooqSort jooqSort = builder
+            .enableJooqFieldExtraLookUp(false)
+            .build();
+
+        final Sort sort = Sort.by("myField", "field-2", "parent_Id", "createTime", "extra");
+        final List<Field<?>> fields = Arrays.asList(
+            DSL.field("MYFIELD"),
+            DSL.field("FIELD-2"),
+            DSL.field("pAREnt_Id"),
+            DSL.field("CREATETIME"),
+            DSL.field("EXtRA")
+        );
+
+        final List<? extends SortField<?>> sortFields = assertDoesNotThrow(() -> jooqSort.buildOrderBy(sort, fields));
+        assertEquals(fields.stream().map(Field::asc).collect(Collectors.toList()), sortFields);
+    }
+
+    @Test
+    void fieldsCanBeMatchedWithExtraLookUp() {
+        final JooqSort jooqSort = builder
+            .ignoreJooqPropertyCase(false)
+            .build();
+
+        final Sort sort = Sort.by("myField", "field2", "parentId", "createTime", "extra");
+        final List<Field<?>> fields = Arrays.asList(
+            DSL.field("MY_FIELD"),
+            DSL.field("FIELD_2"),
+            DSL.field("parent-Id"),
+            DSL.field("CREATE-TIME"),
+            DSL.field("EXTRA")
+        );
+
+        final List<? extends SortField<?>> sortFields = assertDoesNotThrow(() -> jooqSort.buildOrderBy(sort, fields));
+        assertEquals(fields.stream().map(Field::asc).collect(Collectors.toList()), sortFields);
     }
 
 //    @Test

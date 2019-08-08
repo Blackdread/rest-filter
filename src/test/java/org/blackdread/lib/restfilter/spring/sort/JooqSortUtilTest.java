@@ -47,7 +47,8 @@ class JooqSortUtilTest {
         ), sortFields);
 
         final IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () -> JooqSortUtil.buildOrderBy(Sort.by("id", CHILD_ENTITY.NAME.getName(), CHILD_ENTITY.TOTAL.getQualifiedName().toString(), CHILD_ENTITY.ACTIVE.getName()), select));
-        assertEquals("Property 'id' not found", ex1.getMessage());
+//        assertEquals("Property 'id' not found", ex1.getMessage()); -> not thrown since by default case is ignored and cameCase used
+        assertEquals("Property '\"CHILD_ENTITY\".\"TOTAL\"' not found", ex1.getMessage());
 
 
         final IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () -> JooqSortUtil.buildOrderBy(Sort.by("ID", CHILD_ENTITY.getName(), CHILD_ENTITY.TOTAL.getQualifiedName().toString(), CHILD_ENTITY.ACTIVE.getName()), select));
