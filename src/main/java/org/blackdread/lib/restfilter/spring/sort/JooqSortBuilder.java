@@ -76,6 +76,8 @@ public class JooqSortBuilder {
     }
 
     private JooqSortBuilder(final JooqSortBuilder copy) {
+        this.ignoreJooqPropertyCase = copy.ignoreJooqPropertyCase;
+        this.enableJooqFieldExtraLookUp = copy.enableJooqFieldExtraLookUp;
         this.fieldByAliasMap.putAll(copy.fieldByAliasMap);
         this.inlineByAliasMap.putAll(copy.inlineByAliasMap);
         this.defaultSort = copy.defaultSort;

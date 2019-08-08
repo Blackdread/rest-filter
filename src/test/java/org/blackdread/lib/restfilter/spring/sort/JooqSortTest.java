@@ -334,6 +334,33 @@ class JooqSortTest {
     }
 
     @Test
+    void fieldsAreMatchedIgnoringCaseDisabled() {
+        final JooqSort jooqSort = builder
+            .ignoreJooqPropertyCase(false)
+            .build();
+
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(Sort.by("myField"), DSL.field("MY_FIELD")));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(Sort.by("field2"), DSL.field("FIELD_2")));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(Sort.by("parentId"), DSL.field("parent-Id")));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(Sort.by("createTime"), DSL.field("CREATE-TIME")));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(Sort.by("extra"), DSL.field("EXTRA")));
+    }
+
+    @Test
+    void fieldsAreNotMatchedIgnoringCaseDisabledAndLookUp() {
+        final JooqSort jooqSort = builder
+            .ignoreJooqPropertyCase(false)
+            .enableJooqFieldExtraLookUp(false)
+            .build();
+
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("myField"), DSL.field("MY_FIELD")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("field2"), DSL.field("FIELD_2")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("parentId"), DSL.field("parent-Id")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("createTime"), DSL.field("CREATE-TIME")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("extra"), DSL.field("EXTRA")));
+    }
+
+    @Test
     void fieldsCanBeMatchedWithExtraLookUp() {
         final JooqSort jooqSort = builder
             .ignoreJooqPropertyCase(false)
@@ -350,6 +377,33 @@ class JooqSortTest {
 
         final List<? extends SortField<?>> sortFields = assertDoesNotThrow(() -> jooqSort.buildOrderBy(sort, fields));
         assertEquals(fields.stream().map(Field::asc).collect(Collectors.toList()), sortFields);
+    }
+
+    @Test
+    void fieldsAreNotMatchedWithExtraLookUp() {
+        final JooqSort jooqSort = builder
+            .enableJooqFieldExtraLookUp(false)
+            .build();
+
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("myField"), DSL.field("MY_FIELD")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("field2"), DSL.field("FIELD_2")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("parentId"), DSL.field("parent-Id")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("createTime"), DSL.field("CREATE-TIME")));
+        assertDoesNotThrow(() -> jooqSort.buildOrderBy(Sort.by("extra"), DSL.field("EXTRA")));
+    }
+
+    @Test
+    void fieldsAreNotMatchedWithExtraLookUpAndCase() {
+        final JooqSort jooqSort = builder
+            .ignoreJooqPropertyCase(false)
+            .enableJooqFieldExtraLookUp(false)
+            .build();
+
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("myField"), DSL.field("MY_FIELD")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("field2"), DSL.field("FIELD_2")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("parentId"), DSL.field("parent-Id")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("createTime"), DSL.field("CREATE-TIME")));
+        assertThrows(IllegalArgumentException.class, () -> jooqSort.buildOrderBy(Sort.by("extra"), DSL.field("EXTRA")));
     }
 
 //    @Test
