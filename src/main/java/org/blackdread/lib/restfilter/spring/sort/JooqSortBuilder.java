@@ -51,9 +51,9 @@ public class JooqSortBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortBuilder.class);
 
-    private boolean ignoreJooqPropertyCase;
+    private boolean ignoreJooqPropertyCase = true;
 
-    private boolean enableJooqFieldExtraLookUp;
+    private boolean enableJooqFieldExtraLookUp = true;
 
     // fieldByAliasMap and inlineByAliasMap are differentiated but in fact could be one single Map
     private final Map<String, Collection<Field<?>>> fieldByAliasMap = new HashMap<>();

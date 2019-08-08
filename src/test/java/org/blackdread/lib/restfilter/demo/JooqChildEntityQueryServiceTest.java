@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 import static java.time.Instant.ofEpochSecond;
 import static java.time.LocalDate.ofEpochDay;
 import static org.blackdread.lib.restfilter.demo.jooq.tables.ChildEntity.CHILD_ENTITY;
+import static org.blackdread.lib.restfilter.demo.jooq.tables.ParentEntity.PARENT_ENTITY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * <p>Created on 2019-06-12</p>

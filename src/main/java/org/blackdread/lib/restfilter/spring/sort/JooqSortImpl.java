@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.spring.sort;
 
+import org.apache.commons.text.CaseUtils;
 import org.jooq.Field;
 import org.jooq.Param;
 import org.jooq.SortField;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.unmodifiableList;
@@ -102,8 +104,9 @@ class JooqSortImpl implements JooqSort {
 //                    final Collection<Field<?>> fields = unmodifiableList(new ArrayList<>(entry.getValue()));
 //                    final Pair<Collection<Field<?>>> originalEntry = new Pair<>(entry.getKey(), fields);
 //                    final Pair<Collection<Field<?>>> entryNoCase = new Pair<>(entry.getKey().toLowerCase(Locale.ENGLISH), fields);
-//                    return Stream.of(originalEntry, entryNoCase).distinct();
+//                    return Stream.of(originalEntry, entryNoCase);
 //                })
+//                .distinct()
 //                .collect(Collectors.toMap(pair -> pair.key, pair -> pair.value)));
 //
 //            this.inlineByAliasIgnoreCaseMap = unmodifiableMap(inlineByAliasMap.entrySet().stream()
@@ -111,8 +114,9 @@ class JooqSortImpl implements JooqSort {
 //                    final Collection<Param<Integer>> fields = unmodifiableList(new ArrayList<>(entry.getValue()));
 //                    final Pair<Collection<Param<Integer>>> originalEntry = new Pair<>(entry.getKey(), fields);
 //                    final Pair<Collection<Param<Integer>>> entryNoCase = new Pair<>(entry.getKey().toLowerCase(Locale.ENGLISH), fields);
-//                    return Stream.of(originalEntry, entryNoCase).distinct();
+//                    return Stream.of(originalEntry, entryNoCase);
 //                })
+//                .distinct()
 //                .collect(Collectors.toMap(pair -> pair.key, pair -> pair.value)));
 //        } else {
 //            this.fieldByAliasIgnoreCaseMap = Collections.emptyMap();
@@ -211,21 +215,27 @@ class JooqSortImpl implements JooqSort {
     }
 
     private List<? extends SortField<?>> getSortFields(final Sort sort, final Collection<Field<?>> fields) {
+        // in collection field name may be same for different fields but fully qualified name would be different
+        warnIfFieldMayHideEachOther(fields);
         final Map<String, ? extends Field<?>> nameFieldMap = fields.stream()
             .flatMap(field -> {
                 final List<Pair<Field<?>>> pairs = new ArrayList<>();
-                pairs.add(new Pair<>(field.getName(), field));
+                final String fieldName = field.getName();
+                pairs.add(new Pair<>(fieldName, field));
                 if (ignoreJooqPropertyCase) {
-                    pairs.add(new Pair<>(field.getName().toLowerCase(Locale.ENGLISH), field));
+                    pairs.add(new Pair<>(fieldName.toLowerCase(Locale.ENGLISH), field));
                 }
                 if (enableJooqFieldExtraLookUp) {
-
+                    final String camelCase = CaseUtils.toCamelCase(fieldName, false, '_', '-');
+                    pairs.add(new Pair<>(camelCase, field));
                     if (ignoreJooqPropertyCase) {
                         // each extra field to be also not case sensitive
+                        pairs.add(new Pair<>(camelCase.toLowerCase(Locale.ENGLISH), field));
                     }
                 }
-                return pairs.stream().distinct();
+                return pairs.stream();
             })
+            .distinct()
             .collect(Collectors.toMap(pair -> pair.key, pair -> pair.value));
 
         return sort.stream()
@@ -244,8 +254,10 @@ class JooqSortImpl implements JooqSort {
                         .map(field -> convertToSortField(field, order))
                         .collect(Collectors.toList());
                 } else if (!fields.isEmpty()) {
-                    // todo need as well: nameFieldMap.get(property.toLowerCase(Locale.ENGLISH)); if ignoreJooqPropertyCase is true
-                    final Field<?> field = nameFieldMap.get(property);
+                    Field<?> field = nameFieldMap.get(property);
+                    if (field == null && ignoreJooqPropertyCase) {
+                        field = nameFieldMap.get(property.toLowerCase(Locale.ENGLISH));
+                    }
                     if (field != null) {
                         final SortField<?> sortField = convertToSortField(field, order);
                         return Collections.singletonList(sortField);
@@ -280,6 +292,13 @@ class JooqSortImpl implements JooqSort {
         }
 
         return sortField;
+    }
+
+    private void warnIfFieldMayHideEachOther(final Collection<Field<?>> fields) {
+        final Set<String> uniqueNames = fields.stream().map(Field::getName).collect(Collectors.toSet());
+        if (uniqueNames.size() != fields.size()) {
+            log.warn("Some fields will hide each others due to same name: {}", uniqueNames);
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.blackdread.lib.restfilter.spring.sort;
 
+import org.apache.commons.text.CaseUtils;
 import org.jooq.Field;
 import org.jooq.Record4;
 import org.jooq.SelectSelectStep;
@@ -15,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.blackdread.lib.restfilter.demo.jooq.tables.ChildEntity.CHILD_ENTITY;
+import static org.blackdread.lib.restfilter.demo.jooq.tables.ParentEntity.PARENT_ENTITY;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -82,6 +84,27 @@ class JooqSortUtilTest {
         final Field<String> converted = JooqSortUtil.tryConvertSortIgnoreCase(field2);
         assertNotSame(field, converted);
         assertEquals(DSL.upper(DSL.field("any", Integer.class).cast(String.class)), converted);
+    }
+
+    // just to verify some logic
+    @Test
+    void testCamelCase() {
+        assertEquals("id", CaseUtils.toCamelCase("ID", false));
+        assertEquals("my_column", CaseUtils.toCamelCase("MY_COLUMN", false));
+        assertEquals("my-column", CaseUtils.toCamelCase("MY-COLUMN", false));
+        assertEquals("myColumn", CaseUtils.toCamelCase("MY_COLUMN", false, '_'));
+        assertEquals("myColumn", CaseUtils.toCamelCase("MY-COLUMN", false, '-'));
+        assertEquals("myColumnTestAt", CaseUtils.toCamelCase("MY_COLUMN-TEST_AT", false, '_', '-'));
+    }
+
+    @Test
+    void testJooqFieldName() {
+        assertEquals("ID", CHILD_ENTITY.ID.getName());
+        assertEquals("ACTIVE", CHILD_ENTITY.ACTIVE.getName());
+        assertEquals("PARENT_ID", CHILD_ENTITY.PARENT_ID.getName());
+        assertEquals("childId", CHILD_ENTITY.ID.as("childId").getName());
+        assertEquals("active", CHILD_ENTITY.ACTIVE.as("active").getName());
+        assertEquals("parentId", PARENT_ENTITY.ID.as("parentId").getName());
     }
 
 //    @Test
