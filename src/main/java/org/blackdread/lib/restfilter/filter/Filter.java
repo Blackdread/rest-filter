@@ -50,6 +50,9 @@ public class Filter<FIELD_TYPE> implements Serializable {
         this.in = filter.in == null ? null : new ArrayList<>(filter.in);
     }
 
+    /**
+     * @return new filter with all fields copied (deep copy), collections are copied (no just the reference)
+     */
     public Filter<FIELD_TYPE> copy() {
         return new Filter<>(this);
     }
