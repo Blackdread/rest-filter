@@ -23,3 +23,21 @@ When need to filter on an enum, just declare a class or static class like:
         @Override
         public MyEnumFilter copy(){return new MyEnumFilter(this);}
     }
+
+# API use
+When using Spring with REST, you would map the criteria like that:
+
+```
+@GetMapping("/my-link")
+public ResponseEntity<List<MyDTO>> getAll(MyCriteria criteria, Pageable pageable) {
+    Page<MyDTO> page = myQueryService.findByCriteria(criteria, pageable);
+    HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, ...);
+    return ResponseEntity.ok().headers(headers).body(page.getContent());
+}
+```
+
+The query url would look something like:
+
+`http://myWebsite.com?id.equals=1&otherProperty.in=name,other,etc&createTime.greaterThan=2019-01-01T05:04:01Z&sort=createTime,desc&sort=id,desc`
+
+With that the filtering and sorting would work and be consistent through the app.
