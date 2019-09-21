@@ -1,0 +1,23 @@
+/**
+ * <p>Created on 2019/09/21.</p>
+ *
+ * @author Yoann CAPLAIN
+ */
+//module rest.filter {
+//    requires static java.persistence;
+//    requires static spring.data.commons;
+//    requires static spring.context;
+//    requires static spring.tx;
+//    requires static spring.data.jpa;
+//    requires static org.jooq;
+//    requires static org.apache.commons.text;
+//
+//    requires slf4j.api;
+//    requires jsr305;
+//
+//    exports org.blackdread.lib.restfilter.criteria;
+//    exports org.blackdread.lib.restfilter.filter;
+//    exports org.blackdread.lib.restfilter.jooq;
+//    exports org.blackdread.lib.restfilter.spring.filter;
+//    exports org.blackdread.lib.restfilter.spring.sort;
+//}

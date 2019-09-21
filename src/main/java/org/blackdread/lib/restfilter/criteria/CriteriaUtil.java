@@ -1126,6 +1126,8 @@ public final class CriteriaUtil {
      * @param criteriaPassed Criteria to build the greaterThan filtering (can be null)
      * @param value          Value to set (cannot be null)
      * @param replaceValue   True if value of criteria greaterThan should be replaced or throw if different
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with greaterThan value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria greaterThan value is not null and is different from value passed and {@code replaceValue} is false
@@ -1149,6 +1151,8 @@ public final class CriteriaUtil {
      * @param criteriaClass  Class to instantiate if criteria is null
      * @param criteriaPassed Criteria to build the greaterThan filtering (can be null)
      * @param value          Value to set (cannot be null)
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with greaterThan value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria greaterThan value is not null and is lower than value passed
@@ -1301,6 +1305,8 @@ public final class CriteriaUtil {
      * @param criteriaPassed Criteria to build the greaterThanOrEqual filtering (can be null)
      * @param value          Value to set (cannot be null)
      * @param replaceValue   True if value of criteria greaterThanOrEqual should be replaced or throw if different
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with greaterThanOrEqual value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria greaterThanOrEqual value is not null and is different from value passed and {@code replaceValue} is false
@@ -1324,6 +1330,8 @@ public final class CriteriaUtil {
      * @param criteriaClass  Class to instantiate if criteria is null
      * @param criteriaPassed Criteria to build the greaterThanOrEqual filtering (can be null)
      * @param value          Value to set (cannot be null)
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with greaterThanOrEqual value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria greaterThanOrEqual value is not null and is lower than value passed
@@ -1477,6 +1485,8 @@ public final class CriteriaUtil {
      * @param criteriaPassed Criteria to build the lessThan filtering (can be null)
      * @param value          Value to set (cannot be null)
      * @param replaceValue   True if value of criteria lessThan should be replaced or throw if different
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with lessThan value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria lessThan value is not null and is different from value passed and {@code replaceValue} is false
@@ -1500,6 +1510,8 @@ public final class CriteriaUtil {
      * @param criteriaClass  Class to instantiate if criteria is null
      * @param criteriaPassed Criteria to build the lessThan filtering (can be null)
      * @param value          Value to set (cannot be null)
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with lessThan value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria lessThan value is not null and is higher than value passed
@@ -1653,6 +1665,8 @@ public final class CriteriaUtil {
      * @param criteriaPassed Criteria to build the lessThanOrEqual filtering (can be null)
      * @param value          Value to set (cannot be null)
      * @param replaceValue   True if value of criteria lessThanOrEqual should be replaced or throw if different
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with lessThanOrEqual value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria lessThanOrEqual value is not null and is different from value passed and {@code replaceValue} is false
@@ -1676,6 +1690,8 @@ public final class CriteriaUtil {
      * @param criteriaClass  Class to instantiate if criteria is null
      * @param criteriaPassed Criteria to build the lessThanOrEqual filtering (can be null)
      * @param value          Value to set (cannot be null)
+     * @param <T>            Filter generic type
+     * @param <U>            Value generic type
      * @return Filter with lessThanOrEqual value set
      * @throws IllegalArgumentException if {@code value} is null
      * @throws IllegalArgumentException if criteria lessThanOrEqual value is not null and is higher than value passed
