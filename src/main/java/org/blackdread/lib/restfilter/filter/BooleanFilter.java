@@ -7,9 +7,11 @@ import java.util.List;
  * the following query parameters:
  * <pre>
  *      fieldName.equals=true
+ *      fieldName.notEquals=true
  *      fieldName.specified=true
  *      fieldName.specified=false
  *      fieldName.in=true,false
+ *      fieldName.notIn=true,false
  * </pre>
  */
 public class BooleanFilter extends Filter<Boolean> {

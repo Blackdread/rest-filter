@@ -8,9 +8,11 @@ import java.util.Objects;
  * added to a criteria class as a member, to support the following query parameters:
  * <pre>
  *      fieldName.equals=42
+ *      fieldName.notEquals=42
  *      fieldName.specified=true
  *      fieldName.specified=false
  *      fieldName.in=43,42
+ *      fieldName.notIn=43,42
  *      fieldName.greaterThan=41
  *      fieldName.lessThan=44
  *      fieldName.greaterThanOrEqual=42
