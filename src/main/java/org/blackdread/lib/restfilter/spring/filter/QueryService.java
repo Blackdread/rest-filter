@@ -213,7 +213,6 @@ public interface QueryService<ENTITY> {
      * @param <X>        The type of the attribute which is filtered.
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
-     * @deprecated prefer methods with metaclassFunction
      */
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SetAttribute<ENTITY, OTHER> reference,
@@ -251,7 +250,7 @@ public interface QueryService<ENTITY> {
             return equalsSpecification(functionToEntity.andThen(entityToColumn), filter.getEquals());
         } else if (filter.getIn() != null) {
             return valueIn(functionToEntity.andThen(entityToColumn), filter.getIn());
-        }else if (filter.getSpecified() != null) {
+        } else if (filter.getSpecified() != null) {
             // Interestingly, 'functionToEntity' doesn't work, we need the longer lambda formula
             return byFieldSpecified(root -> functionToEntity.apply(root), filter.getSpecified());
         }
@@ -353,9 +352,18 @@ public interface QueryService<ENTITY> {
         return (root, query, builder) -> builder.equal(metaclassFunction.apply(root), value);
     }
 
+    default <X> Specification<ENTITY> notEqualsSpecification(Function<Root<ENTITY>, Expression<X>> metaclassFunction, X value) {
+        return (root, query, builder) -> builder.notEqual(metaclassFunction.apply(root), value);
+    }
+
     default Specification<ENTITY> likeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
                                                          String value) {
         return (root, query, builder) -> builder.like(builder.upper(metaclassFunction.apply(root)), wrapLikeQuery(value));
+    }
+
+    default Specification<ENTITY> notLikeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                            String value) {
+        return (root, query, builder) -> builder.notLike(builder.upper(metaclassFunction.apply(root)), wrapLikeQuery(value));
     }
 
     default <X> Specification<ENTITY> byFieldSpecified(Function<Root<ENTITY>, Expression<X>> metaclassFunction,
