@@ -39,6 +39,15 @@ public class FloatFilter extends RangeFilter<Float> {
      * {@inheritDoc}
      */
     @Override
+    public FloatFilter setNotEquals(Float notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public FloatFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

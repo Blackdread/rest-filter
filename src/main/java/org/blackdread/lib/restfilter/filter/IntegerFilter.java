@@ -39,6 +39,15 @@ public class IntegerFilter extends RangeFilter<Integer> {
      * {@inheritDoc}
      */
     @Override
+    public IntegerFilter setNotEquals(Integer notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public IntegerFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

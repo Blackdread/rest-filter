@@ -39,6 +39,15 @@ public class LongFilter extends RangeFilter<Long> {
      * {@inheritDoc}
      */
     @Override
+    public LongFilter setNotEquals(Long notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public LongFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

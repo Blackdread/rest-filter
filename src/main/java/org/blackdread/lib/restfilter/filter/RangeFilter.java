@@ -68,6 +68,15 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
      * {@inheritDoc}
      */
     @Override
+    public RangeFilter<FIELD_TYPE> setNotEquals(FIELD_TYPE notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public RangeFilter<FIELD_TYPE> setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
@@ -149,8 +158,10 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
             + (getLessThan() != null ? "lessThan=" + getLessThan() + ", " : "")
             + (getLessThanOrEqual() != null ? "lessThanOrEqual=" + getLessThanOrEqual() + ", " : "")
             + (getEquals() != null ? "equals=" + getEquals() + ", " : "")
+            + (getNotEquals() != null ? "notEquals=" + getNotEquals() + ", " : "")
             + (getSpecified() != null ? "specified=" + getSpecified() + ", " : "")
             + (getIn() != null ? "in=" + getIn() : "")
+//            + (getNotIn() != null ? "notIn=" + getNotIn() : "")
             + "]";
     }
 

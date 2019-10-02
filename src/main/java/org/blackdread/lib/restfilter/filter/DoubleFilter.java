@@ -39,6 +39,15 @@ public class DoubleFilter extends RangeFilter<Double> {
      * {@inheritDoc}
      */
     @Override
+    public DoubleFilter setNotEquals(Double notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public DoubleFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

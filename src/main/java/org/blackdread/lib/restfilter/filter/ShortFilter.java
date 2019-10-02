@@ -39,6 +39,15 @@ public class ShortFilter extends RangeFilter<Short> {
      * {@inheritDoc}
      */
     @Override
+    public ShortFilter setNotEquals(Short notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ShortFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

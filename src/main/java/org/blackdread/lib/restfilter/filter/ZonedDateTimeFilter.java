@@ -44,6 +44,16 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
+    @DateTimeFormat(iso = ISO.DATE_TIME)
+    public ZonedDateTimeFilter setNotEquals(ZonedDateTime notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ZonedDateTimeFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

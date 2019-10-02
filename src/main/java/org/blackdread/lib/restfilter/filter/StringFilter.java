@@ -49,6 +49,15 @@ public class StringFilter extends Filter<String> {
      * {@inheritDoc}
      */
     @Override
+    public StringFilter setNotEquals(String notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public StringFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

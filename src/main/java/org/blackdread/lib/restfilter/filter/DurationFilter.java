@@ -40,6 +40,15 @@ public class DurationFilter extends RangeFilter<Duration> {
      * {@inheritDoc}
      */
     @Override
+    public DurationFilter setNotEquals(Duration notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public DurationFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

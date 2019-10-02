@@ -40,6 +40,15 @@ public class BigDecimalFilter extends RangeFilter<BigDecimal> {
      * {@inheritDoc}
      */
     @Override
+    public BigDecimalFilter setNotEquals(BigDecimal notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public BigDecimalFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

@@ -44,6 +44,15 @@ public class BooleanFilter extends Filter<Boolean> {
      * {@inheritDoc}
      */
     @Override
+    public BooleanFilter setNotEquals(Boolean notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public BooleanFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

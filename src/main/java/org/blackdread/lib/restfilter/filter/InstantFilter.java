@@ -44,6 +44,16 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
+    @DateTimeFormat(iso = ISO.DATE_TIME)
+    public InstantFilter setNotEquals(Instant notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public InstantFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;

@@ -40,6 +40,15 @@ public class UUIDFilter extends Filter<UUID> {
      * {@inheritDoc}
      */
     @Override
+    public UUIDFilter setNotEquals(UUID notEquals) {
+        super.setNotEquals(notEquals);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public UUIDFilter setSpecified(Boolean specified) {
         super.setSpecified(specified);
         return this;
