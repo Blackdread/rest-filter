@@ -46,8 +46,10 @@ public class FilterTest {
     @Test
     public void testConstructor() {
         Assertions.assertNull(filter.getEquals());
+        Assertions.assertNull(filter.getNotEquals());
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
+        Assertions.assertNull(filter.getNotIn());
         Assertions.assertEquals("Filter []", filter.toString());
     }
 
@@ -56,8 +58,10 @@ public class FilterTest {
         final Filter<Object> copy = filter.copy();
         Assertions.assertNotSame(copy, filter);
         Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getNotEquals());
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
+        Assertions.assertNull(copy.getNotIn());
         Assertions.assertEquals("Filter []", copy.toString());
     }
 
@@ -66,6 +70,13 @@ public class FilterTest {
         Filter<Object> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getEquals());
+    }
+
+    @Test
+    public void testSetNotEquals() {
+        Filter<Object> chain = filter.setNotEquals(value);
+        Assertions.assertEquals(filter, chain);
+        Assertions.assertEquals(value, filter.getNotEquals());
     }
 
     @Test
@@ -81,6 +92,14 @@ public class FilterTest {
         Filter<Object> chain = filter.setIn(list);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(list, filter.getIn());
+    }
+
+    @Test
+    public void testSetNotIn() {
+        List<Object> list = new LinkedList<>();
+        Filter<Object> chain = filter.setNotIn(list);
+        Assertions.assertEquals(filter, chain);
+        Assertions.assertEquals(list, filter.getNotIn());
     }
 
     @Test

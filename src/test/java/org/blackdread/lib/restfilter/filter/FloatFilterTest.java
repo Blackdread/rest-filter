@@ -116,15 +116,17 @@ public class FloatFilterTest {
     @Test
     public void testToString() {
         filter.setEquals(value);
+        filter.setNotEquals(value);
         filter.setLessThan(value);
         filter.setLessThanOrEqual(value);
         filter.setGreaterThan(value);
         filter.setGreaterThanOrEqual(value);
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
+        filter.setNotIn(new LinkedList<>());
         String str = value.toString();
         Assertions.assertEquals("FloatFilter "
             + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+            + "lessThanOrEqual=" + str + ", equals=" + str + ", notEquals=" + str + ", specified=true, in=[], notIn=[]]", filter.toString());
     }
 }

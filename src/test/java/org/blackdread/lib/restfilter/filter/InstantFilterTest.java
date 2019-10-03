@@ -125,7 +125,7 @@ public class InstantFilterTest {
         filter.setIn(new LinkedList<>());
         String str = value.toString();
         Assertions.assertEquals("InstantFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
+            + "[greatderThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
             + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
     }
 }

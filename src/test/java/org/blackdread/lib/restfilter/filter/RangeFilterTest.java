@@ -41,12 +41,14 @@ public class RangeFilterTest {
     @Test
     public void testConstructor() {
         Assertions.assertNull(filter.getEquals());
+        Assertions.assertNull(filter.getNotEquals());
         Assertions.assertNull(filter.getGreaterThan());
         Assertions.assertNull(filter.getGreaterThanOrEqual());
         Assertions.assertNull(filter.getLessThan());
         Assertions.assertNull(filter.getLessThanOrEqual());
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
+        Assertions.assertNull(filter.getNotIn());
         Assertions.assertEquals("RangeFilter []", filter.toString());
     }
 
@@ -55,12 +57,14 @@ public class RangeFilterTest {
         final RangeFilter<Short> copy = filter.copy();
         Assertions.assertNotSame(copy, filter);
         Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getNotEquals());
         Assertions.assertNull(copy.getGreaterThan());
         Assertions.assertNull(copy.getGreaterThanOrEqual());
         Assertions.assertNull(copy.getLessThan());
         Assertions.assertNull(copy.getLessThanOrEqual());
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
+        Assertions.assertNull(copy.getNotIn());
         Assertions.assertEquals("RangeFilter []", copy.toString());
     }
 
@@ -69,6 +73,13 @@ public class RangeFilterTest {
         Filter<Short> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getEquals());
+    }
+
+    @Test
+    public void testSetNotEquals() {
+        Filter<Short> chain = filter.setNotEquals(value);
+        Assertions.assertEquals(filter, chain);
+        Assertions.assertEquals(value, filter.getNotEquals());
     }
 
     @Test
@@ -112,6 +123,14 @@ public class RangeFilterTest {
         Filter<Short> chain = filter.setIn(list);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(list, filter.getIn());
+    }
+
+    @Test
+    public void testSetNotIn() {
+        List<Short> list = new LinkedList<>();
+        Filter<Short> chain = filter.setNotIn(list);
+        Assertions.assertEquals(filter, chain);
+        Assertions.assertEquals(list, filter.getNotIn());
     }
 
     @Test
@@ -165,14 +184,14 @@ public class RangeFilterTest {
     @Test
     public void testToString() {
         filter.setEquals(value);
+        filter.setNotEquals(value);
         filter.setLessThan(value);
         filter.setLessThanOrEqual(value);
         filter.setGreaterThan(value);
         filter.setGreaterThanOrEqual(value);
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
-        Assertions.assertEquals("RangeFilter "
-            + "[greaterThan=42, greaterThanOrEqual=42, lessThan=42, "
-            + "lessThanOrEqual=42, equals=42, specified=true, in=[]]", filter.toString());
+        filter.setNotIn(new LinkedList<>());
+        Assertions.assertEquals("RangeFilter [greaterThan=42, greaterThanOrEqual=42, lessThan=42, lessThanOrEqual=42, equals=42, notEquals=42, specified=true, in=[], notIn=[]]", filter.toString());
     }
 }

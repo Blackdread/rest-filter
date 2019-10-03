@@ -40,8 +40,10 @@ public class BooleanFilterTest {
     @Test
     public void testConstructor() {
         Assertions.assertNull(filter.getEquals());
+        Assertions.assertNull(filter.getNotEquals());
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
+        Assertions.assertNull(filter.getNotIn());
         Assertions.assertEquals("BooleanFilter []", filter.toString());
     }
 
@@ -50,8 +52,10 @@ public class BooleanFilterTest {
         final BooleanFilter copy = filter.copy();
         Assertions.assertNotSame(copy, filter);
         Assertions.assertNull(copy.getEquals());
+        Assertions.assertNull(copy.getNotEquals());
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
+        Assertions.assertNull(copy.getNotIn());
         Assertions.assertEquals("BooleanFilter []", copy.toString());
     }
 
@@ -60,6 +64,13 @@ public class BooleanFilterTest {
         Filter<Boolean> chain = filter.setEquals(value);
         Assertions.assertEquals(filter, chain);
         Assertions.assertEquals(value, filter.getEquals());
+    }
+
+    @Test
+    public void testSetNotEquals() {
+        Filter<Boolean> chain = filter.setNotEquals(value);
+        Assertions.assertEquals(filter, chain);
+        Assertions.assertEquals(value, filter.getNotEquals());
     }
 
     @Test
@@ -78,10 +89,20 @@ public class BooleanFilterTest {
     }
 
     @Test
+    public void testSetNotIn() {
+        List<Boolean> list = new LinkedList<>();
+        Filter<Boolean> chain = filter.setNotIn(list);
+        Assertions.assertEquals(filter, chain);
+        Assertions.assertEquals(list, filter.getNotIn());
+    }
+
+    @Test
     public void testtoString() {
         filter.setEquals(value);
+        filter.setNotEquals(value);
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
-        Assertions.assertEquals("BooleanFilter [equals=true, in=[], specified=true]", filter.toString());
+        filter.setNotIn(new LinkedList<>());
+        Assertions.assertEquals("BooleanFilter [equals=true, notEquals=true, in=[], notIn=[], specified=true]", filter.toString());
     }
 }
