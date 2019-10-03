@@ -66,6 +66,15 @@ public class LongFilter extends RangeFilter<Long> {
      * {@inheritDoc}
      */
     @Override
+    public LongFilter setNotIn(List<Long> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public LongFilter setGreaterThan(Long greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;

@@ -66,6 +66,15 @@ public class FloatFilter extends RangeFilter<Float> {
      * {@inheritDoc}
      */
     @Override
+    public FloatFilter setNotIn(List<Float> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public FloatFilter setGreaterThan(Float greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;

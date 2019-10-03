@@ -62,4 +62,13 @@ public class UUIDFilter extends Filter<UUID> {
         super.setIn(in);
         return this;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UUIDFilter setNotIn(List<UUID> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
 }

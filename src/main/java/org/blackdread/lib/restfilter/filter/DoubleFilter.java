@@ -66,6 +66,15 @@ public class DoubleFilter extends RangeFilter<Double> {
      * {@inheritDoc}
      */
     @Override
+    public DoubleFilter setNotIn(List<Double> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public DoubleFilter setGreaterThan(Double greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;

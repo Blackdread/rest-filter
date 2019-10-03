@@ -66,6 +66,15 @@ public class ShortFilter extends RangeFilter<Short> {
      * {@inheritDoc}
      */
     @Override
+    public ShortFilter setNotIn(List<Short> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public ShortFilter setGreaterThan(Short greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;

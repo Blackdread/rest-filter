@@ -68,4 +68,13 @@ public class BooleanFilter extends Filter<Boolean> {
         super.setIn(in);
         return this;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BooleanFilter setNotIn(List<Boolean> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
 }

@@ -109,4 +109,14 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @DateTimeFormat(iso = ISO.DATE)
+    public LocalDateFilter setNotIn(List<LocalDate> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
 }

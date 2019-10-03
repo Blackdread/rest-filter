@@ -93,6 +93,15 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public RangeFilter<FIELD_TYPE> setNotIn(List<FIELD_TYPE> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
     public FIELD_TYPE getGreaterThan() {
         return greaterThan;
     }
@@ -163,7 +172,7 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
             + (getNotEquals() != null ? "notEquals=" + getNotEquals() + ", " : "")
             + (getSpecified() != null ? "specified=" + getSpecified() + ", " : "")
             + (getIn() != null ? "in=" + getIn() : "")
-//            + (getNotIn() != null ? "notIn=" + getNotIn() : "")
+            + (getNotIn() != null ? "notIn=" + getNotIn() : "")
             + "]";
     }
 

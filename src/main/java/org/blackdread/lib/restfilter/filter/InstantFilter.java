@@ -63,8 +63,19 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
+    @DateTimeFormat(iso = ISO.DATE_TIME)
     public InstantFilter setIn(List<Instant> in) {
         super.setIn(in);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @DateTimeFormat(iso = ISO.DATE_TIME)
+    public InstantFilter setNotIn(List<Instant> notIn) {
+        super.setNotIn(notIn);
         return this;
     }
 

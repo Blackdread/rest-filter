@@ -67,6 +67,15 @@ public class DurationFilter extends RangeFilter<Duration> {
      * {@inheritDoc}
      */
     @Override
+    public DurationFilter setNotIn(List<Duration> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public DurationFilter setGreaterThan(Duration greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;

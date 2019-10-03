@@ -77,6 +77,15 @@ public class StringFilter extends Filter<String> {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public StringFilter setNotIn(List<String> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
     public String getContains() {
         return contains;
     }

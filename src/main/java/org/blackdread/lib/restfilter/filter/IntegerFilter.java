@@ -66,6 +66,15 @@ public class IntegerFilter extends RangeFilter<Integer> {
      * {@inheritDoc}
      */
     @Override
+    public IntegerFilter setNotIn(List<Integer> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public IntegerFilter setGreaterThan(Integer greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;

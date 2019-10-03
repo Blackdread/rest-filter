@@ -67,6 +67,15 @@ public class BigDecimalFilter extends RangeFilter<BigDecimal> {
      * {@inheritDoc}
      */
     @Override
+    public BigDecimalFilter setNotIn(List<BigDecimal> notIn) {
+        super.setNotIn(notIn);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public BigDecimalFilter setGreaterThan(BigDecimal greaterThan) {
         super.setGreaterThan(greaterThan);
         return this;
