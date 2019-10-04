@@ -73,10 +73,15 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      */
     default <X> Specification<ENTITY> buildSpecification(Filter<X> filter, Function<Root<ENTITY>, Expression<X>> metaclassFunction) {
+        // todo notXXXXXX should be extra, so can be used with others
         if (filter.getEquals() != null) {
             return equalsSpecification(metaclassFunction, filter.getEquals());
         } else if (filter.getIn() != null) {
             return valueIn(metaclassFunction, filter.getIn());
+        } else if (filter.getNotEquals() != null) {
+            return notEqualsSpecification(metaclassFunction, filter.getNotEquals());
+        } else if (filter.getNotIn() != null) {
+            return valueNotIn(metaclassFunction, filter.getNotIn());
         } else if (filter.getSpecified() != null) {
             return byFieldSpecified(metaclassFunction, filter.getSpecified());
         }
@@ -105,12 +110,19 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      */
     default Specification<ENTITY> buildSpecification(StringFilter filter, Function<Root<ENTITY>, Expression<String>> metaclassFunction) {
+        // todo notXXXXXX should be extra, so can be used with others
         if (filter.getEquals() != null) {
             return equalsSpecification(metaclassFunction, filter.getEquals());
         } else if (filter.getIn() != null) {
             return valueIn(metaclassFunction, filter.getIn());
+        } else if (filter.getNotEquals() != null) {
+            return notEqualsSpecification(metaclassFunction, filter.getNotEquals());
+        } else if (filter.getNotIn() != null) {
+            return valueNotIn(metaclassFunction, filter.getNotIn());
         } else if (filter.getContains() != null) {
             return likeUpperSpecification(metaclassFunction, filter.getContains());
+        } else if (filter.getNotContains() != null) {
+            return notLikeUpperSpecification(metaclassFunction, filter.getNotContains());
         } else if (filter.getSpecified() != null) {
             return byFieldSpecified(metaclassFunction, filter.getSpecified());
         }
@@ -152,6 +164,12 @@ public interface QueryService<ENTITY> {
         }
 
         Specification<ENTITY> result = Specification.where(null);
+        if (filter.getNotEquals() != null) {
+            result = result.and(notEqualsSpecification(metaclassFunction, filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            result = result.and(valueNotIn(metaclassFunction, filter.getNotIn()));
+        }
         if (filter.getSpecified() != null) {
             result = result.and(byFieldSpecified(metaclassFunction, filter.getSpecified()));
         }
@@ -250,11 +268,21 @@ public interface QueryService<ENTITY> {
             return equalsSpecification(functionToEntity.andThen(entityToColumn), filter.getEquals());
         } else if (filter.getIn() != null) {
             return valueIn(functionToEntity.andThen(entityToColumn), filter.getIn());
-        } else if (filter.getSpecified() != null) {
-            // Interestingly, 'functionToEntity' doesn't work, we need the longer lambda formula
-            return byFieldSpecified(root -> functionToEntity.apply(root), filter.getSpecified());
         }
-        return null;
+
+        Specification<ENTITY> result = Specification.where(null);
+        if (filter.getNotEquals() != null) {
+            result = result.and(notEqualsSpecification(functionToEntity.andThen(entityToColumn), filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            result = result.and(valueNotIn(functionToEntity.andThen(entityToColumn), filter.getNotIn()));
+        }
+        if (filter.getSpecified() != null) {
+            // Interestingly, 'functionToEntity' doesn't work, we need the longer lambda formula
+            result = result.and(byFieldSpecified(root -> functionToEntity.apply(root), filter.getSpecified()));
+        }
+
+        return result;
     }
 
     /**
@@ -310,9 +338,10 @@ public interface QueryService<ENTITY> {
      * @param <X>              The type of the attribute which is filtered.
      * @return a Specification
      */
-    default <OTHER, MISC, X extends Comparable<? super X>> Specification<ENTITY> buildReferringEntitySpecification(RangeFilter<X> filter,
-                                                                                                                   Function<Root<ENTITY>, SetJoin<MISC, OTHER>> functionToEntity,
-                                                                                                                   Function<SetJoin<MISC, OTHER>, Expression<X>> entityToColumn) {
+    default <OTHER, MISC, X extends Comparable<? super X>> Specification<ENTITY> buildReferringEntitySpecification(
+        RangeFilter<X> filter,
+        Function<Root<ENTITY>, SetJoin<MISC, OTHER>> functionToEntity,
+        Function<SetJoin<MISC, OTHER>, Expression<X>> entityToColumn) {
 
         Function<Root<ENTITY>, Expression<X>> fused = functionToEntity.andThen(entityToColumn);
         if (filter.getEquals() != null) {
@@ -321,6 +350,12 @@ public interface QueryService<ENTITY> {
             return valueIn(fused, filter.getIn());
         }
         Specification<ENTITY> result = Specification.where(null);
+        if (filter.getNotEquals() != null) {
+            result = result.and(notEqualsSpecification(fused, filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            result = result.and(valueNotIn(fused, filter.getNotIn()));
+        }
         if (filter.getSpecified() != null) {
             // Interestingly, 'functionToEntity' doesn't work, we need the longer lambda formula
             result = result.and(byFieldSpecified(root -> functionToEntity.apply(root), filter.getSpecified()));
@@ -388,6 +423,17 @@ public interface QueryService<ENTITY> {
                 in = in.value(value);
             }
             return in;
+        };
+    }
+
+    default <X> Specification<ENTITY> valueNotIn(Function<Root<ENTITY>, Expression<X>> metaclassFunction,
+                                                 Collection<X> values) {
+        return (root, query, builder) -> {
+            CriteriaBuilder.In<X> in = builder.in(metaclassFunction.apply(root));
+            for (X value : values) {
+                in = in.value(value);
+            }
+            return in.not();
         };
     }
 
