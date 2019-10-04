@@ -15,6 +15,8 @@ import java.util.Objects;
  * fieldName.notIn='something','other'
  * fieldName.contains='thing'
  * fieldName.notContains='thing'
+ * fieldName.ignoreCase=true
+ * fieldName.ignoreCase=false
  * </code>
  */
 public class StringFilter extends Filter<String> {
@@ -23,6 +25,7 @@ public class StringFilter extends Filter<String> {
 
     private String contains;
     private String notContains;
+    private boolean ignoreCase = true;
 
     public StringFilter() {
     }
@@ -31,6 +34,7 @@ public class StringFilter extends Filter<String> {
         super(filter);
         this.contains = filter.contains;
         this.notContains = filter.notContains;
+        this.ignoreCase = filter.ignoreCase;
     }
 
     /**
@@ -104,6 +108,19 @@ public class StringFilter extends Filter<String> {
         return this;
     }
 
+    /**
+     * Default is true
+     *
+     * @return if ignore case for filtering
+     */
+    public boolean isIgnoreCase() {
+        return ignoreCase;
+    }
+
+    public void setIgnoreCase(boolean ignoreCase) {
+        this.ignoreCase = ignoreCase;
+    }
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -117,12 +134,13 @@ public class StringFilter extends Filter<String> {
         }
         final StringFilter that = (StringFilter) o;
         return Objects.equals(contains, that.contains) &&
-            Objects.equals(notContains, that.notContains);
+            Objects.equals(notContains, that.notContains) &&
+            Objects.equals(ignoreCase, that.ignoreCase);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), contains, notContains);
+        return Objects.hash(super.hashCode(), contains, notContains, ignoreCase);
     }
 
     @Override
@@ -134,8 +152,10 @@ public class StringFilter extends Filter<String> {
             + (getNotEquals() != null ? "notEquals=" + getNotEquals() + ", " : "")
             + (getSpecified() != null ? "specified=" + getSpecified() + ", " : "")
             + (getIn() != null ? "in=" + getIn() + ", " : "")
-            + (getNotIn() != null ? "notIn=" + getNotIn() : "")
+            + (getNotIn() != null ? "notIn=" + getNotIn() + ", " : "")
+            + ("ignoreCase=" + isIgnoreCase())
             + "]";
     }
+
 
 }
