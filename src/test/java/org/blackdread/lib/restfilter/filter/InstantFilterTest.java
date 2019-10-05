@@ -31,7 +31,7 @@ public class InstantFilterTest {
 
     private InstantFilter filter;
 
-    private Instant value = Instant.now();
+    private Instant value = Instant.parse("2019-10-05T13:25:59Z");
 
     @BeforeEach
     public void setup() {
@@ -124,8 +124,6 @@ public class InstantFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        Assertions.assertEquals("InstantFilter "
-            + "[greatderThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+        Assertions.assertEquals("InstantFilter [greaterThan=2019-10-05T13:25:59Z, greaterThanOrEqual=2019-10-05T13:25:59Z, lessThan=2019-10-05T13:25:59Z, lessThanOrEqual=2019-10-05T13:25:59Z, equals=2019-10-05T13:25:59Z, specified=true, in=[]]", filter.toString());
     }
 }

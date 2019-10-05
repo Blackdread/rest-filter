@@ -31,7 +31,7 @@ public class ZonedDateTimeFilterTest {
 
     private ZonedDateTimeFilter filter;
 
-    private ZonedDateTime value = ZonedDateTime.now();
+    private ZonedDateTime value = ZonedDateTime.parse("2019-10-05T21:25:59+08:00[Asia/Shanghai]");
 
     @BeforeEach
     public void setup() {
@@ -124,9 +124,7 @@ public class ZonedDateTimeFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        final String expected = "ZonedDateTimeFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]";
+        final String expected = "ZonedDateTimeFilter [greaterThan=2019-10-05T21:25:59+08:00[Asia/Shanghai], greaterThanOrEqual=2019-10-05T21:25:59+08:00[Asia/Shanghai], lessThan=2019-10-05T21:25:59+08:00[Asia/Shanghai], lessThanOrEqual=2019-10-05T21:25:59+08:00[Asia/Shanghai], equals=2019-10-05T21:25:59+08:00[Asia/Shanghai], specified=true, in=[]]";
         Assertions.assertEquals(expected, filter.toString());
     }
 }

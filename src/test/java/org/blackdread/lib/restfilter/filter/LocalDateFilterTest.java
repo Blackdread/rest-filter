@@ -124,8 +124,6 @@ public class LocalDateFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        Assertions.assertEquals("LocalDateFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+        Assertions.assertEquals("LocalDateFilter [greaterThan=2019-10-05, greaterThanOrEqual=2019-10-05, lessThan=2019-10-05, lessThanOrEqual=2019-10-05, equals=2019-10-05, specified=true, in=[]]", filter.toString());
     }
 }

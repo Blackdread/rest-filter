@@ -123,8 +123,6 @@ public class DoubleFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        Assertions.assertEquals("DoubleFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+        Assertions.assertEquals("DoubleFilter [greaterThan=42.0, greaterThanOrEqual=42.0, lessThan=42.0, lessThanOrEqual=42.0, equals=42.0, specified=true, in=[]]", filter.toString());
     }
 }

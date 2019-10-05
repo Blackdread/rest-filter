@@ -124,8 +124,6 @@ public class BigDecimalFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        Assertions.assertEquals("BigDecimalFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+        Assertions.assertEquals("BigDecimalFilter [greaterThan=42, greaterThanOrEqual=42, lessThan=42, lessThanOrEqual=42, equals=42, specified=true, in=[]]", filter.toString());
     }
 }

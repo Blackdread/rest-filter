@@ -163,7 +163,7 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
 
     @Override
     public String toString() {
-        return getFilterName() + " ["
+        return (getFilterName() + " ["
             + (getGreaterThan() != null ? "greaterThan=" + getGreaterThan() + ", " : "")
             + (getGreaterThanOrEqual() != null ? "greaterThanOrEqual=" + getGreaterThanOrEqual() + ", " : "")
             + (getLessThan() != null ? "lessThan=" + getLessThan() + ", " : "")
@@ -173,7 +173,7 @@ public class RangeFilter<FIELD_TYPE extends Comparable<? super FIELD_TYPE>> exte
             + (getSpecified() != null ? "specified=" + getSpecified() + ", " : "")
             + (getIn() != null ? "in=" + getIn() + ", " : "")
             + (getNotIn() != null ? "notIn=" + getNotIn() : "")
-            + "]";
+            + "]").replace(", ]", "]");
     }
 
 }

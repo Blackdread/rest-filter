@@ -124,9 +124,7 @@ public class IntegerFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        final String expected = "IntegerFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]";
+        final String expected = "IntegerFilter [greaterThan=42, greaterThanOrEqual=42, lessThan=42, lessThanOrEqual=42, equals=42, specified=true, in=[]]";
         Assertions.assertEquals(expected, filter.toString());
     }
 }

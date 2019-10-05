@@ -47,7 +47,7 @@ public class StringFilterTest {
         Assertions.assertNull(filter.getSpecified());
         Assertions.assertNull(filter.getIn());
         Assertions.assertNull(filter.getNotIn());
-        Assertions.assertEquals("StringFilter []", filter.toString());
+        Assertions.assertEquals("StringFilter [ignoreCase=true]", filter.toString());
     }
 
     @Test
@@ -61,7 +61,7 @@ public class StringFilterTest {
         Assertions.assertNull(copy.getSpecified());
         Assertions.assertNull(copy.getIn());
         Assertions.assertNull(copy.getNotIn());
-        Assertions.assertEquals("StringFilter []", copy.toString());
+        Assertions.assertEquals("StringFilter [ignoreCase=true]", copy.toString());
     }
 
     @Test
@@ -166,6 +166,6 @@ public class StringFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         filter.setNotIn(new LinkedList<>());
-        Assertions.assertEquals("StringFilter [contains=foo, notContains=foo, equals=foo, notEquals=foo, specified=true, in=[], notIn=[]]", filter.toString());
+        Assertions.assertEquals("StringFilter [contains=foo, notContains=foo, equals=foo, notEquals=foo, specified=true, in=[], notIn=[], ignoreCase=true]", filter.toString());
     }
 }

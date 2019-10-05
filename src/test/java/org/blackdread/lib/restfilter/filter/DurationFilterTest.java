@@ -123,8 +123,6 @@ public class DurationFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        Assertions.assertEquals("DurationFilter "
-            + "[greaterThan=" + str + ", greaterThanOrEqual=" + str + ", lessThan=" + str + ", "
-            + "lessThanOrEqual=" + str + ", equals=" + str + ", specified=true, in=[]]", filter.toString());
+        Assertions.assertEquals("DurationFilter [greaterThan=PT5M, greaterThanOrEqual=PT5M, lessThan=PT5M, lessThanOrEqual=PT5M, equals=PT5M, specified=true, in=[]]", filter.toString());
     }
 }
