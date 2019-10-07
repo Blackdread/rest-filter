@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * @author Yoann CAPLAIN
  */
-class CriteriaUtilTest {
+public class CriteriaUtilTest {
 
     private Filter<Long> filterLong;
     private RangeFilter<Long> rangeFilterLong;
@@ -88,9 +88,11 @@ class CriteriaUtilTest {
         uuidFilter = new UUIDFilter();
     }
 
-    private static void fillAll(final LongFilter filter) {
+    public static void fillAll(final LongFilter filter) {
         filter.setEquals(1L);
+        filter.setNotEquals(1L);
         filter.setIn(Arrays.asList(1L, 2L));
+        filter.setNotIn(Arrays.asList(1L, 2L));
         filter.setSpecified(true);
         filter.setGreaterThan(1L);
         filter.setGreaterThanOrEqual(1L);
@@ -98,22 +100,29 @@ class CriteriaUtilTest {
         filter.setLessThanOrEqual(1L);
     }
 
-    private static void fillAll(final StringFilter filter) {
+    public static void fillAll(final StringFilter filter) {
         filter.setEquals("any");
+        filter.setNotEquals("any");
         filter.setIn(Arrays.asList("any", "any2"));
+        filter.setNotIn(Arrays.asList("any", "any2"));
         filter.setSpecified(true);
         filter.setContains("any");
+        filter.setNotContains("any");
     }
 
     private static void assertAllNullExceptEquals(final Filter<?> filter) {
         assertNotNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
     }
 
     private static void assertAllNullExceptEquals(final RangeFilter<?> filter) {
         assertNotNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getGreaterThan());
         assertNull(filter.getGreaterThanOrEqual());
@@ -123,20 +132,27 @@ class CriteriaUtilTest {
 
     private static void assertAllNullExceptEquals(final StringFilter filter) {
         assertNotNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getContains());
+        assertNull(filter.getNotContains());
     }
 
     private static void assertAllNullExceptIn(final Filter<?> filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNotNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
     }
 
     private static void assertAllNullExceptIn(final RangeFilter<?> filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNotNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getGreaterThan());
         assertNull(filter.getGreaterThanOrEqual());
@@ -146,14 +162,18 @@ class CriteriaUtilTest {
 
     private static void assertAllNullExceptIn(final StringFilter filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNotNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getContains());
     }
 
     private static void assertAllNullExceptGreaterThan(final RangeFilter<?> filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNotNull(filter.getGreaterThan());
         assertNull(filter.getGreaterThanOrEqual());
@@ -163,7 +183,9 @@ class CriteriaUtilTest {
 
     private static void assertAllNullExceptGreaterThanOrEqual(final RangeFilter<?> filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getGreaterThan());
         assertNotNull(filter.getGreaterThanOrEqual());
@@ -173,7 +195,9 @@ class CriteriaUtilTest {
 
     private static void assertAllNullExceptLessThan(final RangeFilter<?> filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getGreaterThan());
         assertNull(filter.getGreaterThanOrEqual());
@@ -183,7 +207,9 @@ class CriteriaUtilTest {
 
     private static void assertAllNullExceptLessThanOrEqual(final RangeFilter<?> filter) {
         assertNull(filter.getEquals());
+        assertNull(filter.getNotEquals());
         assertNull(filter.getIn());
+        assertNull(filter.getNotIn());
         assertNull(filter.getSpecified());
         assertNull(filter.getGreaterThan());
         assertNull(filter.getGreaterThanOrEqual());
