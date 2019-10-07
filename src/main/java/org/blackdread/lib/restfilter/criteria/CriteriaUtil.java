@@ -275,6 +275,17 @@ public final class CriteriaUtil {
         return criteria;
     }
 
+    protected static <T extends Filter<U>, U> T buildNotEqualsCriteria(final Class<T> criteriaClass, @Nullable final T criteriaPassed, final U value, final boolean replaceValue) {
+        if (value == null)
+            throw new IllegalArgumentException("Value param cannot be null");
+
+        final T criteria = criteriaPassed == null ? createCriteria(criteriaClass) : criteriaPassed;
+        if (!replaceValue && criteria.getNotEquals() != null && !criteria.getNotEquals().equals(value))
+            throw new IllegalArgumentException("NotEquals filter value is not allowed");
+        criteria.setNotEquals(value);
+        return criteria;
+    }
+
     /**
      * Build a filter with the Equals value with the one passed in param, leave other attribute untouched
      *
@@ -294,6 +305,14 @@ public final class CriteriaUtil {
      */
     public static LongFilter buildEqualsCriteria(@Nullable final LongFilter criteriaPassed, final Long value) {
         return buildEqualsCriteria(LongFilter.class, criteriaPassed, value, true);
+    }
+
+    public static LongFilter buildNotEqualsCriteria(final Long value) {
+        return buildNotEqualsCriteria(new LongFilter(), value);
+    }
+
+    public static LongFilter buildNotEqualsCriteria(@Nullable final LongFilter criteriaPassed, final Long value) {
+        return buildNotEqualsCriteria(LongFilter.class, criteriaPassed, value, true);
     }
 
     /**
@@ -445,6 +464,10 @@ public final class CriteriaUtil {
         return buildInCriteria(new LongFilter(), values);
     }
 
+    public static LongFilter buildNotInCriteria(final List<Long> values) {
+        return buildNotInCriteria(new LongFilter(), values);
+    }
+
     /**
      * @param values List of elements to put in filter IN (can not be empty)
      * @return A Filter with a non-empty IN list or throws
@@ -529,6 +552,10 @@ public final class CriteriaUtil {
      */
     public static LongFilter buildInCriteria(@Nullable final LongFilter criteriaPassed, final List<Long> values) {
         return buildInCriteria(LongFilter.class, criteriaPassed, values);
+    }
+
+    public static LongFilter buildNotInCriteria(@Nullable final LongFilter criteriaPassed, final List<Long> values) {
+        return buildNotInCriteria(LongFilter.class, criteriaPassed, values);
     }
 
     /**
@@ -634,6 +661,22 @@ public final class CriteriaUtil {
         criteria.getIn().addAll(values);
 
         checkInNotEmpty(criteria);
+
+        return criteria;
+    }
+
+    public static <T extends Filter<U>, U> T buildNotInCriteria(final Class<T> criteriaClass, @Nullable final T criteriaPassed, final List<U> values) {
+        if (values.isEmpty())
+            throw new IllegalArgumentException("List param cannot be empty");
+
+        final T criteria = criteriaPassed == null ? createCriteria(criteriaClass) : criteriaPassed;
+        if (criteria.getNotIn() == null)
+            criteria.setNotIn(new ArrayList<>(values.size()));
+
+        criteria.getNotIn().clear();
+        criteria.getNotIn().addAll(values);
+
+        checkNotInNotEmpty(criteria);
 
         return criteria;
     }
@@ -1050,6 +1093,13 @@ public final class CriteriaUtil {
         }
     }
 
+    protected static <T extends Filter<?>> void checkNotInNotEmpty(final T criteriaPassed) {
+        if (criteriaPassed.getNotIn() == null || criteriaPassed.getNotIn().isEmpty()) {
+            // If in is empty then the query will be "... IN ()" so it will result in an error. Kept that verification here just in case of multi-thread and list is modified between check of first line (which should never be the case...)
+            throw new IllegalStateException("A NOT IN criteria cannot result in an empty list");
+        }
+    }
+
     /**
      * Build a filter with the Contains value with the one passed in param, leave other attribute untouched
      * <p>Throws if contains value is set and different from the one passed (not case sensitive)</p>
@@ -1068,6 +1118,16 @@ public final class CriteriaUtil {
         if (!replaceValue && criteria.getContains() != null && !criteria.getContains().equalsIgnoreCase(value))
             throw new IllegalArgumentException("Contains filter value is not allowed");
         criteria.setContains(value);
+        return criteria;
+    }
+
+    protected static StringFilter buildNotContainsCriteria(@Nullable final StringFilter criteriaPassed, final String value, final boolean replaceValue) {
+        if (value == null || value.isEmpty())
+            throw new IllegalArgumentException("NotContains value cannot be empty");
+        final StringFilter criteria = criteriaPassed == null ? new StringFilter() : criteriaPassed;
+        if (!replaceValue && criteria.getNotContains() != null && !criteria.getNotContains().equalsIgnoreCase(value))
+            throw new IllegalArgumentException("NotContains filter value is not allowed");
+        criteria.setNotContains(value);
         return criteria;
     }
 
@@ -1092,6 +1152,15 @@ public final class CriteriaUtil {
      */
     public static StringFilter buildContainsCriteria(@Nullable final StringFilter criteriaPassed, final String value) {
         return buildContainsCriteria(criteriaPassed, value, true);
+    }
+
+
+    public static StringFilter buildNotContainsCriteria(final String value) {
+        return buildNotContainsCriteria(new StringFilter(), value);
+    }
+
+    public static StringFilter buildNotContainsCriteria(@Nullable final StringFilter criteriaPassed, final String value) {
+        return buildNotContainsCriteria(criteriaPassed, value, true);
     }
 
     /**
