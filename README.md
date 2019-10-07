@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Blackdread/rest-filter.svg?branch=master)](https://travis-ci.org/Blackdread/rest-filter)
 [![Coverage Status](https://coveralls.io/repos/github/Blackdread/rest-filter/badge.svg?branch=master)](https://coveralls.io/github/Blackdread/rest-filter?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.blackdread.lib/rest-filter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.blackdread.lib/rest-filter)
-[![Github Workflow](https://github.com/Blackdread/rest-filter/workflows/Java%20CI/badge.svg)](https://github.com/Blackdread/rest-filter/workflows/Java%20CI/badge.svg)
+[![Github Workflow](https://github.com/Blackdread/rest-filter/workflows/Java%20CI/badge.svg)](https://github.com/Blackdread/rest-filter/actions?workflow=Java+CI)
 
 # rest-filter
 Provide consistent functionality to filter/sort for the rest API.
