@@ -31,7 +31,7 @@ public class LocalDateFilterTest {
 
     private LocalDateFilter filter;
 
-    private LocalDate value = LocalDate.now();
+    private LocalDate value = LocalDate.parse("2019-10-07");
 
     @BeforeEach
     public void setup() {
@@ -124,6 +124,6 @@ public class LocalDateFilterTest {
         filter.setSpecified(true);
         filter.setIn(new LinkedList<>());
         String str = value.toString();
-        Assertions.assertEquals("LocalDateFilter [greaterThan=2019-10-05, greaterThanOrEqual=2019-10-05, lessThan=2019-10-05, lessThanOrEqual=2019-10-05, equals=2019-10-05, specified=true, in=[]]", filter.toString());
+        Assertions.assertEquals("LocalDateFilter [greaterThan=2019-10-07, greaterThanOrEqual=2019-10-07, lessThan=2019-10-07, lessThanOrEqual=2019-10-07, equals=2019-10-07, specified=true, in=[]]", filter.toString());
     }
 }

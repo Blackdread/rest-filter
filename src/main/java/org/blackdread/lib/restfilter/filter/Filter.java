@@ -124,13 +124,13 @@ public class Filter<FIELD_TYPE> implements Serializable {
 
     @Override
     public String toString() {
-        return getFilterName() + " ["
+        return (getFilterName() + " ["
             + (getEquals() != null ? "equals=" + getEquals() + ", " : "")
             + (getNotEquals() != null ? "notEquals=" + getNotEquals() + ", " : "")
             + (getIn() != null ? "in=" + getIn() + ", " : "")
             + (getNotIn() != null ? "notIn=" + getNotIn() + ", " : "")
             + (getSpecified() != null ? "specified=" + getSpecified() : "")
-            + "]";
+            + "]").replace(", ]", "]");
     }
 
     protected String getFilterName() {
