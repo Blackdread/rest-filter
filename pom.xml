@@ -136,6 +136,7 @@
 
         <dependency>
             <!-- For validators -->
+            <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
             <version>${javax.validation-api.version}</version>
@@ -143,6 +144,7 @@
         </dependency>
         <dependency>
             <!-- For validators -->
+            <!-- https://mvnrepository.com/artifact/org.glassfish/javax.el -->
             <groupId>org.glassfish</groupId>
             <artifactId>javax.el</artifactId>
             <version>3.0.1-b11</version>
@@ -150,12 +152,12 @@
         </dependency>
 <!--        <dependency>-->
 <!--            &lt;!&ndash; For validators &ndash;&gt;-->
+<!--            &lt;!&ndash; https://mvnrepository.com/artifact/javax.el/javax.el-api &ndash;&gt;-->
 <!--            <groupId>javax.el</groupId>-->
 <!--            <artifactId>javax.el-api</artifactId>-->
 <!--            <version>3.0.1-b06</version>-->
 <!--            <optional>true</optional>-->
 <!--        </dependency>-->
-
 
 
         <dependency>
@@ -228,7 +230,6 @@
             <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
-
 
 
         <dependency>
