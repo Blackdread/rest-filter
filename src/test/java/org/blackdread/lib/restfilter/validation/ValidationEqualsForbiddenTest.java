@@ -77,7 +77,7 @@ class ValidationEqualsForbiddenTest {
         final Set<ConstraintViolation<MyCriteria>> constraintViolations = validator.validate(myCriteria);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Le filtre Equals n'est pas autorisé pas", constraintViolations.iterator().next().getMessage());
+        assertEquals("Le filtre Equals n'est pas autorisé", constraintViolations.iterator().next().getMessage());
     }
 
 
