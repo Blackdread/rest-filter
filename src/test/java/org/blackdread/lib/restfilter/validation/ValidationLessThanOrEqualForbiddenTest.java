@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * <p>Created on 2019/10/06.</p>
@@ -78,6 +79,13 @@ class ValidationLessThanOrEqualForbiddenTest {
 
         assertEquals(1, constraintViolations.size());
         assertEquals("Le filtre LessThanOrEqual n'est pas autorisé", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void validatorAcceptNull() {
+        final LessThanOrEqualForbiddenValidator validator = new LessThanOrEqualForbiddenValidator();
+        final boolean valid = validator.isValid(null, null);
+        assertTrue(valid);
     }
 
 

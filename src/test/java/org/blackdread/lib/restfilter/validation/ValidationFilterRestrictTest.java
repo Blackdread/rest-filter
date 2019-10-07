@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * <p>Created on 2019/10/06.</p>
@@ -96,6 +97,12 @@ class ValidationFilterRestrictTest {
         assertEquals(List.of("Le filtre Contains n'est pas autorisé", "Le filtre Equals n'est pas autorisé", "Le filtre Equals n'est pas autorisé", "Le filtre GreaterThan n'est pas autorisé", "Le filtre GreaterThanOrEqual n'est pas autorisé", "Le filtre In n'est pas autorisé", "Le filtre In n'est pas autorisé", "Le filtre LessThan n'est pas autorisé", "Le filtre LessThanOrEqual n'est pas autorisé", "Le filtre NotContains n'est pas autorisé", "Le filtre NotEquals n'est pas autorisé", "Le filtre NotEquals n'est pas autorisé", "Le filtre NotIn n'est pas autorisé", "Le filtre NotIn n'est pas autorisé", "Le filtre Specified n'est pas autorisé", "Le filtre Specified n'est pas autorisé"), actualConstraints);
     }
 
+    @Test
+    void validatorAcceptNull() {
+        final FilterRestrictValidator validator = new FilterRestrictValidator();
+        final boolean valid = validator.isValid(null, null);
+        assertTrue(valid);
+    }
 
     private static class MyCriteria implements Criteria {
 

@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * <p>Created on 2019/10/06.</p>
@@ -79,6 +80,13 @@ class ValidationNotInForbiddenTest {
 
         assertEquals(1, constraintViolations.size());
         assertEquals("Le filtre NotIn n'est pas autorisé", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void validatorAcceptNull() {
+        final NotInForbiddenValidator validator = new NotInForbiddenValidator();
+        final boolean valid = validator.isValid(null, null);
+        assertTrue(valid);
     }
 
 

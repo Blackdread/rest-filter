@@ -19,6 +19,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * <p>Created on 2019/10/06.</p>
@@ -78,6 +79,13 @@ class ValidationGreaterThanForbiddenTest {
 
         assertEquals(1, constraintViolations.size());
         assertEquals("Le filtre GreaterThan n'est pas autorisé", constraintViolations.iterator().next().getMessage());
+    }
+
+    @Test
+    void validatorAcceptNull() {
+        final GreaterThanForbiddenValidator validator = new GreaterThanForbiddenValidator();
+        final boolean valid = validator.isValid(null, null);
+        assertTrue(valid);
     }
 
 
