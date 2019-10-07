@@ -25,9 +25,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Yoann CAPLAIN
  */
-class ValidationTest {
+class ValidationEqualsForbiddenTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(ValidationEqualsForbiddenTest.class);
 
     private Validator validator;
 
@@ -54,14 +54,14 @@ class ValidationTest {
         final Set<ConstraintViolation<MyCriteria>> constraintViolations = validator.validate(myCriteria);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Equals filter is not supported", constraintViolations.iterator().next().getMessage());
+        assertEquals("Equals filter is not allowed", constraintViolations.iterator().next().getMessage());
     }
 
     @Test
     void hasNoViolationForOthers() {
         myCriteria.longFilter = new LongFilter();
         CriteriaUtilTest.fillAll(myCriteria.longFilter);
-        myCriteria.longFilter = null;
+        myCriteria.longFilter.setEquals(null);
 
         final Set<ConstraintViolation<MyCriteria>> constraintViolations = validator.validate(myCriteria);
 
@@ -77,13 +77,13 @@ class ValidationTest {
         final Set<ConstraintViolation<MyCriteria>> constraintViolations = validator.validate(myCriteria);
 
         assertEquals(1, constraintViolations.size());
-        assertEquals("Le filtre ne supporte pas Equals", constraintViolations.iterator().next().getMessage());
+        assertEquals("Le filtre Equals n'est pas autorisé pas", constraintViolations.iterator().next().getMessage());
     }
 
 
     private static class MyCriteria implements Criteria {
 
-        @EqualsUnsupported
+        @EqualsForbidden
         private LongFilter longFilter;
 
         @Override

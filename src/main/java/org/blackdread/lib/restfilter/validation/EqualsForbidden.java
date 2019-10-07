@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.blackdread.lib.restfilter.validation.EqualsUnsupported.List;
+import static org.blackdread.lib.restfilter.validation.EqualsForbidden.List;
 
 /**
  *
@@ -18,27 +18,27 @@ import static org.blackdread.lib.restfilter.validation.EqualsUnsupported.List;
  * @author Yoann CAPLAIN
  */
 @Documented
-@Constraint(validatedBy = EqualsUnsupportedValidator.class)
+@Constraint(validatedBy = EqualsForbiddenValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Repeatable(List.class)
-public @interface EqualsUnsupported {
+public @interface EqualsForbidden {
 
-    String message() default "{org.blackdread.lib.restfilter.validation.EqualsUnsupported.message}";
+    String message() default "{org.blackdread.lib.restfilter.validation.EqualsForbidden.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Defines several {@code @EqualsUnsupported} constraints on the same element.
+     * Defines several {@code @EqualsForbidden} constraints on the same element.
      *
-     * @see EqualsUnsupported
+     * @see EqualsForbidden
      */
     @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
     @Retention(RUNTIME)
     @Documented
     public @interface List {
-        EqualsUnsupported[] value();
+        EqualsForbidden[] value();
     }
 }

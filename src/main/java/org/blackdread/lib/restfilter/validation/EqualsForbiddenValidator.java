@@ -10,12 +10,12 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author Yoann CAPLAIN
  */
-public class EqualsUnsupportedValidator implements ConstraintValidator<EqualsUnsupported, Filter<?>> {
+public class EqualsForbiddenValidator implements ConstraintValidator<EqualsForbidden, Filter<?>> {
 
-//    private static final Logger log = LoggerFactory.getLogger(EqualsUnsupportedValidator.class);
+//    private static final Logger log = LoggerFactory.getLogger(EqualsForbiddenValidator.class);
 
     @Override
-    public void initialize(EqualsUnsupported constraintAnnotation) {
+    public void initialize(EqualsForbidden constraintAnnotation) {
     }
 
     @Override
