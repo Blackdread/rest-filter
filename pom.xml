@@ -46,13 +46,16 @@
         <!--        <java.version>1.8</java.version>-->
         <java.version>12</java.version>
 
-        <spring-context.version>5.1.6.RELEASE</spring-context.version>
-        <spring-data-jpa.version>2.1.8.RELEASE</spring-data-jpa.version>
+        <spring-framework.version>5.2.0.RELEASE</spring-framework.version>
+        <spring-context.version>${spring-framework.version}</spring-context.version>
+        <spring-web.version>${spring-framework.version}</spring-web.version>
+        <spring-data-jpa.version>2.2.0.RELEASE</spring-data-jpa.version>
 
         <jooq.version>3.12.0</jooq.version>
 
         <guava.version>28.0-jre</guava.version>
 
+        <commons-text.version>1.8</commons-text.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
 
         <!-- Those 3 below only used in test for now for entity/jpa generation-->
@@ -100,6 +103,7 @@
         <!--     <version>${guava.version}</version>-->
         <!-- </dependency>-->
         <!-- <dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
         <!--     <groupId>org.apache.commons</groupId>-->
         <!--     <artifactId>commons-lang3</artifactId>-->
         <!--     <version>${commons-lang3.version}</version>-->
@@ -107,20 +111,31 @@
 
         <dependency>
             <!-- Only used for camel case, maybe should just copy the code so no dependency on it -->
+            <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.7</version>
+            <version>${commons-text.version}</version>
         </dependency>
 
         <dependency>
             <!-- Used in filters -->
+            <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${spring-context.version}</version>
         </dependency>
 
         <dependency>
+            <!-- Used in validator of Multipart -->
+            <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+            <version>${spring-web.version}</version>
+        </dependency>
+
+        <dependency>
             <!-- Used in QueryService -->
+            <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-jpa -->
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring-data-jpa.version}</version>
@@ -150,14 +165,14 @@
             <version>3.0.1-b11</version>
             <optional>true</optional>
         </dependency>
-<!--        <dependency>-->
-<!--            &lt;!&ndash; For validators &ndash;&gt;-->
-<!--            &lt;!&ndash; https://mvnrepository.com/artifact/javax.el/javax.el-api &ndash;&gt;-->
-<!--            <groupId>javax.el</groupId>-->
-<!--            <artifactId>javax.el-api</artifactId>-->
-<!--            <version>3.0.1-b06</version>-->
-<!--            <optional>true</optional>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            &lt;!&ndash; For validators &ndash;&gt;-->
+        <!--            &lt;!&ndash; https://mvnrepository.com/artifact/javax.el/javax.el-api &ndash;&gt;-->
+        <!--            <groupId>javax.el</groupId>-->
+        <!--            <artifactId>javax.el-api</artifactId>-->
+        <!--            <version>3.0.1-b06</version>-->
+        <!--            <optional>true</optional>-->
+        <!--        </dependency>-->
 
 
         <dependency>
