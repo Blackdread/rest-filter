@@ -58,8 +58,8 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    default <X> Specification<ENTITY> buildSpecification(Filter<X> filter, SingularAttribute<? super ENTITY, X>
-        field) {
+    @Deprecated(since = "2.0.1", forRemoval = true)
+    default <X> Specification<ENTITY> buildSpecification(Filter<X> filter, SingularAttribute<? super ENTITY, X> field) {
         return buildSpecification(filter, root -> root.get(field));
     }
 
@@ -73,19 +73,23 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      */
     default <X> Specification<ENTITY> buildSpecification(Filter<X> filter, Function<Root<ENTITY>, Expression<X>> metaclassFunction) {
-        // todo notXXXXXX should be extra, so can be used with others
         if (filter.getEquals() != null) {
             return equalsSpecification(metaclassFunction, filter.getEquals());
         } else if (filter.getIn() != null) {
             return valueIn(metaclassFunction, filter.getIn());
-        } else if (filter.getNotEquals() != null) {
-            return notEqualsSpecification(metaclassFunction, filter.getNotEquals());
-        } else if (filter.getNotIn() != null) {
-            return valueNotIn(metaclassFunction, filter.getNotIn());
-        } else if (filter.getSpecified() != null) {
-            return byFieldSpecified(metaclassFunction, filter.getSpecified());
         }
-        return null;
+
+        Specification<ENTITY> result = Specification.where(null);
+        if (filter.getNotEquals() != null) {
+            result = result.and(notEqualsSpecification(metaclassFunction, filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            result = result.and(valueNotIn(metaclassFunction, filter.getNotIn()));
+        }
+        if (filter.getSpecified() != null) {
+            result = result.and(byFieldSpecified(metaclassFunction, filter.getSpecified()));
+        }
+        return result;
     }
 
     /**
@@ -96,8 +100,7 @@ public interface QueryService<ENTITY> {
      * @param field  the JPA static metamodel representing the field.
      * @return a Specification
      */
-    default Specification<ENTITY> buildStringSpecification(StringFilter filter, SingularAttribute<? super ENTITY,
-        String> field) {
+    default Specification<ENTITY> buildStringSpecification(StringFilter filter, SingularAttribute<? super ENTITY, String> field) {
         return buildSpecification(filter, root -> root.get(field));
     }
 
@@ -110,23 +113,29 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      */
     default Specification<ENTITY> buildSpecification(StringFilter filter, Function<Root<ENTITY>, Expression<String>> metaclassFunction) {
-        // todo notXXXXXX should be extra, so can be used with others
         if (filter.getEquals() != null) {
             return equalsSpecification(metaclassFunction, filter.getEquals());
         } else if (filter.getIn() != null) {
             return valueIn(metaclassFunction, filter.getIn());
-        } else if (filter.getNotEquals() != null) {
-            return notEqualsSpecification(metaclassFunction, filter.getNotEquals());
-        } else if (filter.getNotIn() != null) {
-            return valueNotIn(metaclassFunction, filter.getNotIn());
-        } else if (filter.getContains() != null) {
-            return likeUpperSpecification(metaclassFunction, filter.getContains());
-        } else if (filter.getNotContains() != null) {
-            return notLikeUpperSpecification(metaclassFunction, filter.getNotContains());
-        } else if (filter.getSpecified() != null) {
-            return byFieldSpecified(metaclassFunction, filter.getSpecified());
         }
-        return null;
+
+        Specification<ENTITY> result = Specification.where(null);
+        if (filter.getNotEquals() != null) {
+            result = result.and(notEqualsSpecification(metaclassFunction, filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            result = result.and(valueNotIn(metaclassFunction, filter.getNotIn()));
+        }
+        if (filter.getSpecified() != null) {
+            result = result.and(byFieldSpecified(metaclassFunction, filter.getSpecified()));
+        }
+        if (filter.getContains() != null) {
+            result = result.and(likeUpperSpecification(metaclassFunction, filter.getContains()));
+        }
+        if (filter.getNotContains() != null) {
+            result = result.and(notLikeUpperSpecification(metaclassFunction, filter.getNotContains()));
+        }
+        return result;
     }
 
     /**
@@ -140,6 +149,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
+    @Deprecated(since = "2.0.1", forRemoval = true)
     default <X extends Comparable<? super X>> Specification<ENTITY> buildRangeSpecification(RangeFilter<X> filter,
                                                                                             SingularAttribute<? super ENTITY, X> field) {
         return buildSpecification(filter, root -> root.get(field));
@@ -207,6 +217,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
+    @Deprecated(since = "2.0.1", forRemoval = true)
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SingularAttribute<? super ENTITY, OTHER> reference,
                                                                                SingularAttribute<? super OTHER, X> valueField) {
@@ -232,6 +243,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
+    @Deprecated(since = "2.0.1", forRemoval = true)
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SetAttribute<ENTITY, OTHER> reference,
                                                                                SingularAttribute<OTHER, X> valueField) {
@@ -261,6 +273,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
+    @Deprecated(since = "2.0.1", forRemoval = true)
     default <OTHER, MISC, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                      Function<Root<ENTITY>, SetJoin<MISC, OTHER>> functionToEntity,
                                                                                      Function<SetJoin<MISC, OTHER>, Expression<X>> entityToColumn) {
@@ -306,6 +319,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
+    @Deprecated(since = "2.0.1", forRemoval = true)
     default <OTHER, X extends Comparable<? super X>> Specification<ENTITY> buildReferringEntitySpecification(RangeFilter<X> filter,
                                                                                                              SetAttribute<ENTITY, OTHER> reference,
                                                                                                              SingularAttribute<OTHER, X> valueField) {

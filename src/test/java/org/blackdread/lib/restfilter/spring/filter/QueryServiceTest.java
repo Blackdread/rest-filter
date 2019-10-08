@@ -12,7 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * <p>Created on 2019/07/31.</p>
@@ -57,7 +57,11 @@ class QueryServiceTest {
     @Test
     void buildSpecificationNone() {
         final Specification<ChildEntity> specification = queryService.buildSpecification((Filter<Long>) new LongFilter(), root -> root.get(""));
-        assertNull(specification);
+        assertNotNull(specification);
+        final Specification<ChildEntity> specification2 = queryService.buildSpecification(new LongFilter(), root -> root.get(""));
+        assertNotNull(specification2);
+        final Specification<ChildEntity> specification3 = queryService.buildSpecification(new StringFilter(), root -> root.get(""));
+        assertNotNull(specification3);
     }
 
     @Test
