@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.jooq.impl.DSL.noCondition;
 import static org.jooq.impl.DSL.trueCondition;
 
 /**
@@ -44,9 +45,12 @@ class JooqFilterUtilTest {
 
         stringFilter = new StringFilter();
         stringFilter.setEquals("any");
+        stringFilter.setNotEquals("any2");
         stringFilter.setIn(Arrays.asList("any", "any2"));
+        stringFilter.setNotIn(Arrays.asList("any3", "any4"));
         stringFilter.setSpecified(true);
         stringFilter.setContains("any");
+        stringFilter.setNotContains("any2");
 
         longField = DSL.field("myLong", Long.class);
         stringField = DSL.field("myString", String.class);
@@ -55,7 +59,7 @@ class JooqFilterUtilTest {
     @Test
     void buildConditionNone() {
         final Condition condition = JooqFilterUtil.buildCondition((Filter<Long>) new LongFilter(), longField);
-        Assertions.assertEquals(trueCondition(), condition);
+        Assertions.assertEquals(noCondition(), condition);
     }
 
     @Test
@@ -86,7 +90,7 @@ class JooqFilterUtilTest {
     @Test
     void buildRangeConditionNone() {
         final Condition condition = JooqFilterUtil.buildCondition(new LongFilter(), longField);
-        Assertions.assertEquals(trueCondition(), condition);
+        Assertions.assertEquals(noCondition(), condition);
     }
 
     @Test
@@ -111,11 +115,11 @@ class JooqFilterUtilTest {
         longFilter.setLessThan(null);
         longFilter.setLessThanOrEqual(null);
         final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
-        Assertions.assertEquals(trueCondition().and(longField.isNotNull()), condition);
+        Assertions.assertEquals(noCondition().and(longField.isNotNull()), condition);
 
         longFilter.setSpecified(false);
         final Condition condition2 = JooqFilterUtil.buildCondition(longFilter, longField);
-        Assertions.assertEquals(trueCondition().and(longField.isNull()), condition2);
+        Assertions.assertEquals(noCondition().and(longField.isNull()), condition2);
     }
 
     @Test
@@ -123,11 +127,11 @@ class JooqFilterUtilTest {
         longFilter.setEquals(null);
         longFilter.setIn(null);
         final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
-        Assertions.assertEquals(DSL.and(trueCondition(),longField.isNotNull(), longField.greaterThan(1L), longField.greaterOrEqual(1L), longField.lessThan(1L), longField.lessOrEqual(1L)), condition);
+        Assertions.assertEquals(DSL.and(noCondition(), longField.isNotNull(), longField.greaterThan(1L), longField.greaterOrEqual(1L), longField.lessThan(1L), longField.lessOrEqual(1L)), condition);
 
         longFilter.setSpecified(false);
         final Condition condition2 = JooqFilterUtil.buildCondition(longFilter, longField);
-        Assertions.assertEquals(DSL.and(trueCondition(),longField.isNull(), longField.greaterThan(1L), longField.greaterOrEqual(1L), longField.lessThan(1L), longField.lessOrEqual(1L)), condition2);
+        Assertions.assertEquals(DSL.and(noCondition(), longField.isNull(), longField.greaterThan(1L), longField.greaterOrEqual(1L), longField.lessThan(1L), longField.lessOrEqual(1L)), condition2);
     }
 
     @Test
@@ -138,41 +142,151 @@ class JooqFilterUtilTest {
         longFilter.setGreaterThan(null);
         longFilter.setLessThan(null);
         final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
-        Assertions.assertEquals(DSL.and(trueCondition(),longField.greaterOrEqual(1L), longField.lessOrEqual(1L)), condition);
+        Assertions.assertEquals(DSL.and(noCondition(), longField.greaterOrEqual(1L), longField.lessOrEqual(1L)), condition);
     }
 
     @Test
     void buildStringConditionNone() {
         final Condition condition = JooqFilterUtil.buildCondition(new StringFilter(), stringField);
-        Assertions.assertEquals(trueCondition(), condition);
+        Assertions.assertEquals(noCondition(), condition);
     }
 
     @Test
     void buildStringConditionEquals() {
         final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.equalIgnoreCase("any"), condition);
+    }
+
+    @Test
+    void buildStringConditionEqualsCase() {
+        stringFilter.setIgnoreCase(false);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
         Assertions.assertEquals(stringField.equal("any"), condition);
+    }
+
+    @Test
+    void buildStringConditionNotEquals() {
+        stringFilter.setEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.notEqualIgnoreCase("any2"), condition);
+    }
+
+    @Test
+    void buildStringConditionNotEqualsCase() {
+        stringFilter.setEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
+        stringFilter.setIgnoreCase(false);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.notEqual("any2"), condition);
     }
 
     @Test
     void buildStringConditionIn() {
         stringFilter.setEquals(null);
         final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(DSL.upper(stringField).in(Stream.of("any", "any2").map(String::toUpperCase).collect(Collectors.toSet())), condition);
+    }
+
+    @Test
+    void buildStringConditionInCase() {
+        stringFilter.setEquals(null);
+        stringFilter.setIgnoreCase(false);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
         Assertions.assertEquals(stringField.in(Arrays.asList("any", "any2")), condition);
+    }
+
+    @Test
+    void buildStringConditionNotIn() {
+        stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(DSL.upper(stringField).notIn(Stream.of("any3", "any4").map(String::toUpperCase).collect(Collectors.toSet())), condition);
+    }
+
+    @Test
+    void buildStringConditionNotInCase() {
+        stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
+        stringFilter.setIgnoreCase(false);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.notIn(Arrays.asList("any3", "any4")), condition);
     }
 
     @Test
     void buildStringConditionContains() {
         stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
         stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setNotContains(null);
         final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
         Assertions.assertEquals(stringField.containsIgnoreCase("any"), condition);
     }
 
     @Test
+    void buildStringConditionContainsCase() {
+        stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setNotContains(null);
+        stringFilter.setIgnoreCase(false);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.contains("any"), condition);
+    }
+
+    @Test
+    void buildStringConditionNotContains() {
+        stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.notContainsIgnoreCase("any2"), condition);
+    }
+
+    @Test
+    void buildStringConditionNotContainsCase() {
+        stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        stringFilter.setIgnoreCase(false);
+        final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
+        Assertions.assertEquals(stringField.notContains("any2"), condition);
+    }
+
+    @Test
     void buildStringConditionSpecified() {
         stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
         stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
         stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
         final Condition condition = JooqFilterUtil.buildCondition(stringFilter, stringField);
         Assertions.assertEquals(stringField.isNotNull(), condition);
 
@@ -194,6 +308,18 @@ class JooqFilterUtilTest {
     }
 
     @Test
+    void buildStringConditionIgnoreCaseNotEquals() {
+        stringFilter.setEquals(null);
+        stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
+        final Condition condition = JooqFilterUtil.buildConditionIgnoreCase(stringFilter, stringField);
+        Assertions.assertEquals(stringField.notEqualIgnoreCase("any2"), condition);
+    }
+
+    @Test
     void buildStringConditionIgnoreCaseIn() {
         stringFilter.setEquals(null);
         final Condition condition = JooqFilterUtil.buildConditionIgnoreCase(stringFilter, stringField);
@@ -203,7 +329,11 @@ class JooqFilterUtilTest {
     @Test
     void buildStringConditionIgnoreCaseContains() {
         stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
         stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
+        stringFilter.setSpecified(null);
+        stringFilter.setNotContains(null);
         final Condition condition = JooqFilterUtil.buildConditionIgnoreCase(stringFilter, stringField);
         Assertions.assertEquals(stringField.containsIgnoreCase("any"), condition);
     }
@@ -211,8 +341,11 @@ class JooqFilterUtilTest {
     @Test
     void buildStringConditionIgnoreCaseSpecified() {
         stringFilter.setEquals(null);
+        stringFilter.setNotEquals(null);
         stringFilter.setIn(null);
+        stringFilter.setNotIn(null);
         stringFilter.setContains(null);
+        stringFilter.setNotContains(null);
         final Condition condition = JooqFilterUtil.buildConditionIgnoreCase(stringFilter, stringField);
         Assertions.assertEquals(stringField.isNotNull(), condition);
 

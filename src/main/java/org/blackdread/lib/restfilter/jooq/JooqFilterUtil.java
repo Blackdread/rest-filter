@@ -47,10 +47,18 @@ public class JooqFilterUtil {
             return field.equal(filter.getEquals());
         } else if (filter.getIn() != null) {
             return field.in(filter.getIn());
-        } else if (filter.getSpecified() != null) {
-            return filter.getSpecified() ? field.isNotNull() : field.isNull();
         }
-        return DSL.trueCondition();
+        Condition condition = DSL.noCondition();
+        if (filter.getNotEquals() != null) {
+            condition = condition.and(field.notEqual(filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            condition = condition.and(field.notIn(filter.getNotIn()));
+        }
+        if (filter.getSpecified() != null) {
+            condition = condition.and(filter.getSpecified() ? field.isNotNull() : field.isNull());
+        }
+        return condition;
     }
 
     public static <X extends Comparable<? super X>, T extends Field<X>> Condition buildCondition(final RangeFilter<X> filter, final T field) {
@@ -60,7 +68,13 @@ public class JooqFilterUtil {
             return field.in(filter.getIn());
         }
 
-        Condition condition = DSL.trueCondition();
+        Condition condition = DSL.noCondition();
+        if (filter.getNotEquals() != null) {
+            condition = condition.and(field.notEqual(filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            condition = condition.and(field.notIn(filter.getNotIn()));
+        }
         if (filter.getSpecified() != null) {
             condition = condition.and(filter.getSpecified() ? field.isNotNull() : field.isNull());
         }
@@ -81,28 +95,76 @@ public class JooqFilterUtil {
 
     public static <T extends Field<String>> Condition buildCondition(final StringFilter filter, final T field) {
         if (filter.getEquals() != null) {
-            return field.equal(filter.getEquals());
+            return filter.isIgnoreCase() ?
+                field.equalIgnoreCase(filter.getEquals()) :
+                field.equal(filter.getEquals());
         } else if (filter.getIn() != null) {
-            return field.in(filter.getIn());
-        } else if (filter.getContains() != null) {
-            return field.containsIgnoreCase(filter.getContains());
-        } else if (filter.getSpecified() != null) {
-            return filter.getSpecified() ? field.isNotNull() : field.isNull();
+            return filter.isIgnoreCase() ?
+                DSL.upper(field).in(filter.getIn().stream().map(String::toUpperCase).collect(Collectors.toSet())) :
+                field.in(filter.getIn());
         }
-        return DSL.trueCondition();
+
+        Condition condition = DSL.noCondition();
+        if (filter.getNotEquals() != null) {
+            condition = filter.isIgnoreCase() ?
+                condition.and(field.notEqualIgnoreCase(filter.getNotEquals())) :
+                condition.and(field.notEqual(filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            condition = condition.and(filter.isIgnoreCase() ?
+                DSL.upper(field).notIn(filter.getNotIn().stream().map(String::toUpperCase).collect(Collectors.toSet())) :
+                field.notIn(filter.getNotIn()));
+        }
+        if (filter.getSpecified() != null) {
+            condition = condition.and(filter.getSpecified() ? field.isNotNull() : field.isNull());
+        }
+        if (filter.getContains() != null) {
+            condition = condition.and(filter.isIgnoreCase() ?
+                field.containsIgnoreCase(filter.getContains()) :
+                field.contains(filter.getContains()));
+        }
+        if (filter.getNotContains() != null) {
+            condition = condition.and(filter.isIgnoreCase() ?
+                field.notContainsIgnoreCase(filter.getNotContains()) :
+                field.notContains(filter.getNotContains()));
+        }
+
+        return condition;
     }
 
+    /**
+     * @param filter filter
+     * @param field  field
+     * @param <T>    field type
+     * @return condition
+     * @deprecated prefer {@link #buildCondition(StringFilter, Field)} as it supports conditional ignore case
+     */
+    @Deprecated(since = "2.0.1", forRemoval = true)
     public static <T extends Field<String>> Condition buildConditionIgnoreCase(final StringFilter filter, final T field) {
         if (filter.getEquals() != null) {
             return field.equalIgnoreCase(filter.getEquals());
         } else if (filter.getIn() != null) {
             return DSL.upper(field).in(filter.getIn().stream().map(String::toUpperCase).collect(Collectors.toSet()));
-        } else if (filter.getContains() != null) {
-            return field.containsIgnoreCase(filter.getContains());
-        } else if (filter.getSpecified() != null) {
-            return filter.getSpecified() ? field.isNotNull() : field.isNull();
         }
-        return DSL.trueCondition();
+
+        Condition condition = DSL.noCondition();
+        if (filter.getNotEquals() != null) {
+            condition = condition.and(field.notEqualIgnoreCase(filter.getNotEquals()));
+        }
+        if (filter.getNotIn() != null) {
+            condition = condition.and(DSL.upper(field).notIn(filter.getNotIn().stream().map(String::toUpperCase).collect(Collectors.toSet())));
+        }
+        if (filter.getSpecified() != null) {
+            condition = condition.and(filter.getSpecified() ? field.isNotNull() : field.isNull());
+        }
+        if (filter.getContains() != null) {
+            condition = condition.and(field.containsIgnoreCase(filter.getContains()));
+        }
+        if (filter.getNotContains() != null) {
+            condition = condition.and(field.notContainsIgnoreCase(filter.getNotContains()));
+        }
+
+        return condition;
     }
 
     private JooqFilterUtil() {
