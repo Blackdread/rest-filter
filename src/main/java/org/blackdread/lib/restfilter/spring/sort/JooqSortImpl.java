@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -51,6 +53,8 @@ import static java.util.Collections.unmodifiableMap;
  *
  * @author Yoann CAPLAIN
  */
+@Immutable
+@ThreadSafe
 class JooqSortImpl implements JooqSort {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortImpl.class);

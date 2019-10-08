@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 
 import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -47,6 +48,7 @@ import java.util.stream.Collectors;
  * @author Yoann CAPLAIN
  */
 @Immutable
+@ThreadSafe
 public class JooqSortBuilder {
 
     private static final Logger log = LoggerFactory.getLogger(JooqSortBuilder.class);
