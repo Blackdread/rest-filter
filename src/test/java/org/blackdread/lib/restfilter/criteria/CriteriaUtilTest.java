@@ -88,6 +88,14 @@ public class CriteriaUtilTest {
         uuidFilter = new UUIDFilter();
     }
 
+    public static <T> void fillAll(final Filter<T> filter, final T value, final T value2) {
+        filter.setEquals(value);
+        filter.setNotEquals(value);
+        filter.setIn(Arrays.asList(value, value2));
+        filter.setNotIn(Arrays.asList(value, value2));
+        filter.setSpecified(true);
+    }
+
     public static void fillAll(final LongFilter filter) {
         filter.setEquals(1L);
         filter.setNotEquals(1L);
@@ -98,6 +106,18 @@ public class CriteriaUtilTest {
         filter.setGreaterThanOrEqual(1L);
         filter.setLessThan(1L);
         filter.setLessThanOrEqual(1L);
+    }
+
+    public static <T extends Comparable<? super T>> void fillAll(final RangeFilter<T> filter, final T value, final T value2) {
+        filter.setEquals(value);
+        filter.setNotEquals(value);
+        filter.setIn(Arrays.asList(value, value2));
+        filter.setNotIn(Arrays.asList(value, value2));
+        filter.setSpecified(true);
+        filter.setGreaterThan(value);
+        filter.setGreaterThanOrEqual(value);
+        filter.setLessThan(value);
+        filter.setLessThanOrEqual(value);
     }
 
     public static void fillAll(final StringFilter filter) {
