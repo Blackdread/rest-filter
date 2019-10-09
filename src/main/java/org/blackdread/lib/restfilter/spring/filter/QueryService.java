@@ -114,26 +114,46 @@ public interface QueryService<ENTITY> {
      */
     default Specification<ENTITY> buildSpecification(StringFilter filter, Function<Root<ENTITY>, Expression<String>> metaclassFunction) {
         if (filter.getEquals() != null) {
-            return equalsSpecification(metaclassFunction, filter.getEquals());
+            return filter.isIgnoreCase() ?
+                equalsIgnoreCaseSpecification(metaclassFunction, filter.getEquals()) :
+                equalsSpecification(metaclassFunction, filter.getEquals());
         } else if (filter.getIn() != null) {
-            return valueIn(metaclassFunction, filter.getIn());
+            return filter.isIgnoreCase() ?
+                valueInIgnoreCase(metaclassFunction, filter.getIn()) :
+                valueIn(metaclassFunction, filter.getIn());
         }
 
         Specification<ENTITY> result = Specification.where(null);
         if (filter.getNotEquals() != null) {
-            result = result.and(notEqualsSpecification(metaclassFunction, filter.getNotEquals()));
+            result = result.and(
+                filter.isIgnoreCase() ?
+                    notEqualsIgnoreCaseSpecification(metaclassFunction, filter.getNotEquals()) :
+                    notEqualsSpecification(metaclassFunction, filter.getNotEquals())
+            );
         }
         if (filter.getNotIn() != null) {
-            result = result.and(valueNotIn(metaclassFunction, filter.getNotIn()));
+            result = result.and(
+                filter.isIgnoreCase() ?
+                    valueNotInIgnoreCase(metaclassFunction, filter.getNotIn()) :
+                    valueNotIn(metaclassFunction, filter.getNotIn())
+            );
         }
         if (filter.getSpecified() != null) {
             result = result.and(byFieldSpecified(metaclassFunction, filter.getSpecified()));
         }
         if (filter.getContains() != null) {
-            result = result.and(likeUpperSpecification(metaclassFunction, filter.getContains()));
+            result = result.and(
+                filter.isIgnoreCase() ?
+                    likeIgnoreCaseSpecification(metaclassFunction, filter.getContains()) :
+                    likeSpecification(metaclassFunction, filter.getContains())
+            );
         }
         if (filter.getNotContains() != null) {
-            result = result.and(notLikeUpperSpecification(metaclassFunction, filter.getNotContains()));
+            result = result.and(
+                filter.isIgnoreCase() ?
+                    notLikeIgnoreCaseSpecification(metaclassFunction, filter.getNotContains()) :
+                    notLikeSpecification(metaclassFunction, filter.getNotContains())
+            );
         }
         return result;
     }
@@ -405,14 +425,44 @@ public interface QueryService<ENTITY> {
         return (root, query, builder) -> builder.notEqual(metaclassFunction.apply(root), value);
     }
 
-    default Specification<ENTITY> likeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
-                                                         String value) {
-        return (root, query, builder) -> builder.like(builder.upper(metaclassFunction.apply(root)), wrapLikeQuery(value));
+    default Specification<ENTITY> equalsIgnoreCaseSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction, String value) {
+        return (root, query, builder) -> builder.equal(builder.upper(metaclassFunction.apply(root)), value.toUpperCase());
     }
 
+    default Specification<ENTITY> notEqualsIgnoreCaseSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction, String value) {
+        return (root, query, builder) -> builder.notEqual(builder.upper(metaclassFunction.apply(root)), value.toUpperCase());
+    }
+
+    default Specification<ENTITY> likeSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                    String value) {
+        return (root, query, builder) -> builder.like(metaclassFunction.apply(root), wrapLikeQuery(value));
+    }
+
+    default Specification<ENTITY> notLikeSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                       String value) {
+        return (root, query, builder) -> builder.notLike(metaclassFunction.apply(root), wrapLikeQuery(value));
+    }
+
+    default Specification<ENTITY> likeIgnoreCaseSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                              String value) {
+        return (root, query, builder) -> builder.like(builder.upper(metaclassFunction.apply(root)), wrapLikeUpperQuery(value));
+    }
+
+    default Specification<ENTITY> notLikeIgnoreCaseSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                                 String value) {
+        return (root, query, builder) -> builder.notLike(builder.upper(metaclassFunction.apply(root)), wrapLikeUpperQuery(value));
+    }
+
+    @Deprecated(since = "2.0.1")
+    default Specification<ENTITY> likeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                         String value) {
+        return likeIgnoreCaseSpecification(metaclassFunction, value);
+    }
+
+    @Deprecated(since = "2.0.1")
     default Specification<ENTITY> notLikeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
                                                             String value) {
-        return (root, query, builder) -> builder.notLike(builder.upper(metaclassFunction.apply(root)), wrapLikeQuery(value));
+        return notLikeIgnoreCaseSpecification(metaclassFunction, value);
     }
 
     default <X> Specification<ENTITY> byFieldSpecified(Function<Root<ENTITY>, Expression<X>> metaclassFunction,
@@ -451,6 +501,28 @@ public interface QueryService<ENTITY> {
         };
     }
 
+    default Specification<ENTITY> valueInIgnoreCase(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                    Collection<String> values) {
+        return (root, query, builder) -> {
+            CriteriaBuilder.In<String> in = builder.in(builder.upper(metaclassFunction.apply(root)));
+            for (String value : values) {
+                in = in.value(value.toUpperCase());
+            }
+            return in;
+        };
+    }
+
+    default Specification<ENTITY> valueNotInIgnoreCase(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
+                                                       Collection<String> values) {
+        return (root, query, builder) -> {
+            CriteriaBuilder.In<String> in = builder.in(metaclassFunction.apply(root));
+            for (String value : values) {
+                in = in.value(value.toUpperCase());
+            }
+            return in.not();
+        };
+    }
+
     default <X extends Comparable<? super X>> Specification<ENTITY> greaterThanOrEqualTo(Function<Root<ENTITY>, Expression<X>> metaclassFunction,
                                                                                          X value) {
         return (root, query, builder) -> builder.greaterThanOrEqualTo(metaclassFunction.apply(root), value);
@@ -472,6 +544,10 @@ public interface QueryService<ENTITY> {
     }
 
     default String wrapLikeQuery(String txt) {
+        return "%" + txt + '%';
+    }
+
+    default String wrapLikeUpperQuery(String txt) {
         return "%" + txt.toUpperCase() + '%';
     }
 }
