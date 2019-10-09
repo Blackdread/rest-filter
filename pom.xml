@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.blackdread.lib</groupId>
@@ -72,8 +73,8 @@
         <log4j.version>2.11.1</log4j.version>
 
         <!-- Test versions -->
-        <junit.jupiter.version>5.4.2</junit.jupiter.version>
-        <mockito.version>2.27.0</mockito.version>
+        <junit.jupiter.version>5.5.2</junit.jupiter.version>
+        <mockito.version>3.1.0</mockito.version>
 
         <!-- Plugin versions -->
         <maven-surefire-plugin.version>3.0.0-M3</maven-surefire-plugin.version>
@@ -196,6 +197,7 @@
         </dependency>
         <!-- Check log4j -->
         <dependency>
+            <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback-classic.version}</version>
@@ -204,6 +206,7 @@
 
         <dependency>
             <!-- Used in test due to Generated annotation (see if should use dependency javax.cache/cache-api -->
+            <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
             <groupId>javax.annotation</groupId>
             <artifactId>javax.annotation-api</artifactId>
             <version>${javax.annotation-api.version}</version>
@@ -221,6 +224,7 @@
 
 
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api -->
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.jupiter.version}</version>
@@ -240,6 +244,7 @@
         </dependency>
 
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>${mockito.version}</version>
@@ -247,6 +252,7 @@
         </dependency>
 
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>${mockito.version}</version>
@@ -256,6 +262,7 @@
 
         <dependency>
             <!-- Only in test for now -->
+            <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
             <version>6.0.17.Final</version>
@@ -264,9 +271,10 @@
 
         <dependency>
             <!-- Only in test for now -->
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
-            <version>2.1.6.RELEASE</version>
+            <version>2.1.9.RELEASE</version>
             <!--            <version>${spring-data-jpa.version}</version>-->
             <scope>test</scope>
         </dependency>
@@ -277,9 +285,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>2.1.6.RELEASE</version>
+            <version>2.1.9.RELEASE</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -491,7 +500,7 @@
                 <version>${maven-release-plugin.version}</version>
                 <configuration>
                     <tagNameFormat>@{project.version}</tagNameFormat>
-                    <scmCommentPrefix />
+                    <scmCommentPrefix/>
                     <username>blackdread</username>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <useReleaseProfile>false</useReleaseProfile>
