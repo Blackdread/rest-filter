@@ -44,7 +44,7 @@ import java.util.List;
  * <p>Some methods may be "useless" but it is provided as is, user can decide to use or not.</p>
  * <p>Implementation is strongly opinionated and might not fit all use-case for everyone</p>
  * <br>
- * <p><b>Important:</b> Static will be replaced by an instance that can be customized more easily to handle scenrios where filter given is set properly and will result on some values being ignored (others taking precedence over others).</p>
+ * <p><b>Important:</b> Static will be replaced by an instance that can be customized more easily to handle scenarios where filter given is set properly and will result on some values being ignored (others taking precedence over others).</p>
  * <p>Created on 2018/02/06.</p>
  *
  * @author Yoann CAPLAIN

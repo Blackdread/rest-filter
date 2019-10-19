@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 /**
  * Build condition based on filter passed, for more complex conditions, might require to manually write it instead of using this class.
  * Class is not final to let user shadow or add static methods while keeping.
- * See <a>https://www.jooq.org/doc/3.11/manual/sql-building/column-expressions/case-sensitivity/</a> for filtering without case sensitivity.
+ * See <a>https://www.jooq.org/doc/3.13/manual/sql-building/column-expressions/case-sensitivity/</a> for filtering without case sensitivity.
  * <p>Created on 2019/07/23</p>
  *
  * @author Yoann CAPLAIN
