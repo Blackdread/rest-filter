@@ -26,14 +26,12 @@ package org.blackdread.lib.restfilter.criteria;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.blackdread.lib.restfilter.util.MultiValueMap;
-import org.springframework.web.util.UriBuilder;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * Depends on Spring util and web, could do without but makes more complicated than needed, Spring is the default for REST.
  * <p>Created on 2019/10/19.</p>
  *
  * @author Yoann CAPLAIN
@@ -61,10 +59,6 @@ public interface CriteriaQueryParam {
         return buildQueryParams((Object) criteria);
     }
 
-    default UriBuilder buildQueryParams(final Criteria criteria, final UriBuilder builder) {
-        return buildQueryParams((Object) criteria, builder);
-    }
-
     default MultiValueMap<String, String> buildQueryParams(final Object criteria) {
         final Map<String, Filter> filters = CriteriaFieldParserUtil.build(criteria);
         final List<MultiValueMap<String, String>> maps = filters.entrySet().stream()
@@ -75,11 +69,19 @@ public interface CriteriaQueryParam {
         return multiValueMap;
     }
 
-    UriBuilder buildQueryParams(final Object criteria, final UriBuilder builder);
+    default MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter) {
+        final LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        getFilterQueryParams(fieldName, filter)
+            .forEach(filterQueryParam -> map.addAll(filterQueryParam.getParamName(), filterQueryParam.getParamValues()));
+        return map;
+    }
 
-    MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter);
+    default List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFieldName) {
+        return filtersByFieldName.entrySet().stream()
+            .flatMap(e -> getFilterQueryParams(e.getKey(), e.getValue()).stream())
+            .collect(Collectors.toList());
+    }
 
-    UriBuilder buildQueryParams(final String fieldName, final Filter filter, UriBuilder builder);
-
+    List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter);
 }
 
