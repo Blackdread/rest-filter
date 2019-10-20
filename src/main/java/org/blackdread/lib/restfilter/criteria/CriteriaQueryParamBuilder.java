@@ -14,6 +14,7 @@ import java.util.function.Function;
 @NotThreadSafe
 public class CriteriaQueryParamBuilder {
 
+    private Function<Enum, String> enumFormatter = Enum::name;
     private Function<Boolean, String> booleanFormatter = Object::toString;
     private Function<BigDecimal, String> bigDecimalFormatter = BigDecimal::toString;
     private Function<Double, String> doubleFormatter = Object::toString;
@@ -23,6 +24,15 @@ public class CriteriaQueryParamBuilder {
     private Function<LocalDateTime, String> localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
     private Function<ZonedDateTime, String> zonedDateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
     private Function<Duration, String> durationFormatter = Duration::toString;
+
+    /**
+     * @param formatter transform {@link java.lang.Enum} to query param compatible {@code String}
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    public CriteriaQueryParamBuilder withEnumFormatter(final Function<Enum, String> formatter) {
+        this.enumFormatter = Objects.requireNonNull(formatter);
+        return this;
+    }
 
     /**
      * @param formatter transform {@link java.lang.Boolean} to query param compatible {@code String}

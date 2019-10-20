@@ -1,10 +1,13 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.filter.Filter;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriBuilder;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Depends on Spring util and web, could do without but makes more complicated than needed, Spring is the default for REST.
@@ -35,25 +38,25 @@ public interface CriteriaQueryParam {
         return buildQueryParams((Object) criteria);
     }
 
-    default Object buildQueryParams(final Criteria criteria, final UriBuilder builder) {
+    default UriBuilder buildQueryParams(final Criteria criteria, final UriBuilder builder) {
         return buildQueryParams((Object) criteria, builder);
     }
 
     default MultiValueMap<String, String> buildQueryParams(final Object criteria) {
         final Map<String, Filter> filters = CriteriaFieldParserUtil.build(criteria);
-//        filters.forEach((key, value) -> buildParams(builder, key, value));
-        return null;
+        final List<MultiValueMap<String, String>> maps = filters.entrySet().stream()
+            .map(entry -> buildQueryParams(entry.getKey(), entry.getValue()))
+            .collect(Collectors.toList());
+        final LinkedMultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
+        maps.forEach(multiValueMap::addAll);
+        return multiValueMap;
     }
 
     UriBuilder buildQueryParams(final Object criteria, final UriBuilder builder);
 
-    default MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter) {
-        throw new IllegalStateException("todo");
-    }
+    MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter);
 
-    default UriBuilder buildQueryParams(final String fieldName, final Filter filter, UriBuilder builder) {
-        throw new IllegalStateException("todo");
-    }
+    UriBuilder buildQueryParams(final String fieldName, final Filter filter, UriBuilder builder);
 
 }
 
