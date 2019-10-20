@@ -5,7 +5,7 @@
 
     <groupId>org.blackdread.lib</groupId>
     <artifactId>rest-filter</artifactId>
-    <version>2.0.2-SNAPSHOT</version>
+    <version>2.1.0-SNAPSHOT</version>
 
     <name>Rest filter</name>
     <description>Lib to around simplifying rest filtering</description>

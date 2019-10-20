@@ -107,9 +107,10 @@ class FilterQueryParamImpl implements FilterQueryParam {
 
     @Override
     public String getParamValue() {
-        if (paramValues.size() > 1) {
-            throw new IllegalStateException(String.format("Multiple values are available for field '%s', filter '%s', with values [\"%s\"]", fieldName, filterPropertyName, String.join("\", \"", paramValues)));
-        }
+// it is allowed to query single value already joined with ','
+//        if (paramValues.size() > 1) {
+//            throw new IllegalStateException(String.format("Multiple values are available for field '%s', filter '%s', with values [\"%s\"]", fieldName, filterPropertyName, String.join("\", \"", paramValues)));
+//        }
         return paramValue;
     }
 

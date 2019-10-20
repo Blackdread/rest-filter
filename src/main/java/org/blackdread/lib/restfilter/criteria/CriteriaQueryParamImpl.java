@@ -1,10 +1,10 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.filter.*;
+import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriBuilder;
 
 import javax.annotation.concurrent.Immutable;
@@ -113,6 +113,8 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             return QueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter);
         } else if (filter instanceof LongFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter);
+        } else if (filter instanceof InstantFilter) {
+            return QueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter);
         } else if (filter instanceof IntegerFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, intFormatter);
         } else if (filter instanceof DoubleFilter) {
@@ -123,8 +125,6 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             return QueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter);
         } else if (filter instanceof BigDecimalFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter);
-        } else if (filter instanceof InstantFilter) {
-            return QueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter);
         } else if (filter instanceof LocalDateFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter);
 //        }  else if (filter instanceof LocalDateTimeFilter) {
