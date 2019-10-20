@@ -1,35 +1,26 @@
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.filter.Filter;
+import org.blackdread.lib.restfilter.filter.RangeFilter;
+import org.blackdread.lib.restfilter.filter.StringFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
+import static org.blackdread.lib.restfilter.criteria.FilterQueryParamImpl.ofEquals;
+import static org.blackdread.lib.restfilter.criteria.FilterQueryParamImpl.ofNotEquals;
 
 /**
  * <p>Created on 2019/10/19.</p>
  *
  * @author Yoann CAPLAIN
- * @deprecated no use of static
  */
 public final class QueryParamUtil {
 
     private static final Logger log = LoggerFactory.getLogger(QueryParamUtil.class);
-
-    // format for dates: 2018-01-01T10:10:00Z
-
-    private static final String FIELD_NAME_AND_FILTER_SEPARATOR = ".";
-
-    private static final String EQUALS_FILTER = "equals";
-    private static final String NOT_EQUALS_FILTER = "notEquals";
-    private static final String IN_FILTER = "in";
-    private static final String NOT_IN_FILTER = "notIn";
-    private static final String SPECIFIED_FILTER = "specified";
-
-    private static final String GREATER_THAN_FILTER = "greaterThan";
-    private static final String GREATER_OR_EQUAL_THAN_FILTER = "greaterOrEqualThan";
-    private static final String LESS_THAN_FILTER = "lessThan";
-    private static final String LESS_OR_EQUAL_THAN_FILTER = "lessOrEqualThan";
-
-    private static final String CONTAINS_FILTER = "contains";
-    private static final String NOT_CONTAINS_FILTER = "notContains";
 
     private QueryParamUtil() {
     }
@@ -41,4 +32,28 @@ public final class QueryParamUtil {
     public static Object buildQueryParams(Object criteria) {
         return null;
     }
+
+    public static <T> List<FilterQueryParam> buildQueryParams(final String fieldName, final Filter<T> filter, final Function<T, String> formatter) {
+        final ArrayList<FilterQueryParam> filterQueryParams = new ArrayList<>();
+        if (filter.getEquals() != null) {
+            filterQueryParams.add(ofEquals(fieldName, formatter.apply(filter.getEquals())));
+        }
+        if (filter.getNotEquals() != null) {
+            filterQueryParams.add(ofNotEquals(fieldName, formatter.apply(filter.getNotEquals())));
+        }
+        return filterQueryParams;
+    }
+
+    public static <T extends Comparable<? super T>> List<FilterQueryParam> buildQueryParams(final RangeFilter<T> filter, final Function<T, String> formatter) {
+        return null;
+    }
+
+    public static List<FilterQueryParam> buildQueryParams(final StringFilter filter) {
+        return buildQueryParams(filter, String::toString);
+    }
+
+    public static List<FilterQueryParam> buildQueryParams(final StringFilter filter, final Function<String, String> formatter) {
+        return null;
+    }
+
 }

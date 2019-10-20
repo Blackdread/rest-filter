@@ -34,7 +34,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setEquals(LocalDate equals) {
         super.setEquals(equals);
         return this;
@@ -44,7 +44,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setNotEquals(LocalDate notEquals) {
         super.setNotEquals(notEquals);
         return this;
@@ -63,7 +63,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setGreaterThan(LocalDate equals) {
         super.setGreaterThan(equals);
         return this;
@@ -73,7 +73,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setGreaterThanOrEqual(LocalDate equals) {
         super.setGreaterThanOrEqual(equals);
         return this;
@@ -83,7 +83,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setLessThan(LocalDate equals) {
         super.setLessThan(equals);
         return this;
@@ -93,7 +93,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setLessThanOrEqual(LocalDate equals) {
         super.setLessThanOrEqual(equals);
         return this;
@@ -103,7 +103,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setIn(List<LocalDate> in) {
         super.setIn(in);
         return this;
@@ -113,7 +113,7 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE)
+    @DateTimeFormat(iso = ISO.DATE) // todo annotation might be useless, should register Formatters/other in Spring context
     public LocalDateFilter setNotIn(List<LocalDate> notIn) {
         super.setNotIn(notIn);
         return this;

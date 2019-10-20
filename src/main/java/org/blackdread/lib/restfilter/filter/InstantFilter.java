@@ -34,7 +34,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setEquals(Instant equals) {
         super.setEquals(equals);
         return this;
@@ -44,7 +44,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setNotEquals(Instant notEquals) {
         super.setNotEquals(notEquals);
         return this;
@@ -63,7 +63,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setIn(List<Instant> in) {
         super.setIn(in);
         return this;
@@ -73,7 +73,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setNotIn(List<Instant> notIn) {
         super.setNotIn(notIn);
         return this;
@@ -83,7 +83,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setGreaterThan(Instant equals) {
         super.setGreaterThan(equals);
         return this;
@@ -93,7 +93,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setGreaterThanOrEqual(Instant equals) {
         super.setGreaterThanOrEqual(equals);
         return this;
@@ -103,7 +103,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setLessThan(Instant equals) {
         super.setLessThan(equals);
         return this;
@@ -113,7 +113,7 @@ public class InstantFilter extends RangeFilter<Instant> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public InstantFilter setLessThanOrEqual(Instant equals) {
         super.setLessThanOrEqual(equals);
         return this;

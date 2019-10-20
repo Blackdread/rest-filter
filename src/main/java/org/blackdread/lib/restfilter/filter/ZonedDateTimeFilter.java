@@ -34,7 +34,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setEquals(ZonedDateTime equals) {
         super.setEquals(equals);
         return this;
@@ -44,7 +44,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setNotEquals(ZonedDateTime notEquals) {
         super.setNotEquals(notEquals);
         return this;
@@ -63,7 +63,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setIn(List<ZonedDateTime> in) {
         super.setIn(in);
         return this;
@@ -73,7 +73,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setNotIn(List<ZonedDateTime> notIn) {
         super.setNotIn(notIn);
         return this;
@@ -83,7 +83,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setGreaterThan(ZonedDateTime equals) {
         super.setGreaterThan(equals);
         return this;
@@ -93,7 +93,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setGreaterThanOrEqual(ZonedDateTime equals) {
         super.setGreaterThanOrEqual(equals);
         return this;
@@ -103,7 +103,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setLessThan(ZonedDateTime equals) {
         super.setLessThan(equals);
         return this;
@@ -113,7 +113,7 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
      * {@inheritDoc}
      */
     @Override
-    @DateTimeFormat(iso = ISO.DATE_TIME)
+    @DateTimeFormat(iso = ISO.DATE_TIME) // todo annotation might be useless, should register Formatters/other in Spring context
     public ZonedDateTimeFilter setLessThanOrEqual(ZonedDateTime equals) {
         super.setLessThanOrEqual(equals);
         return this;
