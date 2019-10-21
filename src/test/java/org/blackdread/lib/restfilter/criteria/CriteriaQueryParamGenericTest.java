@@ -15,7 +15,7 @@ public class CriteriaQueryParamGenericTest {
         Filter<String> filter = new Filter<>();
 
         IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, filter::obtainGenericClass);
-        Assertions.assertEquals("Method 'obtainGenericClass' does not support generic retriveal for filters created with 'new Filter<XXX>()'", exception.getMessage());
+        Assertions.assertEquals("Method 'obtainGenericClass' does not support generic retrieval for filters created with 'new Filter<XXX>()'", exception.getMessage());
     }
 
     @Test
@@ -23,7 +23,7 @@ public class CriteriaQueryParamGenericTest {
         Filter<Custom> filter = new Filter<>();
 
         IllegalStateException exception = Assertions.assertThrows(IllegalStateException.class, filter::obtainGenericClass);
-        Assertions.assertEquals("Method 'obtainGenericClass' does not support generic retriveal for filters created with 'new Filter<XXX>()'", exception.getMessage());
+        Assertions.assertEquals("Method 'obtainGenericClass' does not support generic retrieval for filters created with 'new Filter<XXX>()'", exception.getMessage());
     }
 
     @Test
@@ -43,14 +43,13 @@ public class CriteriaQueryParamGenericTest {
 
     @Test
     void canGetFirstGenericInMultipleGenericFilter() {
-        CustomFilter2 filter = new CustomFilter2();
+        CustomFilterWithManyGeneric filter = new CustomFilterWithManyGeneric();
 
         Class<?> aClass = Assertions.assertDoesNotThrow(filter::obtainGenericClass);
-        Assertions.assertEquals(List.class, aClass);
+        Assertions.assertEquals(String.class, aClass);
     }
 
     static class Custom extends ArrayList<String> {
-
     }
 
     static class CustomFilter1 extends Filter<Custom> {
@@ -58,6 +57,30 @@ public class CriteriaQueryParamGenericTest {
 
     static class CustomFilter2 extends Filter<List<String>> {
         // Cannot see any reason to have filters with multiple generics but it is tested at least
+    }
+
+    static class CustomFilterWithManyGeneric extends Filter<String> implements Any, Any1<Long>, Any2<Integer> {
+        @Override
+        public Long getT() {
+            return null;
+        }
+
+        @Override
+        public Integer getT2() {
+            return null;
+        }
+    }
+
+    interface Any {
+
+    }
+
+    interface Any1<T> {
+        T getT();
+    }
+
+    interface Any2<T2> {
+        T2 getT2();
     }
 
 }

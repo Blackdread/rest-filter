@@ -100,9 +100,11 @@ public class Filter<FIELD_TYPE> implements Serializable {
      * Method name does not start with 'get' so jackson/etc will try to get this value. Cannot use {@literal @}JsonIgnore.
      *
      * @return class of this generic filter
+     * @throws IllegalStateException when filter was created via 'new Filter()' or 'new RangeFilter()'
+     * @throws ClassCastException    when fail to cast raw type to generic type
      */
     @SuppressWarnings("unchecked")
-    public Class<FIELD_TYPE> obtainGenericClass() {
+    public Class<FIELD_TYPE> obtainGenericClass() throws IllegalStateException, ClassCastException {
         if (genericClass != null)
             return genericClass;
         final Type genericSuperclass1 = getClass()
@@ -111,7 +113,7 @@ public class Filter<FIELD_TYPE> implements Serializable {
         try {
             genericSuperclass = (ParameterizedType) genericSuperclass1; // ClassCastException if user created a filter directly with 'new Filter<XXX>()'
         } catch (ClassCastException e) {
-            throw new IllegalStateException("Method 'obtainGenericClass' does not support generic retriveal for filters created with 'new Filter<XXX>()'", e);
+            throw new IllegalStateException("Method 'obtainGenericClass' does not support generic retrieval for filters created with 'new Filter<XXX>()'", e);
         }
         final Type[] actualTypeArguments = genericSuperclass.getActualTypeArguments();
         final Type actualTypeArgument = actualTypeArguments[0];

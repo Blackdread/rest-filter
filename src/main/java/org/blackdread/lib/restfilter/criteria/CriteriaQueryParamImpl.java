@@ -27,6 +27,7 @@ import org.blackdread.lib.restfilter.filter.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Field;
@@ -37,6 +38,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
@@ -66,14 +68,14 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     private final Function<ZonedDateTime, String> zonedDateTimeFormatter;
     private final Function<Duration, String> durationFormatter;
     private final Function<UUID, String> uuidFormatter = UUID::toString;
-//    private final Map<Class, Function<Object, String>> defaultFormatterMap;
+    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap;
+    //    private final Map<Class, Function<Object, String>> defaultFormatterMap;
 //    private final Map<Class, Function<Filter, MultiValueMap<String, String>>> customFormatterMultiValueMap;
-//    private final Map<Class, Function<Filter, UriBuilder>> customFormatterUriBuilderMap;
 //    private final Map<Class, Function<Object, String>> formatterMap;
 //    BiFunction -> fieldName and filter
 //    private final Map<Class, BiFunction<String, Filter, List<FilterQueryParam>>> customQueryParamMap;
 
-    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter) {
+    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
         this.enumFormatter = Objects.requireNonNull(enumFormatter);
         this.booleanFormatter = Objects.requireNonNull(booleanFormatter);
         this.bigDecimalFormatter = Objects.requireNonNull(bigDecimalFormatter);
@@ -84,16 +86,15 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         this.localDateTimeFormatter = Objects.requireNonNull(localDateTimeFormatter);
         this.zonedDateTimeFormatter = Objects.requireNonNull(zonedDateTimeFormatter);
         this.durationFormatter = Objects.requireNonNull(durationFormatter);
+        this.customQueryParamFormatterMap = customQueryParamFormatterMap == null ? Map.of() : Map.copyOf(customQueryParamFormatterMap);
     }
 
     @Override
     public List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter) {
-//        if(customQueryParamMap.isNotEmpty() &&){
-//
-//        }
-        // todo handle enums
-        final Class genericClass = filter.obtainGenericClass(); // -> put at the end and add custom formatters first from user
-        boolean anEnum = genericClass.isEnum();
+        final Class<? extends Filter> filterClass = filter.getClass();
+        if (!customQueryParamFormatterMap.isEmpty() && customQueryParamFormatterMap.containsKey(filterClass)) {
+            return customQueryParamFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
+        }
 
         if (filter instanceof StringFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter);
@@ -117,15 +118,25 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //            return QueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter);
         } else if (filter instanceof ZonedDateTimeFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter);
-        }  else if (filter instanceof DurationFilter) {
+        } else if (filter instanceof DurationFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter);
         } else if (filter instanceof BooleanFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter);
         } else if (filter instanceof UUIDFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter);
-        } else {
-            throw new IllegalStateException("TODO, custom mappers, default one, etc");
         }
+
+        final Class genericClass = filter.obtainGenericClass();
+        if (genericClass.isEnum()) {
+            return buildForEnum(fieldName, filter);
+        }
+
+        throw new UnsupportedFilterForQueryParamException(fieldName, filter);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<FilterQueryParam> buildForEnum(final String fieldName, final Filter filter) {
+        return QueryParamUtil.buildQueryParams(fieldName, filter, enumFormatter);
     }
 
     private static Field getEqualsField(final Filter filter) {

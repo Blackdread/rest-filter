@@ -23,6 +23,9 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.filter.Filter;
+
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -31,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 
@@ -47,6 +51,7 @@ public class CriteriaQueryParamBuilder {
     private Function<LocalDateTime, String> localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
     private Function<ZonedDateTime, String> zonedDateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
     private Function<Duration, String> durationFormatter = Duration::toString;
+    private Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap;
 
     /**
      * @param formatter transform {@link java.lang.Enum} to query param compatible {@code String}
@@ -144,8 +149,19 @@ public class CriteriaQueryParamBuilder {
         return this;
     }
 
+    /**
+     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called.
+     *
+     * @param customQueryParamFormatterMap transform filters to query param (may be null)
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    public CriteriaQueryParamBuilder withCustomQueryParamFormatterMap(@Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
+        this.customQueryParamFormatterMap = customQueryParamFormatterMap;
+        return this;
+    }
+
     public CriteriaQueryParam build() {
-        return new CriteriaQueryParamImpl(enumFormatter, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter);
+        return new CriteriaQueryParamImpl(enumFormatter, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter, customQueryParamFormatterMap);
     }
 
 }
