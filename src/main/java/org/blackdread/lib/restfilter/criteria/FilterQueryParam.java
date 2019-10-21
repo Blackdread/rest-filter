@@ -33,6 +33,14 @@ import java.util.List;
 public interface FilterQueryParam {
 
     /**
+     * Name of field of a filter that may have been defined inside a criteria.
+     * <pre>
+     *  class MyCriteria implements Criteria {
+     *      // ommitted functions/constructors/etc
+     *      private LongFilter myFieldName;
+     *  }
+     * </pre>
+     *
      * @return field name
      */
     String getFieldName();

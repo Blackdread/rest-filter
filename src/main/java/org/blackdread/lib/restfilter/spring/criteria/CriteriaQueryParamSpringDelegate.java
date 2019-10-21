@@ -23,13 +23,13 @@
  */
 package org.blackdread.lib.restfilter.spring.criteria;
 
+import org.blackdread.lib.restfilter.criteria.Criteria;
 import org.blackdread.lib.restfilter.criteria.CriteriaQueryParam;
 import org.blackdread.lib.restfilter.criteria.FilterQueryParam;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.util.UriBuilder;
 
 import java.util.List;
 import java.util.Map;
@@ -51,6 +51,16 @@ class CriteriaQueryParamSpringDelegate implements CriteriaQueryParamSpring {
     }
 
     @Override
+    public MultiValueMap<String, String> buildQueryParams(final Criteria criteria) {
+        return delegate.buildQueryParams(criteria);
+    }
+
+    @Override
+    public MultiValueMap<String, String> buildQueryParams(final Object criteria) {
+        return delegate.buildQueryParams(criteria);
+    }
+
+    @Override
     public MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter) {
         return delegate.buildQueryParams(fieldName, filter);
     }
@@ -61,31 +71,8 @@ class CriteriaQueryParamSpringDelegate implements CriteriaQueryParamSpring {
     }
 
     @Override
-    public UriBuilder buildQueryParams(final String fieldName, final Filter filter, final UriBuilder builder) {
-        return null;
-    }
-
-    @Override
     public List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter) {
-        return null;
+        return delegate.getFilterQueryParams(fieldName, filter);
     }
 
-//    @Override
-//    public UriBuilder buildQueryParams(final Object criteria, final UriBuilder builder) {
-//        final Map<String, Filter> filtersByFieldName = CriteriaFieldParserUtil.build(criteria);
-//        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(filtersByFieldName);
-//        for (final FilterQueryParam filterQueryParam : filterQueryParams) {
-//            builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
-//        }
-//        return builder;
-//    }
-
-//    @Override
-//    public UriBuilder buildQueryParams(final String fieldName, final Filter filter, final UriBuilder builder) {
-//        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(fieldName, filter);
-//        for (final FilterQueryParam filterQueryParam : filterQueryParams) {
-//            builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
-//        }
-//        return builder;
-//    }
 }
