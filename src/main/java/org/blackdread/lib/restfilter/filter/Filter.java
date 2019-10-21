@@ -24,6 +24,8 @@
 package org.blackdread.lib.restfilter.filter;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +41,14 @@ import java.util.Objects;
  *      fieldName.in='something','other'
  *      fieldName.notIn='something','other'
  * </pre>
+ * <br>
+ * Criteria classes are not expected to declare field like:
+ * <pre>
+ *     class MyCriteria {
+ *         private Filter&lt;XXX&gt; myFilter;
+ *     }
+ * </pre>
+ * but actual subclasses like {@link org.blackdread.lib.restfilter.filter.LongFilter}, {@link org.blackdread.lib.restfilter.filter.InstantFilter}, etc
  */
 public class Filter<FIELD_TYPE> implements Serializable {
 
@@ -65,6 +75,52 @@ public class Filter<FIELD_TYPE> implements Serializable {
      */
     public Filter<FIELD_TYPE> copy() {
         return new Filter<>(this);
+    }
+
+    /**
+     * Just to compute it once lazily (no lock used)
+     */
+    private Class<FIELD_TYPE> genericClass;
+
+    /**
+     * The class in the generic definition part of this class.
+     * <pre>
+     *     class Filter&lt;XXX&gt; {}
+     * </pre>
+     * Where XXX is the class returned by this method.
+     * <br>
+     * <br>
+     * <b>Important:</b>This method does not support to obtain generic type if filter instance was created with <b>'new Filter&lt;XXX&gt;()'</b> or <b>'new RangeFilter&lt;XXX&gt;()'</b>.
+     * <br>
+     * <b>Important:</b>This methods is subject to change at any time, this is for internal usage of library. It is not stable and may be removed at any time.
+     * <br>
+     * <br>
+     * Note: Sub-classes can override this methods to return the correct/custom type if needed.
+     * <br>
+     * Method name does not start with 'get' so jackson/etc will try to get this value. Cannot use {@literal @}JsonIgnore.
+     *
+     * @return class of this generic filter
+     */
+    @SuppressWarnings("unchecked")
+    public Class<FIELD_TYPE> obtainGenericClass() {
+        if (genericClass != null)
+            return genericClass;
+        final Type genericSuperclass1 = getClass()
+            .getGenericSuperclass();
+        final ParameterizedType genericSuperclass;
+        try {
+            genericSuperclass = (ParameterizedType) genericSuperclass1; // ClassCastException if user created a filter directly with 'new Filter<XXX>()'
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Method 'obtainGenericClass' does not support generic retriveal for filters created with 'new Filter<XXX>()'", e);
+        }
+        final Type[] actualTypeArguments = genericSuperclass.getActualTypeArguments();
+        final Type actualTypeArgument = actualTypeArguments[0];
+        try {
+            return (Class<FIELD_TYPE>) actualTypeArgument; // ClassCastException if user defined a class with multiple generics like 'class MyCustomFilter extends Filter<List<String>>' but should never do that!
+        } catch (ClassCastException e) {
+            final ParameterizedType actualTypeArgument1 = (ParameterizedType) actualTypeArgument;
+            return genericClass = (Class<FIELD_TYPE>) actualTypeArgument1.getRawType();
+        }
     }
 
     public FIELD_TYPE getEquals() {

@@ -43,6 +43,16 @@ import java.util.Objects;
  * </pre>
  * Due to problems with the type conversions, the descendant classes should be used, where the generic type parameter
  * is materialized.
+ * <br>
+ * <br>
+ * Criteria classes are not expected to declare field like:
+ * <pre>
+ *     class MyCriteria {
+ *         private Filter&lt;XXX&gt; myFilter;
+ *         private RangeFilter&lt;XXX&gt; myFilter2;
+ *     }
+ * </pre>
+ * but actual subclasses like {@link org.blackdread.lib.restfilter.filter.LongFilter}, {@link org.blackdread.lib.restfilter.filter.InstantFilter}, etc
  *
  * @param <FIELD_TYPE> the type of filter.
  * @see IntegerFilter

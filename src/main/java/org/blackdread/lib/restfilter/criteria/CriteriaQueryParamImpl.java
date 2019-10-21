@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
@@ -91,6 +92,9 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //
 //        }
         // todo handle enums
+        final Class genericClass = filter.obtainGenericClass(); // -> put at the end and add custom formatters first from user
+        boolean anEnum = genericClass.isEnum();
+
         if (filter instanceof StringFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter);
         } else if (filter instanceof LongFilter) {
@@ -122,5 +126,26 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         } else {
             throw new IllegalStateException("TODO, custom mappers, default one, etc");
         }
+    }
+
+    private static Field getEqualsField(final Filter filter) {
+        Class<?> clazz = filter.getClass();
+        final Class<?> baseClass = clazz;
+        while (clazz != null) {
+            try {
+                return clazz.getDeclaredField("equals");
+            } catch (NoSuchFieldException ignore) {
+
+            }
+//            for (Field field : clazz.getDeclaredFields()) {
+//                if (!fields.containsKey(field.getName())) {
+//                    fields.put(field.getName(), field);
+//                } else {
+//                    log.warn("Class '{}' has fields (inherited) with same name '{}', extra ones are ignored in '{}'!", baseClass.getName(), field.getName(), clazz.getName());
+//                }
+//            }
+            clazz = clazz.getSuperclass();
+        }
+        throw new IllegalStateException("Did not find field 'equals' in filter");
     }
 }
