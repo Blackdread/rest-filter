@@ -113,6 +113,8 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //            return QueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter);
         } else if (filter instanceof ZonedDateTimeFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter);
+        }  else if (filter instanceof DurationFilter) {
+            return QueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter);
         } else if (filter instanceof BooleanFilter) {
             return QueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter);
         } else if (filter instanceof UUIDFilter) {
