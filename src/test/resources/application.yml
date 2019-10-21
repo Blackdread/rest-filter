@@ -15,4 +15,10 @@ spring:
     h2:
         console:
             enabled: false
-
+    jackson:
+        serialization:
+            write-durations-as-timestamps: false # since jackson 2.5
+#            write-dates-as-timestamps: false
+#            write-date-timestamps-as-nanoseconds:  false
+#        deserialization:
+#            read-date-timestamps-as-nanoseconds: false
