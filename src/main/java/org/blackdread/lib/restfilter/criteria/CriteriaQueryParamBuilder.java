@@ -145,7 +145,7 @@ public class CriteriaQueryParamBuilder {
     }
 
     public CriteriaQueryParam build() {
-        throw new IllegalStateException("todo");
+        return new CriteriaQueryParamImpl(enumFormatter, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter);
     }
 
 }

@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -90,6 +91,31 @@ class CriteriaFieldParserUtilTest {
         Assertions.assertTrue(() -> filters2.keySet().containsAll(filters3.keySet()));
     }
 
+    @Test
+    void emptyMapWhenAllNull() {
+        final MyCriteria2 criteria = new MyCriteria2();
+
+        final Map<String, Filter> filterMap = CriteriaFieldParserUtil.build(criteria);
+
+        Map<String, Filter> expected = new HashMap<>();
+        Assertions.assertEquals(expected, filterMap);
+    }
+
+    @Test
+    void notNullFiltersAreFound() {
+        final MyCriteria2 criteria = new MyCriteria2();
+        criteria.setId2(new LongFilter());
+        criteria.setMessage(new StringFilter());
+
+        final Map<String, Filter> filterMap = CriteriaFieldParserUtil.build(criteria);
+
+        Map<String, Filter> expected = new HashMap<>();
+        expected.put("id2", criteria.getId2());
+        expected.put("message", criteria.getMessage());
+        Assertions.assertEquals(expected, filterMap);
+    }
+
+
     private static class MyCriteria {
 
         private LongFilter id;
@@ -118,6 +144,20 @@ class CriteriaFieldParserUtilTest {
 
         public void setWrittenByUserId(final LongFilter writtenByUserId) {
             this.writtenByUserId = writtenByUserId;
+        }
+    }
+
+
+    private static class MyCriteria2 extends MyCriteria {
+
+        private LongFilter id2;
+
+        public LongFilter getId2() {
+            return id2;
+        }
+
+        public void setId2(final LongFilter id2) {
+            this.id2 = id2;
         }
     }
 }

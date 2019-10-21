@@ -23,6 +23,9 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.filter.*;
+import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +39,9 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.UnsupportedTemporalTypeException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -57,8 +63,19 @@ class CriteriaQueryParamTest {
     private final Function<ZonedDateTime, String> zonedDateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
     private final Function<Duration, String> durationFormatter = Duration::toString;
 
+    private MyCriteria myCriteria;
+
+    private CriteriaQueryParamBuilder builder;
+
+    private CriteriaQueryParam defaultCriteriaQueryParam;
+
     @BeforeEach
     void setUp() {
+        myCriteria = new MyCriteria();
+
+        builder = new CriteriaQueryParamBuilder();
+
+        defaultCriteriaQueryParam = builder.build();
     }
 
     @AfterEach
@@ -76,5 +93,145 @@ class CriteriaQueryParamTest {
         Assertions.assertThrows(UnsupportedTemporalTypeException.class, () -> DateTimeFormatter.ISO_INSTANT.format(localDate));
         Assertions.assertThrows(UnsupportedTemporalTypeException.class, () -> DateTimeFormatter.ISO_INSTANT.format(localDateTime));
         Assertions.assertEquals("2007-12-03T09:15:30Z", DateTimeFormatter.ISO_INSTANT.format(zonedDateTime));
+    }
+
+    @Test
+    void noErrorWhenCriteriaEmpty() {
+        MultiValueMap<String, String> result1 = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        MultiValueMap<String, String> result2 = defaultCriteriaQueryParam.buildQueryParams((Object) myCriteria);
+        MultiValueMap<String, String> result3 = defaultCriteriaQueryParam.buildQueryParams("theName", new LongFilter());
+        List<FilterQueryParam> result4 = defaultCriteriaQueryParam.getFilterQueryParams(new HashMap<>());
+        List<FilterQueryParam> result5 = defaultCriteriaQueryParam.getFilterQueryParams("theName", new LongFilter());
+
+        LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
+        Assertions.assertEquals(expected,result1);
+        Assertions.assertEquals(expected,result2);
+        Assertions.assertEquals(expected,result3);
+
+        ArrayList<FilterQueryParam> expected2 = new ArrayList<>();
+        Assertions.assertEquals(expected2,result4);
+        Assertions.assertEquals(expected2,result5);
+    }
+
+    @Test
+    void canBuildQueryParamsFromCriteria() {
+
+    }
+
+    @Test
+    void canBuildQueryParamsFromObject() {
+
+    }
+
+    @Test
+    void buildWithEnum() {
+
+    }
+
+    @Test
+    void buildWithLong() {
+
+    }
+
+    @Test
+    void buildWithInteger() {
+
+    }
+
+    @Test
+    void buildWithDouble() {
+
+    }
+
+    @Test
+    void buildWithFloat() {
+
+    }
+
+    @Test
+    void buildWithBigDecimal() {
+
+    }
+
+    @Test
+    void buildWithBoolean() {
+
+    }
+
+    @Test
+    void buildWithDuration() {
+
+    }
+
+    @Test
+    void buildWithInstant() {
+
+    }
+
+    @Test
+    void buildWithLocalDate() {
+
+    }
+
+    @Test
+    void buildWithShort() {
+
+    }
+
+    @Test
+    void buildWithString() {
+
+    }
+
+    @Test
+    void buildWithUUID() {
+
+    }
+
+    @Test
+    void buildWithZonedDateTime() {
+
+    }
+
+    enum MyEnum {
+        ENUM_VAL_1,
+        ENUM_VAL_2,
+        ENUM_VAL_3
+    }
+
+    static class MyEnumFilter extends Filter<MyEnum> {
+
+    }
+
+    static class MyCriteria implements Criteria {
+
+        MyEnumFilter myEnum;
+
+        LongFilter id;
+
+        StringFilter name;
+
+        InstantFilter createTime;
+
+        BigDecimalFilter total;
+
+        IntegerFilter count;
+
+        LocalDateFilter localDate;
+
+        ShortFilter aShort;
+
+        BooleanFilter active;
+
+        UUIDFilter uuid;
+
+        DurationFilter duration;
+
+        ZonedDateTimeFilter zonedDateTime;
+
+        @Override
+        public Criteria copy() {
+            throw new IllegalStateException("won't impl");
+        }
     }
 }

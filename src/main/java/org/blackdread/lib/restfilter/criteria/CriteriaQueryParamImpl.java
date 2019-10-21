@@ -85,40 +85,6 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         this.durationFormatter = Objects.requireNonNull(durationFormatter);
     }
 
-//    @Override
-//    public UriBuilder buildQueryParams(final Object criteria, UriBuilder builder) {
-//        final Map<String, Filter> filtersByFieldName = CriteriaFieldParserUtil.build(criteria);
-//        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(filtersByFieldName);
-//        for (final FilterQueryParam filterQueryParam : filterQueryParams) {
-//            builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
-//        }
-//        return builder;
-//    }
-
-//    @Override
-//    public MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter) {
-//        final LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-//        getFilterQueryParams(fieldName, filter)
-//            .forEach(filterQueryParam -> map.addAll(filterQueryParam.getParamName(), filterQueryParam.getParamValues()));
-//        return map;
-//    }
-
-//    @Override
-//    public UriBuilder buildQueryParams(final String fieldName, final Filter filter, UriBuilder builder) {
-//        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(fieldName, filter);
-//        for (final FilterQueryParam filterQueryParam : filterQueryParams) {
-//            builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
-//        }
-//        return builder;
-//    }
-
-//    @Override
-//    public List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFieldName) {
-//        return filtersByFieldName.entrySet().stream()
-//            .flatMap(e -> getFilterQueryParams(e.getKey(), e.getValue()).stream())
-//            .collect(Collectors.toList());
-//    }
-
     @Override
     public List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter) {
 //        if(customQueryParamMap.isNotEmpty() &&){
