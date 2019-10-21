@@ -69,7 +69,7 @@ class CriteriaQueryParamTest {
 
     private CriteriaQueryParamBuilder builder;
 
-    private CriteriaQueryParam defaultCriteriaQueryParam;
+    private CriteriaQueryParam criteriaQueryParam;
 
     @BeforeEach
     void setUp() {
@@ -77,7 +77,7 @@ class CriteriaQueryParamTest {
 
         builder = new CriteriaQueryParamBuilder();
 
-        defaultCriteriaQueryParam = builder.build();
+        criteriaQueryParam = builder.build();
     }
 
     @AfterEach
@@ -99,11 +99,11 @@ class CriteriaQueryParamTest {
 
     @Test
     void noErrorWhenCriteriaEmpty() {
-        MultiValueMap<String, String> result1 = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
-        MultiValueMap<String, String> result2 = defaultCriteriaQueryParam.buildQueryParams((Object) myCriteria);
-        MultiValueMap<String, String> result3 = defaultCriteriaQueryParam.buildQueryParams("theName", new LongFilter());
-        List<FilterQueryParam> result4 = defaultCriteriaQueryParam.getFilterQueryParams(new HashMap<>());
-        List<FilterQueryParam> result5 = defaultCriteriaQueryParam.getFilterQueryParams("theName", new LongFilter());
+        MultiValueMap<String, String> result1 = criteriaQueryParam.buildQueryParams(myCriteria);
+        MultiValueMap<String, String> result2 = criteriaQueryParam.buildQueryParams((Object) myCriteria);
+        MultiValueMap<String, String> result3 = criteriaQueryParam.buildQueryParams("theName", new LongFilter());
+        List<FilterQueryParam> result4 = criteriaQueryParam.getFilterQueryParams(new HashMap<>());
+        List<FilterQueryParam> result5 = criteriaQueryParam.getFilterQueryParams("theName", new LongFilter());
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         Assertions.assertEquals(expected,result1);
@@ -125,7 +125,7 @@ class CriteriaQueryParamTest {
         myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List.of("bbb", "ccc"));
         myCriteria.active = CriteriaUtil.buildEqualsCriteria(false);
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         var expected = new LinkedMultiValueMap<>();
         expected.add("duration.equals", "PT55M");
@@ -148,7 +148,7 @@ class CriteriaQueryParamTest {
         myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List.of("bbb", "ccc"));
         myCriteria.active = CriteriaUtil.buildEqualsCriteria(false);
 
-        var result = defaultCriteriaQueryParam.buildQueryParams((Object) myCriteria);
+        var result = criteriaQueryParam.buildQueryParams((Object) myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("duration.equals", "PT55M");
@@ -162,13 +162,28 @@ class CriteriaQueryParamTest {
     }
 
     @Test
+    void customFormatterMatchByClassOnlyAndNoSubclass() {
+        myCriteria.duration = new DurationFilter();
+        myCriteria.duration.setEquals(Duration.ofMinutes(55));
+
+        myCriteria.id = CriteriaUtil.buildEqualsCriteria(5L);
+        myCriteria.name = CriteriaUtil.buildEqualsCriteria("aaa");
+        myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List.of("bbb", "ccc"));
+        myCriteria.active = CriteriaUtil.buildEqualsCriteria(false);
+
+        criteriaQueryParam = builder
+            .addCustomQueryParamFormatter()
+
+    }
+
+    @Test
     void buildWithEnum() {
         var filter = new MyEnumFilter();
         CriteriaUtilTest.fillAll(filter, MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
 
         myCriteria.myEnum = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("myEnum.equals", "ENUM_VAL_1");
@@ -189,7 +204,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.id = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("id.equals", "1");
@@ -214,7 +229,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.count = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("count.equals", "1");
@@ -239,7 +254,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.aDouble = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("aDouble.equals", "1.01");
@@ -264,7 +279,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.aFloat = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("aFloat.equals", "1.01");
@@ -289,7 +304,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.total = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("total.equals", "1555.0351");
@@ -314,7 +329,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.active = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("active.equals", "true");
@@ -339,7 +354,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.duration = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("duration.equals", v1);
@@ -368,7 +383,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.createTime = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("createTime.equals", v1);
@@ -397,7 +412,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.localDate = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("localDate.equals", v1);
@@ -426,7 +441,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.aShort = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("aShort.equals", v1);
@@ -454,7 +469,7 @@ class CriteriaQueryParamTest {
         myCriteria.name = filter;
         myCriteria.name.setIgnoreCase(false);
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("name.equals", v1);
@@ -482,7 +497,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.uuid = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("uuid.equals", v1);
@@ -510,7 +525,7 @@ class CriteriaQueryParamTest {
 
         myCriteria.zonedDateTime = filter;
 
-        var result = defaultCriteriaQueryParam.buildQueryParams(myCriteria);
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("zonedDateTime.equals", v1);

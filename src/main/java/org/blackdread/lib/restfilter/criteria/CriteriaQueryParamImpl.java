@@ -67,7 +67,10 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     private final Function<LocalDateTime, String> localDateTimeFormatter;
     private final Function<ZonedDateTime, String> zonedDateTimeFormatter;
     private final Function<Duration, String> durationFormatter;
-    private final Function<UUID, String> uuidFormatter = UUID::toString;
+    private final Function<UUID, String> uuidFormatter;
+    /**
+     * Could in fact add all formatters above into this map if filter class not already in it
+     */
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap;
     //    private final Map<Class, Function<Object, String>> defaultFormatterMap;
 //    private final Map<Class, Function<Filter, MultiValueMap<String, String>>> customFormatterMultiValueMap;
@@ -75,7 +78,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //    BiFunction -> fieldName and filter
 //    private final Map<Class, BiFunction<String, Filter, List<FilterQueryParam>>> customQueryParamMap;
 
-    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
+    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, final Function<UUID, String> uuidFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
         this.enumFormatter = Objects.requireNonNull(enumFormatter);
         this.booleanFormatter = Objects.requireNonNull(booleanFormatter);
         this.bigDecimalFormatter = Objects.requireNonNull(bigDecimalFormatter);
@@ -86,6 +89,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         this.localDateTimeFormatter = Objects.requireNonNull(localDateTimeFormatter);
         this.zonedDateTimeFormatter = Objects.requireNonNull(zonedDateTimeFormatter);
         this.durationFormatter = Objects.requireNonNull(durationFormatter);
+        this.uuidFormatter = Objects.requireNonNull(uuidFormatter);
         this.customQueryParamFormatterMap = customQueryParamFormatterMap == null ? Map.of() : Map.copyOf(customQueryParamFormatterMap);
     }
 

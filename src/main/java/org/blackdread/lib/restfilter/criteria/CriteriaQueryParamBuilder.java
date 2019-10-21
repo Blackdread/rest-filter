@@ -36,6 +36,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.function.Function;
 
 @NotThreadSafe
@@ -51,6 +52,7 @@ public class CriteriaQueryParamBuilder {
     private Function<LocalDateTime, String> localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
     private Function<ZonedDateTime, String> zonedDateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
     private Function<Duration, String> durationFormatter = Duration::toString;
+    private Function<UUID, String> uuidFormatter = UUID::toString;
     private Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap;
 
     /**
@@ -150,7 +152,17 @@ public class CriteriaQueryParamBuilder {
     }
 
     /**
+     * @param formatter transform {@link java.util.UUID} to query param compatible {@code String}
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    public CriteriaQueryParamBuilder withUUIDFormatter(final Function<UUID, String> formatter) {
+        this.uuidFormatter = Objects.requireNonNull(formatter);
+        return this;
+    }
+
+    /**
      * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called.
+     * If {@code customQueryParamFormatterMap} is null then the map is removed from builder.
      *
      * @param customQueryParamFormatterMap transform filters to query param (may be null)
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
@@ -160,8 +172,21 @@ public class CriteriaQueryParamBuilder {
         return this;
     }
 
+    /**
+     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called.
+     * If {@code customQueryParamFormatter} is null then the key associated with the given {@code filterClass} is removed from the map of the builder.
+     *
+     * @param customQueryParamFormatter transform filters to query param (may be null)
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    public CriteriaQueryParamBuilder addCustomQueryParamFormatter(final Class<? extends Filter> filterClass, @Nullable FilterQueryParamFormatter customQueryParamFormatter) {
+        Objects.requireNonNull(filterClass);
+        this.customQueryParamFormatterMap = customQueryParamFormatterMap;
+        return this;
+    }
+
     public CriteriaQueryParam build() {
-        return new CriteriaQueryParamImpl(enumFormatter, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter, customQueryParamFormatterMap);
+        return new CriteriaQueryParamImpl(enumFormatter, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter, uuidFormatter, customQueryParamFormatterMap);
     }
 
 }

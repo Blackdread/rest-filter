@@ -13,11 +13,12 @@ import java.util.List;
 interface FilterQueryParamFormatter {
 
     /**
+     * Build query params from a filter
+     *
      * @param fieldName field name of filter
      * @param filter    filter to extract FilterQueryParam (never null)
-     * @param <T>       filter type
      * @return query params, may be empty
      */
-    <T extends Filter> List<FilterQueryParam> getFilterQueryParams(String fieldName, T filter);
+    List<FilterQueryParam> getFilterQueryParams(String fieldName, Filter filter);
 
 }
