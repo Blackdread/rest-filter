@@ -36,8 +36,9 @@ public interface FilterQueryParam {
      * Name of field of a filter that may have been defined inside a criteria.
      * <pre>
      *  class MyCriteria implements Criteria {
-     *      // ommitted functions/constructors/etc
+     *      // omitted functions/constructors/etc
      *      private LongFilter myFieldName;
+     *      private BooleanFilter myFieldName2;
      *  }
      * </pre>
      *

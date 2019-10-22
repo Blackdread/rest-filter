@@ -163,17 +163,44 @@ class CriteriaQueryParamTest {
 
     @Test
     void customFormatterMatchByClassOnlyAndNoSubclass() {
-        myCriteria.duration = new DurationFilter();
-        myCriteria.duration.setEquals(Duration.ofMinutes(55));
+        var filter = new CustomLongFilter();
+        CriteriaUtilTest.fillAll(filter, 1L, 2L);
 
-        myCriteria.id = CriteriaUtil.buildEqualsCriteria(5L);
-        myCriteria.name = CriteriaUtil.buildEqualsCriteria("aaa");
-        myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List.of("bbb", "ccc"));
-        myCriteria.active = CriteriaUtil.buildEqualsCriteria(false);
+        myCriteria.id = filter;
 
-        criteriaQueryParam = builder
-            .addCustomQueryParamFormatter()
+        var result = builder
+            .addCustomQueryParamFormatter(LongFilter.class, (fieldName, filter1) -> {
+                throw new IllegalStateException("Will not be called");
+            })
+            .build()
+            .buildQueryParams(myCriteria);
 
+        LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void defaultFormatterMatchByClassOnlyAndNoSubclass() {
+        var filter = new CustomLongFilter();
+        CriteriaUtilTest.fillAll(filter, 1L, 2L);
+
+        myCriteria.id = filter;
+
+        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+
+        LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
+
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static class CustomLongFilter extends LongFilter {
+
+    }
+
+    @Test
+    void buildWithManyEnum() {
+        // todo configure multi enum type in builder
     }
 
     @Test

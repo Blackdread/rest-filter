@@ -107,8 +107,18 @@ public class Filter<FIELD_TYPE> implements Serializable {
     public Class<FIELD_TYPE> obtainGenericClass() throws IllegalStateException, ClassCastException {
         if (genericClass != null)
             return genericClass;
-        final Type genericSuperclass1 = getClass()
-            .getGenericSuperclass();
+        Class<?> aClass = getClass();
+        Class<?> nextClass = aClass.getSuperclass();
+        boolean isNextRangeFilter = RangeFilter.class.equals(nextClass);
+        boolean isNextFilter = Filter.class.equals(nextClass);
+        while (nextClass != null && !Object.class.equals(nextClass) && isNextRangeFilter == isNextFilter) {
+            aClass = nextClass;
+            nextClass = aClass.getSuperclass();
+            isNextRangeFilter = RangeFilter.class.equals(nextClass);
+            isNextFilter = Filter.class.equals(nextClass);
+        }
+
+        final Type genericSuperclass1 = aClass.getGenericSuperclass();
         final ParameterizedType genericSuperclass;
         try {
             genericSuperclass = (ParameterizedType) genericSuperclass1; // ClassCastException if user created a filter directly with 'new Filter<XXX>()'

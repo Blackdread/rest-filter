@@ -41,11 +41,11 @@ import static org.blackdread.lib.restfilter.criteria.FilterQueryParamImpl.*;
  *
  * @author Yoann CAPLAIN
  */
-public final class QueryParamUtil {
+public final class FilterQueryParamUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(QueryParamUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(FilterQueryParamUtil.class);
 
-    private QueryParamUtil() {
+    private FilterQueryParamUtil() {
     }
 
 //    public static Object buildQueryParams(Criteria criteria) {

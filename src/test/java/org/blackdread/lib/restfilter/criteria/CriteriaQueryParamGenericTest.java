@@ -35,6 +35,26 @@ public class CriteriaQueryParamGenericTest {
     }
 
     @Test
+    void withCustomFilterEnumWrapperOk() {
+        CustomFilterEnum filter = new CustomFilterEnum();
+
+        Class<?> aClass = Assertions.assertDoesNotThrow(filter::obtainGenericClass);
+        Assertions.assertEquals(CustomEnum.class, aClass);
+        Assertions.assertTrue(aClass.isEnum());
+        Assertions.assertFalse(aClass.isInterface());
+    }
+
+    @Test
+    void withCustomFilterEnumInterfaceWrapperOk() {
+        CustomFilterEnumInterface filter = new CustomFilterEnumInterface();
+
+        Class<?> aClass = Assertions.assertDoesNotThrow(filter::obtainGenericClass);
+        Assertions.assertEquals(Any.class, aClass);
+        Assertions.assertFalse(aClass.isEnum());
+        Assertions.assertTrue(aClass.isInterface());
+    }
+
+    @Test
     void withSubclassGenericFilterFails() {
         RangeFilter<String> filter = new RangeFilter<>();
 
@@ -50,6 +70,12 @@ public class CriteriaQueryParamGenericTest {
     }
 
     static class Custom extends ArrayList<String> {
+    }
+
+    static class CustomFilterEnumInterface extends Filter<Any> {
+    }
+
+    static class CustomFilterEnum extends Filter<CustomEnum> {
     }
 
     static class CustomFilter1 extends Filter<Custom> {
@@ -69,6 +95,11 @@ public class CriteriaQueryParamGenericTest {
         public Integer getT2() {
             return null;
         }
+    }
+
+    enum CustomEnum implements Any {
+        CUSTOM_ENUM_1,
+        CUSTOM_ENUM_2
     }
 
     interface Any {

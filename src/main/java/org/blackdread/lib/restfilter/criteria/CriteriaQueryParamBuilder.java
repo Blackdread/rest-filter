@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -42,17 +43,31 @@ import java.util.function.Function;
 @NotThreadSafe
 public class CriteriaQueryParamBuilder {
 
-    private Function<Enum, String> enumFormatter = Enum::name;
-    private Function<Boolean, String> booleanFormatter = Object::toString;
-    private Function<BigDecimal, String> bigDecimalFormatter = BigDecimal::toString;
-    private Function<Double, String> doubleFormatter = Object::toString;
-    private Function<Float, String> floatFormatter = Object::toString;
-    private Function<Instant, String> instantFormatter = DateTimeFormatter.ISO_INSTANT::format;
-    private Function<LocalDate, String> localDateFormatter = DateTimeFormatter.ISO_LOCAL_DATE::format;
-    private Function<LocalDateTime, String> localDateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
-    private Function<ZonedDateTime, String> zonedDateTimeFormatter = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
-    private Function<Duration, String> durationFormatter = Duration::toString;
-    private Function<UUID, String> uuidFormatter = UUID::toString;
+    private static final Function<Enum, String> ENUM_FORMATTER_DEFAULT = Enum::name;
+    private static final Function<Boolean, String> BOOLEAN_FORMATTER = Object::toString;
+    private static final Function<BigDecimal, String> BIG_DECIMAL_FORMATTER = BigDecimal::toString;
+    private static final Function<Double, String> DOUBLE_FORMATTER = Object::toString;
+    private static final Function<Float, String> FLOAT_FORMATTER = Object::toString;
+    private static final Function<Instant, String> INSTANT_FORMATTER = DateTimeFormatter.ISO_INSTANT::format;
+    private static final Function<LocalDate, String> LOCAL_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE::format;
+    private static final Function<LocalDateTime, String> LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
+    private static final Function<ZonedDateTime, String> ZONED_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
+    private static final Function<Duration, String> DURATION_FORMATTER = Duration::toString;
+    private static final Function<UUID, String> UUID_FORMATTER = UUID::toString;
+
+    private boolean matchSubclassForDefaultFormatters = false;
+
+    private Function<Enum, String> enumFormatter = ENUM_FORMATTER_DEFAULT;
+    private Function<Boolean, String> booleanFormatter = BOOLEAN_FORMATTER;
+    private Function<BigDecimal, String> bigDecimalFormatter = BIG_DECIMAL_FORMATTER;
+    private Function<Double, String> doubleFormatter = DOUBLE_FORMATTER;
+    private Function<Float, String> floatFormatter = FLOAT_FORMATTER;
+    private Function<Instant, String> instantFormatter = INSTANT_FORMATTER;
+    private Function<LocalDate, String> localDateFormatter = LOCAL_DATE_FORMATTER;
+    private Function<LocalDateTime, String> localDateTimeFormatter = LOCAL_DATE_TIME_FORMATTER;
+    private Function<ZonedDateTime, String> zonedDateTimeFormatter = ZONED_DATE_TIME_FORMATTER;
+    private Function<Duration, String> durationFormatter = DURATION_FORMATTER;
+    private Function<UUID, String> uuidFormatter = UUID_FORMATTER;
     private Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap;
 
     /**
@@ -161,8 +176,11 @@ public class CriteriaQueryParamBuilder {
     }
 
     /**
-     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called.
+     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called when calling methods in {@link CriteriaQueryParam}.
+     * <br>
      * If {@code customQueryParamFormatterMap} is null then the map is removed from builder.
+     * <br>
+     * Map passed replaces current builder map.
      *
      * @param customQueryParamFormatterMap transform filters to query param (may be null)
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
@@ -173,20 +191,32 @@ public class CriteriaQueryParamBuilder {
     }
 
     /**
-     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called.
+     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called when calling methods in {@link CriteriaQueryParam}.
+     * <br>
      * If {@code customQueryParamFormatter} is null then the key associated with the given {@code filterClass} is removed from the map of the builder.
+     * <br>
+     * If {@code filterClass} is already contained in map, replaces it.
      *
      * @param customQueryParamFormatter transform filters to query param (may be null)
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
     public CriteriaQueryParamBuilder addCustomQueryParamFormatter(final Class<? extends Filter> filterClass, @Nullable FilterQueryParamFormatter customQueryParamFormatter) {
         Objects.requireNonNull(filterClass);
-        this.customQueryParamFormatterMap = customQueryParamFormatterMap;
+        Map<Class<? extends Filter>, FilterQueryParamFormatter> localMap = this.customQueryParamFormatterMap;
+        if (localMap == null) {
+            localMap = new HashMap<>();
+        }
+        if (customQueryParamFormatter == null) {
+            localMap.remove(filterClass);
+        } else {
+            localMap.put(filterClass, customQueryParamFormatter);
+        }
+        this.customQueryParamFormatterMap = localMap;
         return this;
     }
 
     public CriteriaQueryParam build() {
-        return new CriteriaQueryParamImpl(enumFormatter, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter, uuidFormatter, customQueryParamFormatterMap);
+        return new CriteriaQueryParamImpl(enumFormatter, matchSubclassForDefaultFormatters, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter, uuidFormatter, customQueryParamFormatterMap);
     }
 
 }

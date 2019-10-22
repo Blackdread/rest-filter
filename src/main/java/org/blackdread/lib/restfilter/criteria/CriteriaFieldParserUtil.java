@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,7 +67,7 @@ public final class CriteriaFieldParserUtil {
     private static Map<String, Filter> parse(final Object criteria) {
         final List<Field> fields = getFilterFields(criteria.getClass());
 
-        final Map<String, Filter> filtersByFieldName = new HashMap<>(fields.size());
+        final Map<String, Filter> filtersByFieldName = new LinkedHashMap<>(fields.size());
         for (Field field : fields) {
             try {
                 final Object fieldValue = field.get(criteria);
@@ -90,7 +90,7 @@ public final class CriteriaFieldParserUtil {
 
     private static Collection<Field> getFields(Class<?> clazz) {
         final Class<?> baseClass = clazz;
-        final Map<String, Field> fields = new HashMap<>();
+        final Map<String, Field> fields = new LinkedHashMap<>();
         while (clazz != null) {
             for (Field field : clazz.getDeclaredFields()) {
                 if (!fields.containsKey(field.getName())) {

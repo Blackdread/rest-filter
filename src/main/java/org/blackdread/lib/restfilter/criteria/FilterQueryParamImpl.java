@@ -141,4 +141,19 @@ class FilterQueryParamImpl implements FilterQueryParam {
     public List<String> getParamValues() {
         return paramValues;
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final FilterQueryParamImpl that = (FilterQueryParamImpl) o;
+        return fieldName.equals(that.fieldName) &&
+            filterPropertyName.equals(that.filterPropertyName) &&
+            paramValue.equals(that.paramValue);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fieldName, filterPropertyName, paramValue);
+    }
 }
