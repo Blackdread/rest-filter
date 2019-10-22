@@ -51,11 +51,11 @@ public final class CriteriaFieldParserUtil {
     private static final Map<Class, List<Field>> cachedFilterFieldsOfClass = new ConcurrentHashMap<>();
 
     /**
-     * Key of map is field name
+     * Key of map is field name.
+     * Fields with value null are skipped
      *
      * @param criteria A criteria object used for filtering
-     * @return All fields (and inherited) of criteria class, fields that extends {@link Filter}.
-     * Key of map is field name
+     * @return All fields (and inherited) of criteria class, fields (not null) that extends {@link Filter}.
      */
     public static Map<String, Filter> build(@Nullable final Object criteria) {
         if (criteria == null) {
