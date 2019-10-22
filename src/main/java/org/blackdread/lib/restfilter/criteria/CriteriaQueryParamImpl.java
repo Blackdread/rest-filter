@@ -70,12 +70,19 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //    private final List<FieldIgnore> fieldIgnores; todo
 //    private final Map<String, List<>>
 
-    private final boolean matchSubclassForDefaultFormatters;
-    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultQueryParamFormatterMap = new HashMap<>(16);
+    private final boolean matchSubclassForDefaultFilterFormatters;
+    /**
+     * Default supported filters to be transformed in FilterQueryParam with implementation provided by {@link FilterQueryParamUtil}
+     */
+    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new HashMap<>(16);
+    /**
+     * Functions to take an object (Boolean, String, Integer, BigDecimal, etc) as input and return a string as output to be used as param value.
+     * Key is object class that function will take as input
+     */
     private final Map<Class, Function<Object, String>> simpleTypeFormatterMap = new HashMap<>(16);
     private final Function<Boolean, String> booleanFormatter;
     private final Function<String, String> stringFormatter = string -> string;
-    private final Function<Integer, String> intFormatter = integer -> integer.toString();
+    private final Function<Integer, String> integerFormatter = integer -> integer.toString();
     private final Function<Long, String> longFormatter = aLong -> aLong.toString();
     private final Function<Short, String> shortFormatter = aShort -> aShort.toString();
     private final Function<BigDecimal, String> bigDecimalFormatter;
@@ -89,7 +96,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     private final Function<UUID, String> uuidFormatter;
 
     /**
-     * Could in fact add all formatters above into this map if filter class not already in it
+     * Custom formatters from user, short-circuit the logic if filter class is found, user provide its own logic to map a filter to a list of {@link FilterQueryParam}
      */
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap;
     //    private final Map<Class, Function<Object, String>> defaultFormatterMap;
@@ -98,9 +105,14 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //    BiFunction -> fieldName and filter
 //    private final Map<Class, BiFunction<String, Filter, List<FilterQueryParam>>> customQueryParamMap;
 
-    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final boolean matchSubclassForDefaultFormatters, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, final Function<UUID, String> uuidFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
+//    CriteriaQueryParamImpl(final Map<Class, Function<Object, String>> simpleTypeFormatterMap, final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap){
+//        this.simpleTypeFormatterMap = Map.copyOf(simpleTypeFormatterMap);
+//        this.customQueryParamFormatterMap = Map.copyOf(customQueryParamFormatterMap);
+//    }
+
+    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final boolean matchSubclassForDefaultFilterFormatters, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, final Function<UUID, String> uuidFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
         this.enumFormatter = Objects.requireNonNull(enumFormatter);
-        this.matchSubclassForDefaultFormatters = matchSubclassForDefaultFormatters;
+        this.matchSubclassForDefaultFilterFormatters = matchSubclassForDefaultFilterFormatters;
 
         this.booleanFormatter = Objects.requireNonNull(booleanFormatter);
         this.bigDecimalFormatter = Objects.requireNonNull(bigDecimalFormatter);
@@ -115,21 +127,21 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         this.customQueryParamFormatterMap = customQueryParamFormatterMap == null ? Map.of() : Map.copyOf(customQueryParamFormatterMap);
 
 
-        if (!matchSubclassForDefaultFormatters) {
-            defaultQueryParamFormatterMap.put(StringFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(LongFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(InstantFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(IntegerFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, intFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(DoubleFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(FloatFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(ShortFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(BigDecimalFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(LocalDateFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter));
+        if (!matchSubclassForDefaultFilterFormatters) {
+            defaultFilterClassFormatterMap.put(StringFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(LongFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(InstantFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(IntegerFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(DoubleFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(FloatFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(ShortFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(BigDecimalFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(LocalDateFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter));
 //            defaultQueryParamFormatterMap.put(LocalDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(ZonedDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(DurationFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(BooleanFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter));
-            defaultQueryParamFormatterMap.put(UUIDFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(ZonedDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(DurationFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(BooleanFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter));
+            defaultFilterClassFormatterMap.put(UUIDFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter));
         }
     }
 
@@ -146,12 +158,12 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             return customQueryParamFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
         }
 
-        if (matchSubclassForDefaultFormatters) {
+        if (matchSubclassForDefaultFilterFormatters) {
             final List<FilterQueryParam> x = getFilterQueryParamsByInstanceOf(fieldName, filter);
             if (x != null) return x;
         } else {
-            if (!defaultQueryParamFormatterMap.isEmpty() && defaultQueryParamFormatterMap.containsKey(filterClass)) {
-                return defaultQueryParamFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
+            if (!defaultFilterClassFormatterMap.isEmpty() && defaultFilterClassFormatterMap.containsKey(filterClass)) {
+                return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
             }
 //            final List<FilterQueryParam> x = getFilterQueryParamsByClass(fieldName, filter);
 //            if (x != null) return x;
@@ -171,6 +183,13 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     }
 
     private List<FilterQueryParam> getFilterQueryParamsByInstanceOf(final String fieldName, final Filter filter) {
+        // todo change to:
+//        Optional<Map.Entry<Class<? extends Filter>, FilterQueryParamFormatter>> first = defaultFilterClassFormatterMap.entrySet().stream()
+//            .filter(e -> e.getKey().isAssignableFrom(filter.getClass()))
+//            .findFirst();
+        // then do the actual logic needed
+
+
         if (filter instanceof StringFilter) {
             return FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter);
         } else if (filter instanceof LongFilter) {
@@ -178,7 +197,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         } else if (filter instanceof InstantFilter) {
             return FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter);
         } else if (filter instanceof IntegerFilter) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, intFormatter, booleanFormatter);
+            return FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter);
         } else if (filter instanceof DoubleFilter) {
             return FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter);
         } else if (filter instanceof FloatFilter) {
@@ -204,38 +223,38 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         return null;
     }
 
-    private List<FilterQueryParam> getFilterQueryParamsByClass(final String fieldName, final Filter filter) {
-        Class<? extends Filter> filterClass = filter.getClass();
-        if (StringFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter);
-        } else if (LongFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter);
-        } else if (InstantFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter);
-        } else if (IntegerFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, intFormatter, booleanFormatter);
-        } else if (DoubleFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter);
-        } else if (FloatFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter);
-        } else if (ShortFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter);
-        } else if (BigDecimalFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter);
-        } else if (LocalDateFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter);
-//        }  else if (LocalDateTimeFilter.class.equals(filterClass)) {
-//            return QueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter);
-        } else if (ZonedDateTimeFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter);
-        } else if (DurationFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter);
-        } else if (BooleanFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter);
-        } else if (UUIDFilter.class.equals(filterClass)) {
-            return FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter);
-        }
-        // very specific behavior of returning null here for a list return type
-        return null;
-    }
+//    private List<FilterQueryParam> getFilterQueryParamsByClass(final String fieldName, final Filter filter) {
+//        Class<? extends Filter> filterClass = filter.getClass();
+//        if (StringFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter);
+//        } else if (LongFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter);
+//        } else if (InstantFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter);
+//        } else if (IntegerFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter);
+//        } else if (DoubleFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter);
+//        } else if (FloatFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter);
+//        } else if (ShortFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter);
+//        } else if (BigDecimalFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter);
+//        } else if (LocalDateFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter);
+////        }  else if (LocalDateTimeFilter.class.equals(filterClass)) {
+////            return QueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter);
+//        } else if (ZonedDateTimeFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter);
+//        } else if (DurationFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter);
+//        } else if (BooleanFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter);
+//        } else if (UUIDFilter.class.equals(filterClass)) {
+//            return FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter);
+//        }
+//        // very specific behavior of returning null here for a list return type
+//        return null;
+//    }
 }

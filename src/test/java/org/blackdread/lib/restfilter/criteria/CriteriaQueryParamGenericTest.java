@@ -1,5 +1,6 @@
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.filter.DoubleFilter;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.filter.RangeFilter;
 import org.junit.jupiter.api.Assertions;
@@ -55,6 +56,14 @@ public class CriteriaQueryParamGenericTest {
     }
 
     @Test
+    void withCustomFilterExtendConcreteFilterOk() {
+        CustomFromDoubleFilter filter = new CustomFromDoubleFilter();
+
+        Class<?> aClass = Assertions.assertDoesNotThrow(filter::obtainGenericClass);
+        Assertions.assertEquals(Double.class, aClass);
+    }
+
+    @Test
     void withSubclassGenericFilterFails() {
         RangeFilter<String> filter = new RangeFilter<>();
 
@@ -67,6 +76,9 @@ public class CriteriaQueryParamGenericTest {
 
         Class<?> aClass = Assertions.assertDoesNotThrow(filter::obtainGenericClass);
         Assertions.assertEquals(String.class, aClass);
+    }
+
+    static class CustomFromDoubleFilter extends DoubleFilter {
     }
 
     static class Custom extends ArrayList<String> {
