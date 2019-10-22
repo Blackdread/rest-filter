@@ -156,4 +156,14 @@ class FilterQueryParamImpl implements FilterQueryParam {
     public int hashCode() {
         return Objects.hash(fieldName, filterPropertyName, paramValue);
     }
+
+    @Override
+    public String toString() {
+        return "FilterQueryParamImpl{" +
+            "fieldName='" + fieldName + '\'' +
+            ", filterPropertyName='" + filterPropertyName + '\'' +
+            ", paramValue='" + paramValue + '\'' +
+            ", paramValues=" + paramValues +
+            '}';
+    }
 }

@@ -25,7 +25,6 @@ package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.filter.Filter;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -70,9 +69,30 @@ public class CriteriaQueryParamBuilder {
     private Function<Duration, String> durationFormatter = DURATION_FORMATTER;
     private Function<UUID, String> uuidFormatter = UUID_FORMATTER;
 
+    private final Map<Class, Function<Object, String>> simpleTypeFormatterMap = new HashMap<>(16);
+    private final Map<Class<? extends Filter>, Class> simpleTypeFormatterByFilterClassMap = new HashMap<>(16);
+
+
 
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
-    private Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(16);
+    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(16);
+
+    public CriteriaQueryParamBuilder() {
+        simpleTypeFormatterMap.put(Enum.class, o -> ((Enum) o).name());
+    }
+
+    /**
+     * Formatter should not have side-effect.
+     *
+     * @param formatter transform {@link java.lang.Enum} to query param compatible {@code String}
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    @SuppressWarnings("unchecked")
+    public <T> CriteriaQueryParamBuilder withTypeFormatter(final Class<T> tClass, final Function<T, String> formatter) {
+        Objects.requireNonNull(formatter);
+        simpleTypeFormatterMap.put(tClass, (Function<Object, String>) formatter);
+        return this;
+    }
 
     /**
      * @param formatter transform {@link java.lang.Enum} to query param compatible {@code String}
@@ -180,42 +200,39 @@ public class CriteriaQueryParamBuilder {
     }
 
     /**
-     * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called when calling methods in {@link CriteriaQueryParam}.
-     * <br>
-     * If {@code customQueryParamFormatterMap} is null then the map is removed from builder.
+     * If a filter class is matched (exact class), the matching value {@link FilterQueryParamFormatter} will be called when calling methods in {@link CriteriaQueryParam}.
      * <br>
      * Map passed replaces current builder map.
      *
-     * @param customQueryParamFormatterMap transform filters to query param (may be null)
+     * @param customQueryParamFormatterMap transform filters to query params
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
-    public CriteriaQueryParamBuilder withCustomQueryParamFormatterMap(@Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
-        this.customQueryParamFormatterMap = customQueryParamFormatterMap;
+    public CriteriaQueryParamBuilder withCustomQueryParamFormatterMap(final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
+        this.customQueryParamFormatterMap.clear();
+        if (!customQueryParamFormatterMap.isEmpty()) {
+            this.customQueryParamFormatterMap.putAll(customQueryParamFormatterMap);
+        }
         return this;
     }
 
     /**
      * If a filter class is matched, the matching value {@link FilterQueryParamFormatter} will be called when calling methods in {@link CriteriaQueryParam}.
      * <br>
-     * If {@code customQueryParamFormatter} is null then the key associated with the given {@code filterClass} is removed from the map of the builder.
-     * <br>
      * If {@code filterClass} is already contained in map, replaces it.
      *
-     * @param customQueryParamFormatter transform filters to query param (may be null)
+     * @param customQueryParamFormatter transform filters to query params
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
-    public CriteriaQueryParamBuilder addCustomQueryParamFormatter(final Class<? extends Filter> filterClass, @Nullable FilterQueryParamFormatter customQueryParamFormatter) {
+    public CriteriaQueryParamBuilder putCustomQueryParamFormatter(final Class<? extends Filter> filterClass, final FilterQueryParamFormatter customQueryParamFormatter) {
         Objects.requireNonNull(filterClass);
-        Map<Class<? extends Filter>, FilterQueryParamFormatter> localMap = this.customQueryParamFormatterMap;
-        if (localMap == null) {
-            localMap = new HashMap<>();
-        }
-        if (customQueryParamFormatter == null) {
-            localMap.remove(filterClass);
-        } else {
-            localMap.put(filterClass, customQueryParamFormatter);
-        }
-        this.customQueryParamFormatterMap = localMap;
+        Objects.requireNonNull(customQueryParamFormatter);
+        this.customQueryParamFormatterMap.put(filterClass, customQueryParamFormatter);
+        return this;
+    }
+
+    public CriteriaQueryParamBuilder removeCustomQueryParamFormatter(final Class<? extends Filter> filterClass) {
+        Objects.requireNonNull(filterClass);
+        this.customQueryParamFormatterMap.remove(filterClass);
         return this;
     }
 

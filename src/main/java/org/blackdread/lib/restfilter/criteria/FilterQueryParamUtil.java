@@ -64,23 +64,31 @@ public final class FilterQueryParamUtil {
         return applyFilter(fieldName, filter, formatter, booleanFormatter);
     }
 
+    public static List<FilterQueryParam> buildFilterQueryParams(final String fieldName, final Filter filter, final Function objectToStringFormatter, final Function booleanToStringFormatter) {
+        return applyFilterWildcard(fieldName, filter, objectToStringFormatter, booleanToStringFormatter);
+    }
+
     public static <T extends Comparable<? super T>> List<FilterQueryParam> buildQueryParams(final String fieldName, final RangeFilter<T> filter, final Function<T, String> formatter) {
         return buildQueryParams(fieldName, filter, formatter, Object::toString);
     }
 
     public static <T extends Comparable<? super T>> List<FilterQueryParam> buildQueryParams(final String fieldName, final RangeFilter<T> filter, final Function<T, String> formatter, final Function<Boolean, String> booleanFormatter) {
-        final List<FilterQueryParam> filterQueryParams = applyFilter(fieldName, filter, formatter, booleanFormatter);
+        return buildRangeFilterQueryParams(fieldName, filter, formatter, booleanFormatter);
+    }
+
+    public static List<FilterQueryParam> buildRangeFilterQueryParams(final String fieldName, final RangeFilter filter, final Function objectToStringFormatter, final Function booleanFormatter) {
+        final List<FilterQueryParam> filterQueryParams = applyFilterWildcard(fieldName, filter, objectToStringFormatter, booleanFormatter);
         if (filter.getGreaterThan() != null) {
-            filterQueryParams.add(ofGreaterThan(fieldName, formatter.apply(filter.getGreaterThan())));
+            filterQueryParams.add(ofGreaterThan(fieldName, (String) objectToStringFormatter.apply(filter.getGreaterThan())));
         }
         if (filter.getGreaterThanOrEqual() != null) {
-            filterQueryParams.add(ofGreaterThanOrEqual(fieldName, formatter.apply(filter.getGreaterThanOrEqual())));
+            filterQueryParams.add(ofGreaterThanOrEqual(fieldName, (String) objectToStringFormatter.apply(filter.getGreaterThanOrEqual())));
         }
         if (filter.getLessThan() != null) {
-            filterQueryParams.add(ofLessThan(fieldName, formatter.apply(filter.getLessThan())));
+            filterQueryParams.add(ofLessThan(fieldName, (String) objectToStringFormatter.apply(filter.getLessThan())));
         }
         if (filter.getLessThanOrEqual() != null) {
-            filterQueryParams.add(ofLessThanOrEqual(fieldName, formatter.apply(filter.getLessThanOrEqual())));
+            filterQueryParams.add(ofLessThanOrEqual(fieldName, (String) objectToStringFormatter.apply(filter.getLessThanOrEqual())));
         }
         return filterQueryParams;
     }
@@ -94,15 +102,19 @@ public final class FilterQueryParamUtil {
     }
 
     public static List<FilterQueryParam> buildQueryParams(final String fieldName, final StringFilter filter, final Function<String, String> formatter, final Function<Boolean, String> booleanFormatter) {
-        final List<FilterQueryParam> filterQueryParams = applyFilter(fieldName, filter, formatter, booleanFormatter);
+        return buildStringFilterQueryParams(fieldName, filter, formatter, booleanFormatter);
+    }
+
+    public static List<FilterQueryParam> buildStringFilterQueryParams(final String fieldName, final StringFilter filter, final Function stringToStringFormatter, final Function booleanToStringFormatter) {
+        final List<FilterQueryParam> filterQueryParams = applyFilterWildcard(fieldName, filter, stringToStringFormatter, booleanToStringFormatter);
         if (filter.getContains() != null) {
-            filterQueryParams.add(ofContains(fieldName, formatter.apply(filter.getContains())));
+            filterQueryParams.add(ofContains(fieldName, (String) stringToStringFormatter.apply(filter.getContains())));
         }
         if (filter.getNotContains() != null) {
-            filterQueryParams.add(ofNotContains(fieldName, formatter.apply(filter.getNotContains())));
+            filterQueryParams.add(ofNotContains(fieldName, (String) stringToStringFormatter.apply(filter.getNotContains())));
         }
         if (!filter.isIgnoreCase()) {
-            filterQueryParams.add(ofIgnoreCase(fieldName, booleanFormatter.apply(false)));
+            filterQueryParams.add(ofIgnoreCase(fieldName, (String) booleanToStringFormatter.apply(false)));
         }
         return filterQueryParams;
     }
@@ -112,21 +124,29 @@ public final class FilterQueryParamUtil {
     }
 
     private static <T> List<FilterQueryParam> applyFilter(final String fieldName, final Filter<T> filter, final Function<T, String> formatter, final Function<Boolean, String> booleanFormatter) {
+        return applyFilterWildcard(fieldName, filter, formatter, booleanFormatter);
+    }
+
+//    private static List<FilterQueryParam> applyFilterWildcard(final String fieldName, final Filter<?> filter, final Function<?, String> objectToStringFormatter, final Function<?, String> booleanToStringFormatter) {
+//
+//    }
+
+    private static List<FilterQueryParam> applyFilterWildcard(final String fieldName, final Filter filter, final Function objectToStringFormatter, final Function booleanToStringFormatter) {
         final List<FilterQueryParam> filterQueryParams = new ArrayList<>();
         if (filter.getEquals() != null) {
-            filterQueryParams.add(ofEquals(fieldName, formatter.apply(filter.getEquals())));
+            filterQueryParams.add(ofEquals(fieldName, (String) objectToStringFormatter.apply(filter.getEquals())));
         }
         if (filter.getNotEquals() != null) {
-            filterQueryParams.add(ofNotEquals(fieldName, formatter.apply(filter.getNotEquals())));
+            filterQueryParams.add(ofNotEquals(fieldName, (String) objectToStringFormatter.apply(filter.getNotEquals())));
         }
         if (filter.getIn() != null && !filter.getIn().isEmpty()) {
-            filterQueryParams.add(ofIn(fieldName, filter.getIn().stream().map(formatter).collect(Collectors.toList())));
+            filterQueryParams.add(ofIn(fieldName, (List<String>) filter.getIn().stream().map(objectToStringFormatter).collect(Collectors.toList())));
         }
         if (filter.getNotIn() != null && !filter.getNotIn().isEmpty()) {
-            filterQueryParams.add(ofNotIn(fieldName, filter.getNotIn().stream().map(formatter).collect(Collectors.toList())));
+            filterQueryParams.add(ofNotIn(fieldName, (List<String>) filter.getNotIn().stream().map(objectToStringFormatter).collect(Collectors.toList())));
         }
         if (filter.getSpecified() != null) {
-            filterQueryParams.add(ofSpecified(fieldName, booleanFormatter.apply(filter.getSpecified())));
+            filterQueryParams.add(ofSpecified(fieldName, (String) booleanToStringFormatter.apply(filter.getSpecified())));
         }
         return filterQueryParams;
     }

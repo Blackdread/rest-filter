@@ -169,7 +169,7 @@ class CriteriaQueryParamTest {
         myCriteria.id = filter;
 
         var result = builder
-            .addCustomQueryParamFormatter(LongFilter.class, (fieldName, filter1) -> {
+            .putCustomQueryParamFormatter(LongFilter.class, (fieldName, filter1) -> {
                 throw new IllegalStateException("Will not be called");
             })
             .build()
