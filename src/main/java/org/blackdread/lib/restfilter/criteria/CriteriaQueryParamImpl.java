@@ -170,6 +170,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         }
 
         final Class genericClass = filter.obtainGenericClass();
+        // todo for enum we should find formatter if defined for this specific enum class, if not found then we fallback to default Enum class formatter
         if (genericClass.isEnum()) {
             return buildForEnum(fieldName, filter);
         }
