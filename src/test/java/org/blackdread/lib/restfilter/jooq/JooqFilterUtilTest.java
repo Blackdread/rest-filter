@@ -59,7 +59,9 @@ class JooqFilterUtilTest {
     void setUp() {
         longFilter = new LongFilter();
         longFilter.setEquals(1L);
+        longFilter.setNotEquals(1L);
         longFilter.setIn(Arrays.asList(1L, 2L));
+        longFilter.setNotIn(Arrays.asList(1L, 2L));
         longFilter.setSpecified(true);
         longFilter.setGreaterThan(1L);
         longFilter.setGreaterThanOrEqual(1L);
@@ -92,6 +94,18 @@ class JooqFilterUtilTest {
     }
 
     @Test
+    void buildConditionNotEquals() {
+        longFilter.setEquals(null);
+        longFilter.setIn(null);
+        final Condition condition = JooqFilterUtil.buildCondition((Filter<Long>) longFilter, longField);
+        Assertions.assertEquals(longField
+                .notEqual(1L)
+                .and(longField.notIn(Arrays.asList(1L, 2L)))
+                .and(longField.isNotNull())
+            , condition);
+    }
+
+    @Test
     void buildConditionIn() {
         longFilter.setEquals(null);
         final Condition condition = JooqFilterUtil.buildCondition((Filter<Long>) longFilter, longField);
@@ -99,9 +113,23 @@ class JooqFilterUtilTest {
     }
 
     @Test
+    void buildConditionNotIn() {
+        longFilter.setEquals(null);
+        longFilter.setNotEquals(null);
+        longFilter.setIn(null);
+        final Condition condition = JooqFilterUtil.buildCondition((Filter<Long>) longFilter, longField);
+        Assertions.assertEquals(longField
+                .notIn(Arrays.asList(1L, 2L))
+                .and(longField.isNotNull())
+            , condition);
+    }
+
+    @Test
     void buildConditionSpecified() {
         longFilter.setEquals(null);
+        longFilter.setNotEquals(null);
         longFilter.setIn(null);
+        longFilter.setNotIn(null);
         final Condition condition = JooqFilterUtil.buildCondition((Filter<Long>) longFilter, longField);
         Assertions.assertEquals(longField.isNotNull(), condition);
 
@@ -123,6 +151,21 @@ class JooqFilterUtilTest {
     }
 
     @Test
+    void buildRangeConditionNotEquals() {
+        longFilter.setEquals(null);
+        longFilter.setIn(null);
+        longFilter.setNotIn(null);
+        longFilter.setSpecified(null);
+        final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
+        Assertions.assertEquals(longField.notEqual(1L)
+                .and(longField.greaterThan(1L))
+                .and(longField.greaterOrEqual(1L))
+                .and(longField.lessThan(1L))
+                .and(longField.lessOrEqual(1L))
+            , condition);
+    }
+
+    @Test
     void buildRangeConditionIn() {
         longFilter.setEquals(null);
         final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
@@ -130,9 +173,26 @@ class JooqFilterUtilTest {
     }
 
     @Test
+    void buildRangeConditionNotIn() {
+        longFilter.setEquals(null);
+        longFilter.setNotEquals(null);
+        longFilter.setIn(null);
+        longFilter.setSpecified(null);
+        final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
+        Assertions.assertEquals(longField.notIn(Arrays.asList(1L, 2L))
+                .and(longField.greaterThan(1L))
+                .and(longField.greaterOrEqual(1L))
+                .and(longField.lessThan(1L))
+                .and(longField.lessOrEqual(1L))
+            , condition);
+    }
+
+    @Test
     void buildRangeConditionSpecified() {
         longFilter.setEquals(null);
+        longFilter.setNotEquals(null);
         longFilter.setIn(null);
+        longFilter.setNotIn(null);
         longFilter.setGreaterThan(null);
         longFilter.setGreaterThanOrEqual(null);
         longFilter.setLessThan(null);
@@ -148,7 +208,9 @@ class JooqFilterUtilTest {
     @Test
     void buildRangeConditionOthers() {
         longFilter.setEquals(null);
+        longFilter.setNotEquals(null);
         longFilter.setIn(null);
+        longFilter.setNotIn(null);
         final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
         Assertions.assertEquals(DSL.and(noCondition(), longField.isNotNull(), longField.greaterThan(1L), longField.greaterOrEqual(1L), longField.lessThan(1L), longField.lessOrEqual(1L)), condition);
 
@@ -165,7 +227,7 @@ class JooqFilterUtilTest {
         longFilter.setGreaterThan(null);
         longFilter.setLessThan(null);
         final Condition condition = JooqFilterUtil.buildCondition(longFilter, longField);
-        Assertions.assertEquals(DSL.and(noCondition(), longField.greaterOrEqual(1L), longField.lessOrEqual(1L)), condition);
+        Assertions.assertEquals(DSL.and(noCondition(), longField.notEqual(1L), longField.notIn(1L, 2L), longField.greaterOrEqual(1L), longField.lessOrEqual(1L)), condition);
     }
 
     @Test
