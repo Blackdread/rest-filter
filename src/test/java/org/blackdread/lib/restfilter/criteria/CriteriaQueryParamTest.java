@@ -30,6 +30,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -226,14 +228,18 @@ class CriteriaQueryParamTest {
         // todo configure multi enum type in builder
     }
 
-    @Test
-    void buildWithEnum() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithEnum(boolean matchSubclass) {
         var filter = new MyEnumFilter();
         CriteriaUtilTest.fillAll(filter, MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
 
         myCriteria.myEnum = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("myEnum.equals", "ENUM_VAL_1");
@@ -247,14 +253,18 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithLong() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithLong(boolean matchSubclass) {
         var filter = new LongFilter();
         CriteriaUtilTest.fillAll(filter, 1L, 2L);
 
         myCriteria.id = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("id.equals", "1");
@@ -272,14 +282,18 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithInteger() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithInteger(boolean matchSubclass) {
         var filter = new IntegerFilter();
         CriteriaUtilTest.fillAll(filter, 1, 2);
 
         myCriteria.count = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("count.equals", "1");
@@ -297,14 +311,18 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithDouble() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithDouble(boolean matchSubclass) {
         var filter = new DoubleFilter();
         CriteriaUtilTest.fillAll(filter, 1.01, 2.02);
 
         myCriteria.aDouble = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("aDouble.equals", "1.01");
@@ -322,14 +340,18 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithFloat() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithFloat(boolean matchSubclass) {
         var filter = new FloatFilter();
         CriteriaUtilTest.fillAll(filter, 1.01f, 2.02f);
 
         myCriteria.aFloat = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("aFloat.equals", "1.01");
@@ -347,14 +369,18 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithBigDecimal() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithBigDecimal(boolean matchSubclass) {
         var filter = new BigDecimalFilter();
         CriteriaUtilTest.fillAll(filter, BigDecimal.valueOf(1555.0351), BigDecimal.valueOf(155566.03519));
 
         myCriteria.total = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("total.equals", "1555.0351");
@@ -372,14 +398,18 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithBoolean() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithBoolean(boolean matchSubclass) {
         var filter = new BooleanFilter();
         CriteriaUtilTest.fillAll(filter, true, false);
 
         myCriteria.active = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("active.equals", "true");
@@ -393,8 +423,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithDuration() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithDuration(boolean matchSubclass) {
         var filter = new DurationFilter();
         var value1 = Duration.ofSeconds(959599774);
         var value2 = Duration.ofSeconds(314623697);
@@ -404,7 +435,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.duration = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("duration.equals", v1);
@@ -422,8 +456,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithInstant() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithInstant(boolean matchSubclass) {
         var filter = new InstantFilter();
         var value1 = Instant.parse("2019-01-05T09:05:35Z");
         var value2 = Instant.parse("1999-12-05T09:05:35Z");
@@ -433,7 +468,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.createTime = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("createTime.equals", v1);
@@ -451,8 +489,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithLocalDate() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithLocalDate(boolean matchSubclass) {
         var filter = new LocalDateFilter();
         var value1 = LocalDate.parse("2019-01-05");
         var value2 = LocalDate.parse("1999-12-05");
@@ -462,7 +501,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.localDate = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("localDate.equals", v1);
@@ -480,8 +522,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithShort() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithShort(boolean matchSubclass) {
         var filter = new ShortFilter();
         short value1 = 1;
         short value2 = 2;
@@ -491,7 +534,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.aShort = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("aShort.equals", v1);
@@ -509,8 +555,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithString() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithString(boolean matchSubclass) {
         var filter = new StringFilter();
         CriteriaUtilTest.fillAll(filter);
         var v1 = "any";
@@ -519,7 +566,10 @@ class CriteriaQueryParamTest {
         myCriteria.name = filter;
         myCriteria.name.setIgnoreCase(false);
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("name.equals", v1);
@@ -536,8 +586,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithUUID() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithUUID(boolean matchSubclass) {
         var filter = new UUIDFilter();
         var value1 = UUID.randomUUID();
         var value2 = UUID.randomUUID();
@@ -547,7 +598,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.uuid = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("uuid.equals", v1);
@@ -564,8 +618,9 @@ class CriteriaQueryParamTest {
         Assertions.assertEquals(expected, result);
     }
 
-    @Test
-    void buildWithZonedDateTime() {
+    @ValueSource(booleans = {true, false})
+    @ParameterizedTest
+    void buildWithZonedDateTime(boolean matchSubclass) {
         var filter = new ZonedDateTimeFilter();
         var value1 = ZonedDateTime.parse("2019-01-05T09:05:35+05:35");
         var value2 = ZonedDateTime.parse("1999-12-05T09:05:35-10:10");
@@ -575,7 +630,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.zonedDateTime = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(matchSubclass)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("zonedDateTime.equals", v1);
