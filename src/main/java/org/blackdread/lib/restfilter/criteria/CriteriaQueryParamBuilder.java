@@ -24,6 +24,7 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.filter.Filter;
+import org.blackdread.lib.restfilter.filter.ShortFilter;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.math.BigDecimal;
@@ -43,11 +44,16 @@ import java.util.function.Function;
 @NotThreadSafe
 public class CriteriaQueryParamBuilder {
 
-    private static final Function<Enum, String> ENUM_FORMATTER_DEFAULT = Enum::name;
-    private static final Function<Boolean, String> BOOLEAN_FORMATTER = Object::toString;
+    // Default formatters
+    private static final Function<Enum, String> ENUM_FORMATTER = Enum::name;
+    private static final Function<String, String> STRING_FORMATTER = aString -> aString;
+    private static final Function<Boolean, String> BOOLEAN_FORMATTER = aBoolean -> Boolean.toString(aBoolean);
     private static final Function<BigDecimal, String> BIG_DECIMAL_FORMATTER = BigDecimal::toString;
-    private static final Function<Double, String> DOUBLE_FORMATTER = Object::toString;
-    private static final Function<Float, String> FLOAT_FORMATTER = Object::toString;
+    private static final Function<Integer, String> INTEGER_FORMATTER = integer -> Integer.toString(integer);
+    private static final Function<Long, String> LONG_FORMATTER = aLong -> Long.toString(aLong);
+    private static final Function<Short, String> SHORT_FORMATTER = aShort -> Short.toString(aShort);
+    private static final Function<Double, String> DOUBLE_FORMATTER = aDouble -> Double.toString(aDouble);
+    private static final Function<Float, String> FLOAT_FORMATTER = aFloat -> Float.toString(aFloat);
     private static final Function<Instant, String> INSTANT_FORMATTER = DateTimeFormatter.ISO_INSTANT::format;
     private static final Function<LocalDate, String> LOCAL_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE::format;
     private static final Function<LocalDateTime, String> LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
@@ -57,28 +63,55 @@ public class CriteriaQueryParamBuilder {
 
     private boolean matchSubclassForDefaultFilterFormatters = false;
 
-    private Function<Enum, String> enumFormatter = ENUM_FORMATTER_DEFAULT;
-    private Function<Boolean, String> booleanFormatter = BOOLEAN_FORMATTER;
-    private Function<BigDecimal, String> bigDecimalFormatter = BIG_DECIMAL_FORMATTER;
-    private Function<Double, String> doubleFormatter = DOUBLE_FORMATTER;
-    private Function<Float, String> floatFormatter = FLOAT_FORMATTER;
-    private Function<Instant, String> instantFormatter = INSTANT_FORMATTER;
-    private Function<LocalDate, String> localDateFormatter = LOCAL_DATE_FORMATTER;
-    private Function<LocalDateTime, String> localDateTimeFormatter = LOCAL_DATE_TIME_FORMATTER;
-    private Function<ZonedDateTime, String> zonedDateTimeFormatter = ZONED_DATE_TIME_FORMATTER;
-    private Function<Duration, String> durationFormatter = DURATION_FORMATTER;
-    private Function<UUID, String> uuidFormatter = UUID_FORMATTER;
+//    private Function<Enum, String> enumFormatter = ENUM_FORMATTER_DEFAULT;
+//    private Function<Boolean, String> booleanFormatter = BOOLEAN_FORMATTER;
+//    private Function<BigDecimal, String> bigDecimalFormatter = BIG_DECIMAL_FORMATTER;
+//    private Function<Double, String> doubleFormatter = DOUBLE_FORMATTER;
+//    private Function<Float, String> floatFormatter = FLOAT_FORMATTER;
+//    private Function<Instant, String> instantFormatter = INSTANT_FORMATTER;
+//    private Function<LocalDate, String> localDateFormatter = LOCAL_DATE_FORMATTER;
+//    private Function<LocalDateTime, String> localDateTimeFormatter = LOCAL_DATE_TIME_FORMATTER;
+//    private Function<ZonedDateTime, String> zonedDateTimeFormatter = ZONED_DATE_TIME_FORMATTER;
+//    private Function<Duration, String> durationFormatter = DURATION_FORMATTER;
+//    private Function<UUID, String> uuidFormatter = UUID_FORMATTER;
 
-    private final Map<Class, Function<Object, String>> simpleTypeFormatterMap = new HashMap<>(16);
+    private final Map<Class, Function<Object, String>> simpleTypeFormatterMap = new LinkedHashMap<>(16);
     private final Map<Class<? extends Filter>, Class> simpleTypeFormatterByFilterClassMap = new HashMap<>(16);
-
 
 
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(16);
 
     public CriteriaQueryParamBuilder() {
-        simpleTypeFormatterMap.put(Enum.class, o -> ((Enum) o).name());
+        // Add defaults
+        simpleTypeFormatterMap.put(Long.class, (Function) LONG_FORMATTER);
+        simpleTypeFormatterMap.put(Instant.class, (Function) INSTANT_FORMATTER);
+        simpleTypeFormatterMap.put(String.class, (Function) STRING_FORMATTER);
+        simpleTypeFormatterMap.put(Double.class, (Function) DOUBLE_FORMATTER);
+        simpleTypeFormatterMap.put(Integer.class, (Function) INTEGER_FORMATTER);
+        simpleTypeFormatterMap.put(Short.class, (Function) SHORT_FORMATTER);
+        simpleTypeFormatterMap.put(Float.class, (Function) FLOAT_FORMATTER);
+        simpleTypeFormatterMap.put(Boolean.class, (Function) BOOLEAN_FORMATTER);
+        simpleTypeFormatterMap.put(BigDecimal.class, (Function) BIG_DECIMAL_FORMATTER);
+        simpleTypeFormatterMap.put(LocalDate.class, (Function) LOCAL_DATE_FORMATTER);
+        simpleTypeFormatterMap.put(LocalDateTime.class, (Function) LOCAL_DATE_TIME_FORMATTER);
+        simpleTypeFormatterMap.put(ZonedDateTime.class, (Function) ZONED_DATE_TIME_FORMATTER);
+        simpleTypeFormatterMap.put(Duration.class, (Function) DURATION_FORMATTER);
+        simpleTypeFormatterMap.put(UUID.class, (Function) UUID_FORMATTER);
+        simpleTypeFormatterMap.put(Enum.class, (Function) ENUM_FORMATTER);
+    }
+
+    /**
+     * Formatter should not have side-effect.
+     *
+     * @param formatter transform {@link T} to query param compatible {@code String}
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    @SuppressWarnings("unchecked")
+    public <T> CriteriaQueryParamBuilder withTypeFormatter(final Class<T> tClass, final Function<T, String> formatter) {
+        Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(tClass, (Function<Object, String>) formatter);
+        return this;
     }
 
     /**
@@ -88,114 +121,131 @@ public class CriteriaQueryParamBuilder {
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
     @SuppressWarnings("unchecked")
-    public <T> CriteriaQueryParamBuilder withTypeFormatter(final Class<T> tClass, final Function<T, String> formatter) {
-        Objects.requireNonNull(formatter);
-        simpleTypeFormatterMap.put(tClass, (Function<Object, String>) formatter);
-        return this;
-    }
-
-    /**
-     * @param formatter transform {@link java.lang.Enum} to query param compatible {@code String}
-     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
-     */
     public CriteriaQueryParamBuilder withEnumFormatter(final Function<Enum, String> formatter) {
-        this.enumFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(Enum.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.lang.Boolean} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withBooleanFormatter(final Function<Boolean, String> formatter) {
-        this.booleanFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(Boolean.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.math.BigDecimal} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withBigDecimalFormatter(final Function<BigDecimal, String> formatter) {
-        this.bigDecimalFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(BigDecimal.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.lang.Double} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withDoubleFormatter(final Function<Double, String> formatter) {
-        this.doubleFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(Double.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.lang.Float} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withFloatFormatter(final Function<Float, String> formatter) {
-        this.floatFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(Float.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.time.Instant} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withInstantFormatter(final Function<Instant, String> formatter) {
-        this.instantFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(Instant.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
      * In Spring context for web with REST, you might need to register org.springframework.format.Formatter or Converter beans.
      *
      * @param formatter transform {@link java.time.LocalDate} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withLocalDateFormatter(final Function<LocalDate, String> formatter) {
-        this.localDateFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(LocalDate.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
      * In Spring context for web with REST, you might need to register org.springframework.format.Formatter or Converter beans.
      *
      * @param formatter transform {@link java.time.LocalDateTime} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withLocalDateTimeFormatter(final Function<LocalDateTime, String> formatter) {
-        this.localDateTimeFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(LocalDateTime.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
      * In Spring context for web with REST, you might need to register org.springframework.format.Formatter or Converter beans.
      *
      * @param formatter transform {@link java.time.ZonedDateTime} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withZonedDateTimeFormatter(final Function<ZonedDateTime, String> formatter) {
-        this.zonedDateTimeFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(ZonedDateTime.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.time.Duration} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withDurationFormatter(final Function<Duration, String> formatter) {
-        this.durationFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(Duration.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
     /**
+     * Formatter should not have side-effect.
+     *
      * @param formatter transform {@link java.util.UUID} to query param compatible {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withUUIDFormatter(final Function<UUID, String> formatter) {
-        this.uuidFormatter = Objects.requireNonNull(formatter);
+        this.simpleTypeFormatterMap.put(UUID.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -220,6 +270,7 @@ public class CriteriaQueryParamBuilder {
      * <br>
      * If {@code filterClass} is already contained in map, replaces it.
      *
+     * @param filterClass               filter that will match a criteria filter field
      * @param customQueryParamFormatter transform filters to query params
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
@@ -230,6 +281,12 @@ public class CriteriaQueryParamBuilder {
         return this;
     }
 
+    /**
+     * Remove a previous added {@link FilterQueryParamFormatter} matching this filter class.
+     *
+     * @param filterClass filter class to remove
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
     public CriteriaQueryParamBuilder removeCustomQueryParamFormatter(final Class<? extends Filter> filterClass) {
         Objects.requireNonNull(filterClass);
         this.customQueryParamFormatterMap.remove(filterClass);
