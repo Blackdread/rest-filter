@@ -23,8 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
-import org.blackdread.lib.restfilter.filter.Filter;
-import org.blackdread.lib.restfilter.filter.ShortFilter;
+import org.blackdread.lib.restfilter.filter.*;
 
 import javax.annotation.concurrent.NotThreadSafe;
 import java.math.BigDecimal;
@@ -42,6 +41,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 @NotThreadSafe
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class CriteriaQueryParamBuilder {
 
     // Default formatters
@@ -75,42 +75,72 @@ public class CriteriaQueryParamBuilder {
 //    private Function<Duration, String> durationFormatter = DURATION_FORMATTER;
 //    private Function<UUID, String> uuidFormatter = UUID_FORMATTER;
 
-    private final Map<Class, Function<Object, String>> simpleTypeFormatterMap = new LinkedHashMap<>(16);
-    private final Map<Class<? extends Filter>, Class> simpleTypeFormatterByFilterClassMap = new HashMap<>(16);
+    private final Map<Class, Function<Object, String>> typeFormatterBySimpleTypeMap = new LinkedHashMap<>(16);
+    private final Map<Class<? extends Filter>, Class> typeFormatterByFilterClassMap = new LinkedHashMap<>(16);
 
 
-    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
+    //    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(16);
 
+    @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder() {
         // Add defaults
-        simpleTypeFormatterMap.put(Long.class, (Function) LONG_FORMATTER);
-        simpleTypeFormatterMap.put(Instant.class, (Function) INSTANT_FORMATTER);
-        simpleTypeFormatterMap.put(String.class, (Function) STRING_FORMATTER);
-        simpleTypeFormatterMap.put(Double.class, (Function) DOUBLE_FORMATTER);
-        simpleTypeFormatterMap.put(Integer.class, (Function) INTEGER_FORMATTER);
-        simpleTypeFormatterMap.put(Short.class, (Function) SHORT_FORMATTER);
-        simpleTypeFormatterMap.put(Float.class, (Function) FLOAT_FORMATTER);
-        simpleTypeFormatterMap.put(Boolean.class, (Function) BOOLEAN_FORMATTER);
-        simpleTypeFormatterMap.put(BigDecimal.class, (Function) BIG_DECIMAL_FORMATTER);
-        simpleTypeFormatterMap.put(LocalDate.class, (Function) LOCAL_DATE_FORMATTER);
-        simpleTypeFormatterMap.put(LocalDateTime.class, (Function) LOCAL_DATE_TIME_FORMATTER);
-        simpleTypeFormatterMap.put(ZonedDateTime.class, (Function) ZONED_DATE_TIME_FORMATTER);
-        simpleTypeFormatterMap.put(Duration.class, (Function) DURATION_FORMATTER);
-        simpleTypeFormatterMap.put(UUID.class, (Function) UUID_FORMATTER);
-        simpleTypeFormatterMap.put(Enum.class, (Function) ENUM_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Long.class, (Function) LONG_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Instant.class, (Function) INSTANT_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(String.class, (Function) STRING_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Double.class, (Function) DOUBLE_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Integer.class, (Function) INTEGER_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(UUID.class, (Function) UUID_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Short.class, (Function) SHORT_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Float.class, (Function) FLOAT_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Boolean.class, (Function) BOOLEAN_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(BigDecimal.class, (Function) BIG_DECIMAL_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(LocalDate.class, (Function) LOCAL_DATE_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(LocalDateTime.class, (Function) LOCAL_DATE_TIME_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(ZonedDateTime.class, (Function) ZONED_DATE_TIME_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Duration.class, (Function) DURATION_FORMATTER);
+        typeFormatterBySimpleTypeMap.put(Enum.class, (Function) ENUM_FORMATTER);
+
+
+        typeFormatterByFilterClassMap.put(LongFilter.class, Long.class);
+        typeFormatterByFilterClassMap.put(InstantFilter.class, Instant.class);
+        typeFormatterByFilterClassMap.put(StringFilter.class, String.class);
+        typeFormatterByFilterClassMap.put(DoubleFilter.class, Double.class);
+        typeFormatterByFilterClassMap.put(IntegerFilter.class, Integer.class);
+        typeFormatterByFilterClassMap.put(UUIDFilter.class, UUID.class);
+        typeFormatterByFilterClassMap.put(ShortFilter.class, Short.class);
+        typeFormatterByFilterClassMap.put(FloatFilter.class, Float.class);
+        typeFormatterByFilterClassMap.put(BooleanFilter.class, Boolean.class);
+        typeFormatterByFilterClassMap.put(BigDecimalFilter.class, BigDecimal.class);
+        typeFormatterByFilterClassMap.put(LocalDateFilter.class, LocalDate.class);
+//        typeFormatterByFilterClassMap.put(LocalDateTimeFilter.class, LocalDateTime.class);
+        typeFormatterByFilterClassMap.put(ZonedDateTimeFilter.class, ZonedDateTime.class);
+        typeFormatterByFilterClassMap.put(DurationFilter.class, Duration.class);
+//        typeFormatterByFilterClassMap.put(EnumXXXXX.class, Enum.class); -> handled differently in impl
+
+    }
+
+    /**
+     *
+     * @param matchSubclassForDefaultFilterFormatters whether subclass of a given filter will
+     * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
+     */
+    public CriteriaQueryParamBuilder matchSubclassForDefaultFilterFormatters(final boolean matchSubclassForDefaultFilterFormatters) {
+        this.matchSubclassForDefaultFilterFormatters = matchSubclassForDefaultFilterFormatters;
+        return this;
     }
 
     /**
      * Formatter should not have side-effect.
      *
      * @param formatter transform {@link T} to query param compatible {@code String}
+     * @param <T> type to be formatted to {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
     @SuppressWarnings("unchecked")
     public <T> CriteriaQueryParamBuilder withTypeFormatter(final Class<T> tClass, final Function<T, String> formatter) {
         Objects.requireNonNull(formatter);
-        this.simpleTypeFormatterMap.put(tClass, (Function<Object, String>) formatter);
+        this.typeFormatterBySimpleTypeMap.put(tClass, (Function<Object, String>) formatter);
         return this;
     }
 
@@ -122,7 +152,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withEnumFormatter(final Function<Enum, String> formatter) {
-        this.simpleTypeFormatterMap.put(Enum.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(Enum.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -134,7 +164,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withBooleanFormatter(final Function<Boolean, String> formatter) {
-        this.simpleTypeFormatterMap.put(Boolean.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(Boolean.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -146,7 +176,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withBigDecimalFormatter(final Function<BigDecimal, String> formatter) {
-        this.simpleTypeFormatterMap.put(BigDecimal.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(BigDecimal.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -158,7 +188,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withDoubleFormatter(final Function<Double, String> formatter) {
-        this.simpleTypeFormatterMap.put(Double.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(Double.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -170,7 +200,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withFloatFormatter(final Function<Float, String> formatter) {
-        this.simpleTypeFormatterMap.put(Float.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(Float.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -182,7 +212,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withInstantFormatter(final Function<Instant, String> formatter) {
-        this.simpleTypeFormatterMap.put(Instant.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(Instant.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -195,7 +225,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withLocalDateFormatter(final Function<LocalDate, String> formatter) {
-        this.simpleTypeFormatterMap.put(LocalDate.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(LocalDate.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -208,7 +238,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withLocalDateTimeFormatter(final Function<LocalDateTime, String> formatter) {
-        this.simpleTypeFormatterMap.put(LocalDateTime.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(LocalDateTime.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -221,7 +251,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withZonedDateTimeFormatter(final Function<ZonedDateTime, String> formatter) {
-        this.simpleTypeFormatterMap.put(ZonedDateTime.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(ZonedDateTime.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -233,7 +263,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withDurationFormatter(final Function<Duration, String> formatter) {
-        this.simpleTypeFormatterMap.put(Duration.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(Duration.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 
@@ -245,7 +275,7 @@ public class CriteriaQueryParamBuilder {
      */
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder withUUIDFormatter(final Function<UUID, String> formatter) {
-        this.simpleTypeFormatterMap.put(UUID.class, (Function) Objects.requireNonNull(formatter));
+        this.typeFormatterBySimpleTypeMap.put(UUID.class, (Function) Objects.requireNonNull(formatter));
         return this;
     }
 

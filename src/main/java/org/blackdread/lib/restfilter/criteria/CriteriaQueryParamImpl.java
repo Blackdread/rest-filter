@@ -53,11 +53,13 @@ import java.util.stream.Collectors;
 @ThreadSafe
 final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
-    @FunctionalInterface
-    interface CriteriaFieldIgnore {
-        boolean isIgnored(Class fieldClass, String fieldName, @Nullable Object fieldValue);
-    }
+// not sure if useful below
+//    @FunctionalInterface
+//    interface CriteriaFieldIgnore {
+//        boolean isIgnored(Class fieldClass, String fieldName, @Nullable Object fieldValue);
+//    }
 
+// not sure if useful below
 //    interface CriteriaFieldSupport {
 //        boolean support(...);
 //
@@ -78,9 +80,9 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
     /**
      * Functions to take an object (Boolean, String, Integer, BigDecimal, etc) as input and return a string as output to be used as param value.
-     * Key is object class that function will take as input
+     * Key is object class that function will take as input (Boolean, String, Integer, BigDecimal, etc)
      */
-    private final Map<Class, Function<Object, String>> simpleTypeFormatterMap = new LinkedHashMap<>(16);
+    private final Map<Class, Function<Object, String>> typeFormatterBySimpleTypeMap = new LinkedHashMap<>(16);
 //    private final Function<Boolean, String> booleanFormatter;
 //    private final Function<String, String> stringFormatter = string -> string;
 //    private final Function<Integer, String> integerFormatter = integer -> integer.toString();
@@ -148,7 +150,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     }
 
     private void checkLogic() {
-        if (!simpleTypeFormatterMap.containsKey(Boolean.class)) {
+        if (!typeFormatterBySimpleTypeMap.containsKey(Boolean.class)) {
             throw new IllegalStateException("Boolean formatter is mandatory");
         }
     }
@@ -161,21 +163,24 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         }
 
         if (matchSubclassForDefaultFilterFormatters) {
-            final List<FilterQueryParam> x = getFilterQueryParamsByInstanceOf(fieldName, filter);
+            final List<FilterQueryParam> x = getFilterQueryParamsWithSubclass(fieldName, filter);
             if (x != null) return x;
         } else {
             if (!defaultFilterClassFormatterMap.isEmpty() && defaultFilterClassFormatterMap.containsKey(filterClass)) {
                 return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
             }
-//            final List<FilterQueryParam> x = getFilterQueryParamsByClass(fieldName, filter);
-//            if (x != null) return x;
         }
 
         final Class genericClass = filter.obtainGenericClass();
-        // todo for enum we should find formatter if defined for this specific enum class, if not found then we fallback to default Enum class formatter
         if (genericClass.isEnum()) {
+            if (typeFormatterBySimpleTypeMap.containsKey(genericClass)) {
+                return buildForEnum(fieldName, filter, typeFormatterBySimpleTypeMap.get(genericClass));
+            }
             return buildForEnum(fieldName, filter);
         }
+
+        // todo do we try to find 'simpleTypeFormatterMap.containsKey(genericClass)' when not an enum ? Then try to apply a default formatter when we find the formatter for the genericClass
+        // well no in theory since it should have been found by getFilterQueryParamsWithSubclass/defaultFilterClassFormatterMap/customQueryParamFormatterMap already
 
         throw new UnsupportedFilterForQueryParamException(fieldName, filter);
     }
@@ -185,24 +190,41 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         return FilterQueryParamUtil.buildQueryParams(fieldName, filter, enumFormatter);
     }
 
-    private List<FilterQueryParam> getFilterQueryParamsByInstanceOf(final String fieldName, final Filter filter) {
-        // todo change to:
+    @SuppressWarnings("unchecked")
+    private List<FilterQueryParam> buildForEnum(final String fieldName, final Filter filter, final Function enumFormatter) {
+        return FilterQueryParamUtil.buildQueryParams(fieldName, filter, enumFormatter);
+    }
+
+    private List<FilterQueryParam> getFilterQueryParamsWithSubclass(final String fieldName, final Filter filter) {
+        final Class<? extends Filter> filterClass = filter.getClass();
         final List<Map.Entry<Class<? extends Filter>, FilterQueryParamFormatter>> formatters = defaultFilterClassFormatterMap.entrySet().stream()
-            .filter(e -> e.getKey().isAssignableFrom(filter.getClass()))
+            .filter(e -> e.getKey().isAssignableFrom(filterClass))
             .limit(2)
             .collect(Collectors.toList());
-        // todo should we throw if more than one match? -> maybe not as we could define specific filters then at end of list the default generic one
+        // todo should we throw if more than one match? -> maybe not as we could define specific filters then at end of list the default generic one (Map is ordered by insertion)
+
+        log.warn("At least two formatters for '{}' were found, first one will be used", filterClass);
 
         if (formatters.isEmpty()) {
             // very specific behavior of returning null here for a list return type
             return null;
         }
 
-        return formatters.get(0).getValue().getFilterQueryParams(fieldName, filter);
+        return formatters.get(0)
+            .getValue()
+            .getFilterQueryParams(fieldName, filter);
+    }
 
-        // then do the actual logic needed
+//    private List<FilterQueryParam> getFilterQueryParamsByClass(final String fieldName, final Filter filter) {
+//        final Class<? extends Filter> filterClass = filter.getClass();
+//        if (defaultFilterClassFormatterMap.containsKey(filterClass)) {
+//            return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
+//        }
+//        // very specific behavior of returning null here for a list return type
+//        return null;
+//    }
 
-
+//        private List<FilterQueryParam> getFilterQueryParamsWithSubclass(final String fieldName, final Filter filter) {
 //        if (filter instanceof StringFilter) {
 //            return FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter);
 //        } else if (filter instanceof LongFilter) {
@@ -234,7 +256,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //        }
         // very specific behavior of returning null here for a list return type
 //        return null;
-    }
+//    }
 
 //    private List<FilterQueryParam> getFilterQueryParamsByClass(final String fieldName, final Filter filter) {
 //        Class<? extends Filter> filterClass = filter.getClass();

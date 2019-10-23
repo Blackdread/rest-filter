@@ -41,6 +41,7 @@ import static org.blackdread.lib.restfilter.criteria.FilterQueryParamImpl.*;
  *
  * @author Yoann CAPLAIN
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public final class FilterQueryParamUtil {
 
     private static final Logger log = LoggerFactory.getLogger(FilterQueryParamUtil.class);
@@ -76,6 +77,7 @@ public final class FilterQueryParamUtil {
         return buildRangeFilterQueryParams(fieldName, filter, formatter, booleanFormatter);
     }
 
+    @SuppressWarnings("unchecked")
     public static List<FilterQueryParam> buildRangeFilterQueryParams(final String fieldName, final RangeFilter filter, final Function objectToStringFormatter, final Function booleanFormatter) {
         final List<FilterQueryParam> filterQueryParams = applyFilterWildcard(fieldName, filter, objectToStringFormatter, booleanFormatter);
         if (filter.getGreaterThan() != null) {
@@ -105,6 +107,7 @@ public final class FilterQueryParamUtil {
         return buildStringFilterQueryParams(fieldName, filter, formatter, booleanFormatter);
     }
 
+    @SuppressWarnings("unchecked")
     public static List<FilterQueryParam> buildStringFilterQueryParams(final String fieldName, final StringFilter filter, final Function stringToStringFormatter, final Function booleanToStringFormatter) {
         final List<FilterQueryParam> filterQueryParams = applyFilterWildcard(fieldName, filter, stringToStringFormatter, booleanToStringFormatter);
         if (filter.getContains() != null) {
@@ -131,6 +134,7 @@ public final class FilterQueryParamUtil {
 //
 //    }
 
+    @SuppressWarnings("unchecked")
     private static List<FilterQueryParam> applyFilterWildcard(final String fieldName, final Filter filter, final Function objectToStringFormatter, final Function booleanToStringFormatter) {
         final List<FilterQueryParam> filterQueryParams = new ArrayList<>();
         if (filter.getEquals() != null) {
