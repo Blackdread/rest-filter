@@ -106,13 +106,13 @@ class CriteriaQueryParamTest {
         List<FilterQueryParam> result5 = criteriaQueryParam.getFilterQueryParams("theName", new LongFilter());
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
-        Assertions.assertEquals(expected,result1);
-        Assertions.assertEquals(expected,result2);
-        Assertions.assertEquals(expected,result3);
+        Assertions.assertEquals(expected, result1);
+        Assertions.assertEquals(expected, result2);
+        Assertions.assertEquals(expected, result3);
 
         ArrayList<FilterQueryParam> expected2 = new ArrayList<>();
-        Assertions.assertEquals(expected2,result4);
-        Assertions.assertEquals(expected2,result5);
+        Assertions.assertEquals(expected2, result4);
+        Assertions.assertEquals(expected2, result5);
     }
 
     @Test
@@ -168,16 +168,14 @@ class CriteriaQueryParamTest {
 
         myCriteria.id = filter;
 
-        var result = builder
+        criteriaQueryParam = builder
             .putCustomQueryParamFormatter(LongFilter.class, (fieldName, filter1) -> {
                 throw new IllegalStateException("Will not be called");
             })
-            .build()
-            .buildQueryParams(myCriteria);
+            .build();
 
-        LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
-
-        Assertions.assertEquals(expected, result);
+        final UnsupportedFilterForQueryParamException exception = Assertions.assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
+        Assertions.assertEquals("Field 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
     }
 
     @Test
@@ -187,11 +185,36 @@ class CriteriaQueryParamTest {
 
         myCriteria.id = filter;
 
-        var result = criteriaQueryParam.buildQueryParams(myCriteria);
+        var result = builder
+            .matchSubclassForDefaultFilterFormatters(true)
+            .build()
+            .buildQueryParams(myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
+        expected.add("id.equals", "1");
+        expected.add("id.notEquals", "1");
+        expected.add("id.in", "1");
+        expected.add("id.in", "2");
+        expected.add("id.notIn", "1");
+        expected.add("id.notIn", "2");
+        expected.add("id.specified", "true");
+        expected.add("id.greaterThan", "1");
+        expected.add("id.greaterThanOrEqual", "1");
+        expected.add("id.lessThan", "1");
+        expected.add("id.lessThanOrEqual", "1");
 
         Assertions.assertEquals(expected, result);
+    }
+
+    @Test
+    void defaultFormatterCanMatchSubclass() {
+        var filter = new CustomLongFilter();
+        CriteriaUtilTest.fillAll(filter, 1L, 2L);
+
+        myCriteria.id = filter;
+
+        final UnsupportedFilterForQueryParamException exception = Assertions.assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
+        Assertions.assertEquals("Field 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
     }
 
     private static class CustomLongFilter extends LongFilter {

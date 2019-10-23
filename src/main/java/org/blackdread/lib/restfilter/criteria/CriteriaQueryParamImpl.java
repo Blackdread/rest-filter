@@ -146,7 +146,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             }
         });
 
-        log.debug("typeFormatterBySimpleTypeMap: {}", this.typeFormatterBySimpleTypeMap);
+        log.debug("typeFormatterBySimpleTypeMap keys: {}", this.typeFormatterBySimpleTypeMap.keySet());
         log.debug("typeFormatterByFilterClassMap: {}", typeFormatterByFilterClassMap);
         log.debug("customQueryParamFormatterMap: {}", this.customQueryParamFormatterMap);
     }
@@ -232,6 +232,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
         // todo do we try to find 'simpleTypeFormatterMap.containsKey(genericClass)' when not an enum ? Then try to apply a default formatter when we find the formatter for the genericClass
         // well no in theory since it should have been found by getFilterQueryParamsWithSubclass/defaultFilterClassFormatterMap/customQueryParamFormatterMap already
+        log.info("Filter {} could not be formatted, generic class is '{}' and available formatter is '{}'", filter.getClass().getName(), genericClass.getName(), typeFormatterBySimpleTypeMap.containsKey(genericClass));
 
         throw new UnsupportedFilterForQueryParamException(fieldName, filter);
     }
@@ -254,7 +255,9 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             .collect(Collectors.toList());
         // todo should we throw if more than one match? -> maybe not as we could define specific filters then at end of list the default generic one (Map is ordered by insertion)
 
-        log.warn("At least two formatters for '{}' were found, first one will be used", filterClass);
+        if (formatters.size() > 1) {
+            log.warn("At least two formatters for filter '{}' were found, first one will be used: {}", filterClass, formatters);
+        }
 
         if (formatters.isEmpty()) {
             // very specific behavior of returning null here for a list return type
@@ -266,81 +269,4 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             .getFilterQueryParams(fieldName, filter);
     }
 
-//    private List<FilterQueryParam> getFilterQueryParamsByClass(final String fieldName, final Filter filter) {
-//        final Class<? extends Filter> filterClass = filter.getClass();
-//        if (defaultFilterClassFormatterMap.containsKey(filterClass)) {
-//            return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
-//        }
-//        // very specific behavior of returning null here for a list return type
-//        return null;
-//    }
-
-//        private List<FilterQueryParam> getFilterQueryParamsWithSubclass(final String fieldName, final Filter filter) {
-//        if (filter instanceof StringFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter);
-//        } else if (filter instanceof LongFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter);
-//        } else if (filter instanceof InstantFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter);
-//        } else if (filter instanceof IntegerFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter);
-//        } else if (filter instanceof DoubleFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter);
-//        } else if (filter instanceof FloatFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter);
-//        } else if (filter instanceof ShortFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter);
-//        } else if (filter instanceof BigDecimalFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter);
-//        } else if (filter instanceof LocalDateFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter);
-////        }  else if (filter instanceof LocalDateTimeFilter) {
-////            return QueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter);
-//        } else if (filter instanceof ZonedDateTimeFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter);
-//        } else if (filter instanceof DurationFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter);
-//        } else if (filter instanceof BooleanFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter);
-//        } else if (filter instanceof UUIDFilter) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter);
-//        }
-    // very specific behavior of returning null here for a list return type
-//        return null;
-//    }
-
-//    private List<FilterQueryParam> getFilterQueryParamsByClass(final String fieldName, final Filter filter) {
-//        Class<? extends Filter> filterClass = filter.getClass();
-//        if (StringFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter);
-//        } else if (LongFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter);
-//        } else if (InstantFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter);
-//        } else if (IntegerFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter);
-//        } else if (DoubleFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter);
-//        } else if (FloatFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter);
-//        } else if (ShortFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter);
-//        } else if (BigDecimalFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter);
-//        } else if (LocalDateFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter);
-////        }  else if (LocalDateTimeFilter.class.equals(filterClass)) {
-////            return QueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter);
-//        } else if (ZonedDateTimeFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter);
-//        } else if (DurationFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter);
-//        } else if (BooleanFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter);
-//        } else if (UUIDFilter.class.equals(filterClass)) {
-//            return FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter);
-//        }
-//        // very specific behavior of returning null here for a list return type
-//        return null;
-//    }
 }
