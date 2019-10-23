@@ -23,19 +23,20 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
-import org.blackdread.lib.restfilter.filter.*;
+import org.blackdread.lib.restfilter.filter.Filter;
+import org.blackdread.lib.restfilter.filter.RangeFilter;
+import org.blackdread.lib.restfilter.filter.StringFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,8 +69,6 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private static final Logger log = LoggerFactory.getLogger(CriteriaQueryParamImpl.class);
 
-    private final Function<Enum, String> enumFormatter;
-
 //    private final List<FieldIgnore> fieldIgnores; todo
 //    private final Map<String, List<>>
 
@@ -83,7 +82,9 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
      * Key is object class that function will take as input (Boolean, String, Integer, BigDecimal, etc)
      */
     private final Map<Class, Function<Object, String>> typeFormatterBySimpleTypeMap = new LinkedHashMap<>(16);
-//    private final Function<Boolean, String> booleanFormatter;
+
+    private final Function<Enum, String> enumFormatter;
+    private final Function<Boolean, String> booleanFormatter;
 //    private final Function<String, String> stringFormatter = string -> string;
 //    private final Function<Integer, String> integerFormatter = integer -> integer.toString();
 //    private final Function<Long, String> longFormatter = aLong -> aLong.toString();
@@ -108,51 +109,101 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //    BiFunction -> fieldName and filter
 //    private final Map<Class, BiFunction<String, Filter, List<FilterQueryParam>>> customQueryParamMap;
 
-//    CriteriaQueryParamImpl(final Map<Class, Function<Object, String>> simpleTypeFormatterMap, final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap){
-//        this.simpleTypeFormatterMap = Map.copyOf(simpleTypeFormatterMap);
-//        this.customQueryParamFormatterMap = Map.copyOf(customQueryParamFormatterMap);
-    // todo log trace maps as order is important
-//    }
+    CriteriaQueryParamImpl(final boolean matchSubclassForDefaultFilterFormatters,
+                           final Map<Class, Function<Object, String>> simpleTypeFormatterMap,
+                           final Map<Class<? extends Filter>, Class> typeFormatterByFilterClassMap,
+                           final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
+        checkBasicFormatterArePresent(simpleTypeFormatterMap);
 
-    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final boolean matchSubclassForDefaultFilterFormatters, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, final Function<UUID, String> uuidFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
-        this.enumFormatter = Objects.requireNonNull(enumFormatter);
         this.matchSubclassForDefaultFilterFormatters = matchSubclassForDefaultFilterFormatters;
+        this.typeFormatterBySimpleTypeMap.putAll(simpleTypeFormatterMap);
+//        this.typeFormatterByFilterClassMap = new LinkedHashMap<>(typeFormatterByFilterClassMap);
+        this.customQueryParamFormatterMap = new HashMap<>(customQueryParamFormatterMap);
 
-        this.booleanFormatter = Objects.requireNonNull(booleanFormatter);
-        this.bigDecimalFormatter = Objects.requireNonNull(bigDecimalFormatter);
-        this.doubleFormatter = Objects.requireNonNull(doubleFormatter);
-        this.floatFormatter = Objects.requireNonNull(floatFormatter);
-        this.instantFormatter = Objects.requireNonNull(instantFormatter);
-        this.localDateFormatter = Objects.requireNonNull(localDateFormatter);
-        this.localDateTimeFormatter = Objects.requireNonNull(localDateTimeFormatter);
-        this.zonedDateTimeFormatter = Objects.requireNonNull(zonedDateTimeFormatter);
-        this.durationFormatter = Objects.requireNonNull(durationFormatter);
-        this.uuidFormatter = Objects.requireNonNull(uuidFormatter);
-        this.customQueryParamFormatterMap = customQueryParamFormatterMap == null ? Map.of() : Map.copyOf(customQueryParamFormatterMap);
+        this.enumFormatter = checkAndGet(Enum.class, simpleTypeFormatterMap);
+        this.booleanFormatter = checkAndGet(Boolean.class, simpleTypeFormatterMap);
 
+        typeFormatterByFilterClassMap.forEach((filterClass, formatterTypeClass) -> {
+            // eagerly get the formatter then pass the reference to the lambdas
+            final Function<Object, String> objectToStringFormatter = simpleTypeFormatterMap.get(formatterTypeClass);
+            if (StringFilter.class.isAssignableFrom(filterClass)) {
+                defaultFilterClassFormatterMap.put(filterClass,
+                    (fieldName, filter) ->
+                        FilterQueryParamUtil.buildStringFilterQueryParams(fieldName, (StringFilter) filter, objectToStringFormatter, booleanFormatter)
+                );
+            } else if (RangeFilter.class.isAssignableFrom(filterClass)) {
+                defaultFilterClassFormatterMap.put(filterClass,
+                    (fieldName, filter) ->
+                        FilterQueryParamUtil.buildRangeFilterQueryParams(fieldName, (RangeFilter) filter, objectToStringFormatter, booleanFormatter)
+                );
+            } else if (Filter.class.isAssignableFrom(filterClass)) {
+                defaultFilterClassFormatterMap.put(filterClass,
+                    (fieldName, filter) ->
+                        FilterQueryParamUtil.buildFilterQueryParams(fieldName, filter, objectToStringFormatter, booleanFormatter)
+                );
+            } else {
+                throw new IllegalStateException("Unsupported filter class: " + filterClass.getName());
+            }
+        });
 
-        if (!matchSubclassForDefaultFilterFormatters) {
-            defaultFilterClassFormatterMap.put(StringFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(LongFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(InstantFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(IntegerFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(DoubleFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(FloatFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(ShortFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(BigDecimalFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(LocalDateFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter));
-//            defaultQueryParamFormatterMap.put(LocalDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(ZonedDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(DurationFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(BooleanFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter));
-            defaultFilterClassFormatterMap.put(UUIDFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter));
-        }
+        log.debug("typeFormatterBySimpleTypeMap: {}", this.typeFormatterBySimpleTypeMap);
+        log.debug("typeFormatterByFilterClassMap: {}", typeFormatterByFilterClassMap);
+        log.debug("customQueryParamFormatterMap: {}", this.customQueryParamFormatterMap);
     }
 
-    private void checkLogic() {
-        if (!typeFormatterBySimpleTypeMap.containsKey(Boolean.class)) {
-            throw new IllegalStateException("Boolean formatter is mandatory");
-        }
+//    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final boolean matchSubclassForDefaultFilterFormatters, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, final Function<UUID, String> uuidFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
+//        this.enumFormatter = Objects.requireNonNull(enumFormatter);
+//        this.matchSubclassForDefaultFilterFormatters = matchSubclassForDefaultFilterFormatters;
+//
+//        this.booleanFormatter = Objects.requireNonNull(booleanFormatter);
+//        this.bigDecimalFormatter = Objects.requireNonNull(bigDecimalFormatter);
+//        this.doubleFormatter = Objects.requireNonNull(doubleFormatter);
+//        this.floatFormatter = Objects.requireNonNull(floatFormatter);
+//        this.instantFormatter = Objects.requireNonNull(instantFormatter);
+//        this.localDateFormatter = Objects.requireNonNull(localDateFormatter);
+//        this.localDateTimeFormatter = Objects.requireNonNull(localDateTimeFormatter);
+//        this.zonedDateTimeFormatter = Objects.requireNonNull(zonedDateTimeFormatter);
+//        this.durationFormatter = Objects.requireNonNull(durationFormatter);
+//        this.uuidFormatter = Objects.requireNonNull(uuidFormatter);
+//        this.customQueryParamFormatterMap = customQueryParamFormatterMap == null ? Map.of() : Map.copyOf(customQueryParamFormatterMap);
+//
+//
+//        if (!matchSubclassForDefaultFilterFormatters) {
+//            defaultFilterClassFormatterMap.put(StringFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(LongFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(InstantFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(IntegerFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(DoubleFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(FloatFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(ShortFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(BigDecimalFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(LocalDateFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter));
+////            defaultQueryParamFormatterMap.put(LocalDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(ZonedDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(DurationFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(BooleanFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter));
+//            defaultFilterClassFormatterMap.put(UUIDFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter));
+//        }
+//    }
+
+    private static Function checkAndGet(final Class typeFormatter, final Map<Class, Function<Object, String>> simpleTypeFormatterMap) {
+        return Objects.requireNonNull(simpleTypeFormatterMap.get(typeFormatter), () -> "Formatter is mandatory for type: " + typeFormatter.getName());
+    }
+
+    private static void checkBasicFormatterArePresent(final Map<Class, Function<Object, String>> simpleTypeFormatterMap) {
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Boolean.class), () -> "Formatter is mandatory for type: " + Boolean.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Integer.class), () -> "Formatter is mandatory for type: " + Integer.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Long.class), () -> "Formatter is mandatory for type: " + Long.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(BigDecimal.class), () -> "Formatter is mandatory for type: " + BigDecimal.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Double.class), () -> "Formatter is mandatory for type: " + Double.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Float.class), () -> "Formatter is mandatory for type: " + Float.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Duration.class), () -> "Formatter is mandatory for type: " + Duration.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Instant.class), () -> "Formatter is mandatory for type: " + Instant.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(LocalDate.class), () -> "Formatter is mandatory for type: " + LocalDate.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(Short.class), () -> "Formatter is mandatory for type: " + Short.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(String.class), () -> "Formatter is mandatory for type: " + String.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(UUID.class), () -> "Formatter is mandatory for type: " + UUID.class.getName());
+        Objects.requireNonNull(simpleTypeFormatterMap.get(ZonedDateTime.class), () -> "Formatter is mandatory for type: " + ZonedDateTime.class.getName());
     }
 
     @Override
@@ -254,7 +305,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 //        } else if (filter instanceof UUIDFilter) {
 //            return FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter);
 //        }
-        // very specific behavior of returning null here for a list return type
+    // very specific behavior of returning null here for a list return type
 //        return null;
 //    }
 

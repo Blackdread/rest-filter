@@ -75,7 +75,7 @@ class CriteriaFieldParserUtilTest {
         final Map<String, Filter> filters2 = CriteriaFieldParserUtil.build(criteria);
         stopwatch.stop();
         final long timeSpentSecondTimeNanos = stopwatch.getNanoTime();
-        final int TIME_FASTER = 50;
+        final int TIME_FASTER = 40;
         Assertions.assertTrue(() -> timeSpentFirstTimeNanos > timeSpentSecondTimeNanos * TIME_FASTER, () -> "First time should be around " + TIME_FASTER + " times longer than second time (1st: " + timeSpentFirstTimeNanos + " nanos, 2nd: " + timeSpentSecondTimeNanos + " nanos)");
         Assertions.assertTrue(() -> filters.size() == filters2.size());
         Assertions.assertTrue(() -> filters.keySet().containsAll(filters2.keySet()));

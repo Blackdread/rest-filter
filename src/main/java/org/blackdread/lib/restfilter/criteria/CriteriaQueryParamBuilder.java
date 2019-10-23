@@ -80,7 +80,7 @@ public class CriteriaQueryParamBuilder {
 
 
     //    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
-    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(16);
+    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(6);
 
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder() {
@@ -121,7 +121,6 @@ public class CriteriaQueryParamBuilder {
     }
 
     /**
-     *
      * @param matchSubclassForDefaultFilterFormatters whether subclass of a given filter will
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
@@ -134,7 +133,7 @@ public class CriteriaQueryParamBuilder {
      * Formatter should not have side-effect.
      *
      * @param formatter transform {@link T} to query param compatible {@code String}
-     * @param <T> type to be formatted to {@code String}
+     * @param <T>       type to be formatted to {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)
      */
     @SuppressWarnings("unchecked")
@@ -324,7 +323,12 @@ public class CriteriaQueryParamBuilder {
     }
 
     public CriteriaQueryParam build() {
-        return new CriteriaQueryParamImpl(enumFormatter, matchSubclassForDefaultFilterFormatters, booleanFormatter, bigDecimalFormatter, doubleFormatter, floatFormatter, instantFormatter, localDateFormatter, localDateTimeFormatter, zonedDateTimeFormatter, durationFormatter, uuidFormatter, customQueryParamFormatterMap);
+        return new CriteriaQueryParamImpl(
+            matchSubclassForDefaultFilterFormatters,
+            typeFormatterBySimpleTypeMap,
+            typeFormatterByFilterClassMap,
+            customQueryParamFormatterMap
+        );
     }
 
 }

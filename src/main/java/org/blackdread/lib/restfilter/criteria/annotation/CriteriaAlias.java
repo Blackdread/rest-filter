@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  *   public String name;
  *
  *   &#64;CriteriaInclude
- *   &#64;CriteriaAlias("createTime.greaterThan"})
+ *   &#64;CriteriaAlias("createTime.greaterThan"}) // can use like if back-end use Filter class but client code is not
  *   public Instant createdAfter;
  *
  *   &#64;CriteriaAlias("updateTime"})

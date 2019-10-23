@@ -177,12 +177,13 @@ class CriteriaQueryParamBuilderTest {
             .withTypeFormatter(BigDecimal.class, BigDecimal::toString)
             .withTypeFormatter(Instant.class, Instant::toString);
 
-        Field field = builder.getClass().getDeclaredField("simpleTypeFormatterMap");
+        Field field = builder.getClass().getDeclaredField("typeFormatterBySimpleTypeMap");
         field.setAccessible(true);
         Map<Class, Function<Object, String>> o = (Map<Class, Function<Object, String>>) field.get(builder);
 
         Assertions.assertEquals("CUSTOM_ENUM_1", o.get(Enum.class).apply(CriteriaQueryParamGenericTest.CustomEnum.CUSTOM_ENUM_1));
         Assertions.assertEquals("49996", o.get(BigDecimal.class).apply(BigDecimal.valueOf(49996)));
-        Assertions.assertThrows(NullPointerException.class, () -> o.get(Integer.class).apply(44));
+        Assertions.assertEquals("44", o.get(Integer.class).apply(44));
+        Assertions.assertThrows(NullPointerException.class, () -> o.get(Object.class).apply(44));
     }
 }
