@@ -27,7 +27,6 @@ import org.blackdread.lib.restfilter.filter.*;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,6 +46,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * <p>Created on 2019/10/19.</p>
@@ -88,15 +91,15 @@ class CriteriaQueryParamTest {
 
     @Test
     void toInstant() {
-        Assertions.assertEquals("2019-10-19T15:50:10Z", instantFormatter.apply(instant));
-        Assertions.assertEquals("2019-10-19", localDateFormatter.apply(localDate));
-        Assertions.assertEquals("2019-10-19T17:50:10", localDateTimeFormatter.apply(localDateTime));
-        Assertions.assertEquals("2007-12-03T10:15:30+01:00[Europe/Paris]", zonedDateTimeFormatter.apply(zonedDateTime));
-        Assertions.assertEquals("PT48H20.345S", durationFormatter.apply(duration));
+        assertEquals("2019-10-19T15:50:10Z", instantFormatter.apply(instant));
+        assertEquals("2019-10-19", localDateFormatter.apply(localDate));
+        assertEquals("2019-10-19T17:50:10", localDateTimeFormatter.apply(localDateTime));
+        assertEquals("2007-12-03T10:15:30+01:00[Europe/Paris]", zonedDateTimeFormatter.apply(zonedDateTime));
+        assertEquals("PT48H20.345S", durationFormatter.apply(duration));
 
-        Assertions.assertThrows(UnsupportedTemporalTypeException.class, () -> DateTimeFormatter.ISO_INSTANT.format(localDate));
-        Assertions.assertThrows(UnsupportedTemporalTypeException.class, () -> DateTimeFormatter.ISO_INSTANT.format(localDateTime));
-        Assertions.assertEquals("2007-12-03T09:15:30Z", DateTimeFormatter.ISO_INSTANT.format(zonedDateTime));
+        assertThrows(UnsupportedTemporalTypeException.class, () -> DateTimeFormatter.ISO_INSTANT.format(localDate));
+        assertThrows(UnsupportedTemporalTypeException.class, () -> DateTimeFormatter.ISO_INSTANT.format(localDateTime));
+        assertEquals("2007-12-03T09:15:30Z", DateTimeFormatter.ISO_INSTANT.format(zonedDateTime));
     }
 
     @Test
@@ -108,13 +111,13 @@ class CriteriaQueryParamTest {
         List<FilterQueryParam> result5 = criteriaQueryParam.getFilterQueryParams("theName", new LongFilter());
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
-        Assertions.assertEquals(expected, result1);
-        Assertions.assertEquals(expected, result2);
-        Assertions.assertEquals(expected, result3);
+        assertEquals(expected, result1);
+        assertEquals(expected, result2);
+        assertEquals(expected, result3);
 
         ArrayList<FilterQueryParam> expected2 = new ArrayList<>();
-        Assertions.assertEquals(expected2, result4);
-        Assertions.assertEquals(expected2, result5);
+        assertEquals(expected2, result4);
+        assertEquals(expected2, result5);
     }
 
     @Test
@@ -137,7 +140,7 @@ class CriteriaQueryParamTest {
         expected.add("active.equals", "false");
         expected.add("id.equals", "5");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -160,7 +163,7 @@ class CriteriaQueryParamTest {
         expected.add("active.equals", "false");
         expected.add("id.equals", "5");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -176,8 +179,11 @@ class CriteriaQueryParamTest {
             })
             .build();
 
-        final UnsupportedFilterForQueryParamException exception = Assertions.assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
-        Assertions.assertEquals("Field 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
+        final UnsupportedFilterForQueryParamException exception = assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
+        assertEquals("Field/method 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
+        assertEquals("id", exception.getCriteriaName());
+        assertEquals(filter, exception.getFilter());
+        assertSame(filter, exception.getFilter());
     }
 
     @Test
@@ -205,7 +211,7 @@ class CriteriaQueryParamTest {
         expected.add("id.lessThan", "1");
         expected.add("id.lessThanOrEqual", "1");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -215,8 +221,8 @@ class CriteriaQueryParamTest {
 
         myCriteria.id = filter;
 
-        final UnsupportedFilterForQueryParamException exception = Assertions.assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
-        Assertions.assertEquals("Field 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
+        final UnsupportedFilterForQueryParamException exception = assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
+        assertEquals("Field 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
     }
 
     private static class CustomLongFilter extends LongFilter {
@@ -237,7 +243,7 @@ class CriteriaQueryParamTest {
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
 
         expected.add("myEnum.equals", "prefix-ENUM_VAL_1");
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -262,7 +268,7 @@ class CriteriaQueryParamTest {
         expected.add("myEnum.notIn", "ENUM_VAL_2");
         expected.add("myEnum.specified", "true");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -291,7 +297,7 @@ class CriteriaQueryParamTest {
         expected.add("id.lessThan", "1");
         expected.add("id.lessThanOrEqual", "1");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -320,7 +326,7 @@ class CriteriaQueryParamTest {
         expected.add("count.lessThan", "1");
         expected.add("count.lessThanOrEqual", "1");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -349,7 +355,7 @@ class CriteriaQueryParamTest {
         expected.add("aDouble.lessThan", "1.01");
         expected.add("aDouble.lessThanOrEqual", "1.01");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -378,7 +384,7 @@ class CriteriaQueryParamTest {
         expected.add("aFloat.lessThan", "1.01");
         expected.add("aFloat.lessThanOrEqual", "1.01");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -407,7 +413,7 @@ class CriteriaQueryParamTest {
         expected.add("total.lessThan", "1555.0351");
         expected.add("total.lessThanOrEqual", "1555.0351");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -432,7 +438,7 @@ class CriteriaQueryParamTest {
         expected.add("active.notIn", "false");
         expected.add("active.specified", "true");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -465,7 +471,7 @@ class CriteriaQueryParamTest {
         expected.add("duration.lessThan", v1);
         expected.add("duration.lessThanOrEqual", v1);
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -498,7 +504,7 @@ class CriteriaQueryParamTest {
         expected.add("createTime.lessThan", v1);
         expected.add("createTime.lessThanOrEqual", v1);
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -531,7 +537,7 @@ class CriteriaQueryParamTest {
         expected.add("localDate.lessThan", v1);
         expected.add("localDate.lessThanOrEqual", v1);
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -564,7 +570,7 @@ class CriteriaQueryParamTest {
         expected.add("aShort.lessThan", v1);
         expected.add("aShort.lessThanOrEqual", v1);
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -595,7 +601,7 @@ class CriteriaQueryParamTest {
         expected.add("name.notContains", v1);
         expected.add("name.ignoreCase", "false");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -627,7 +633,7 @@ class CriteriaQueryParamTest {
 //        expected.add("uuid.notContains", v1);
 //        expected.add("uuid.ignoreCase", "false");
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
@@ -660,7 +666,7 @@ class CriteriaQueryParamTest {
         expected.add("zonedDateTime.lessThan", v1);
         expected.add("zonedDateTime.lessThanOrEqual", v1);
 
-        Assertions.assertEquals(expected, result);
+        assertEquals(expected, result);
     }
 
     enum MyEnum {

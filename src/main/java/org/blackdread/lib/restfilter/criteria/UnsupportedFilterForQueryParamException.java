@@ -35,17 +35,17 @@ public class UnsupportedFilterForQueryParamException extends IllegalArgumentExce
 
     private static final long serialVersionUID = 1L;
 
-    private final String fieldName;
+    private final String criteriaName;
     private final Filter filter;
 
-    public UnsupportedFilterForQueryParamException(final String fieldName, final Filter filter) {
-        super("Field '" + fieldName + "' did not match any formatter for filter '" + filter.getClass() + "'");
-        this.fieldName = fieldName;
+    public UnsupportedFilterForQueryParamException(final String criteriaName, final Filter filter) {
+        super("Field/method '" + criteriaName + "' did not match any formatter for filter '" + filter.getClass() + "'");
+        this.criteriaName = criteriaName;
         this.filter = filter;
     }
 
-    public String getFieldName() {
-        return fieldName;
+    public String getCriteriaName() {
+        return criteriaName;
     }
 
     public Filter getFilter() {
