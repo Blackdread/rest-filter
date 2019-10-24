@@ -24,13 +24,14 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * <p>Created on 2019/10/20.</p>
  *
  * @author Yoann CAPLAIN
  */
-public interface FilterQueryParam {
+public interface FilterQueryParam extends QueryParam {
 
     /**
      * Name of a filter that may have been defined inside a criteria.
@@ -101,6 +102,13 @@ public interface FilterQueryParam {
      * @return value of a query param
      */
     String getParamValue();
+
+    /**
+     * {@inheritDoc}
+     */
+    default Optional<String> getParamValueOpt() {
+        return Optional.ofNullable(getParamValue()); // should never be empty for filter
+    }
 
     /**
      * @return param values
