@@ -40,77 +40,77 @@ class FilterQueryParamImpl implements FilterQueryParam {
 
     private static final Logger log = LoggerFactory.getLogger(FilterQueryParamImpl.class);
 
-    private final String fieldName;
+    private final String criteriaName;
     private final String filterPropertyName;
     private final String paramValue;
     private final List<String> paramValues;
 
-    public static FilterQueryParam ofEquals(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, EQUALS_FILTER, paramValue);
+    public static FilterQueryParam ofEquals(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, EQUALS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofNotEquals(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, NOT_EQUALS_FILTER, paramValue);
+    public static FilterQueryParam ofNotEquals(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, NOT_EQUALS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofIn(final String fieldName, final List<String> paramValues) {
-        return ofMultipleValues(fieldName, IN_FILTER, paramValues);
+    public static FilterQueryParam ofIn(final String criteriaName, final List<String> paramValues) {
+        return ofMultipleValues(criteriaName, IN_FILTER, paramValues);
     }
 
-    public static FilterQueryParam ofNotIn(final String fieldName, final List<String> paramValues) {
-        return ofMultipleValues(fieldName, NOT_IN_FILTER, paramValues);
+    public static FilterQueryParam ofNotIn(final String criteriaName, final List<String> paramValues) {
+        return ofMultipleValues(criteriaName, NOT_IN_FILTER, paramValues);
     }
 
-    public static FilterQueryParam ofSpecified(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, SPECIFIED_FILTER, paramValue);
+    public static FilterQueryParam ofSpecified(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, SPECIFIED_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofGreaterThan(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, GREATER_THAN_FILTER, paramValue);
+    public static FilterQueryParam ofGreaterThan(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, GREATER_THAN_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofGreaterThanOrEqual(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, GREATER_THAN_OR_EQUAL_FILTER, paramValue);
+    public static FilterQueryParam ofGreaterThanOrEqual(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, GREATER_THAN_OR_EQUAL_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofLessThan(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, LESS_THAN_FILTER, paramValue);
+    public static FilterQueryParam ofLessThan(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, LESS_THAN_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofLessThanOrEqual(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, LESS_OR_EQUAL_THAN_FILTER, paramValue);
+    public static FilterQueryParam ofLessThanOrEqual(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, LESS_OR_EQUAL_THAN_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofContains(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, CONTAINS_FILTER, paramValue);
+    public static FilterQueryParam ofContains(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, CONTAINS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofNotContains(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, NOT_CONTAINS_FILTER, paramValue);
+    public static FilterQueryParam ofNotContains(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, NOT_CONTAINS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofIgnoreCase(final String fieldName, final String paramValue) {
-        return ofSingleValue(fieldName, IGNORE_CASE_FILTER, paramValue);
+    public static FilterQueryParam ofIgnoreCase(final String criteriaName, final String paramValue) {
+        return ofSingleValue(criteriaName, IGNORE_CASE_FILTER, paramValue);
     }
 
-    private static FilterQueryParam ofSingleValue(final String fieldName, final String filterPropertyName, final String paramValue) {
-        return new FilterQueryParamImpl(fieldName, filterPropertyName, paramValue, List.of(paramValue));
+    private static FilterQueryParam ofSingleValue(final String criteriaName, final String filterPropertyName, final String paramValue) {
+        return new FilterQueryParamImpl(criteriaName, filterPropertyName, paramValue, List.of(paramValue));
     }
 
-    private static FilterQueryParam ofMultipleValues(final String fieldName, final String filterPropertyName, final List<String> paramValues) {
-        return new FilterQueryParamImpl(fieldName, filterPropertyName, String.join(",", paramValues), List.copyOf(paramValues));
+    private static FilterQueryParam ofMultipleValues(final String criteriaName, final String filterPropertyName, final List<String> paramValues) {
+        return new FilterQueryParamImpl(criteriaName, filterPropertyName, String.join(",", paramValues), List.copyOf(paramValues));
     }
 
-    private FilterQueryParamImpl(final String fieldName, final String filterPropertyName, final String paramValue, final List<String> paramValues) {
-        this.fieldName = Objects.requireNonNull(fieldName);
+    private FilterQueryParamImpl(final String criteriaName, final String filterPropertyName, final String paramValue, final List<String> paramValues) {
+        this.criteriaName = Objects.requireNonNull(criteriaName);
         this.filterPropertyName = Objects.requireNonNull(filterPropertyName);
         this.paramValue = Objects.requireNonNull(paramValue);
         this.paramValues = Objects.requireNonNull(paramValues);
     }
 
     @Override
-    public String getFieldName() {
-        return fieldName;
+    public String getCriteriaName() {
+        return criteriaName;
     }
 
     @Override
@@ -132,7 +132,7 @@ class FilterQueryParamImpl implements FilterQueryParam {
     public String getParamValue() {
 // it is allowed to query single value already joined with ','
 //        if (paramValues.size() > 1) {
-//            throw new IllegalStateException(String.format("Multiple values are available for field '%s', filter '%s', with values [\"%s\"]", fieldName, filterPropertyName, String.join("\", \"", paramValues)));
+//            throw new IllegalStateException(String.format("Multiple values are available for field '%s', filter '%s', with values [\"%s\"]", criteriaName, filterPropertyName, String.join("\", \"", paramValues)));
 //        }
         return paramValue;
     }
@@ -147,20 +147,20 @@ class FilterQueryParamImpl implements FilterQueryParam {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final FilterQueryParamImpl that = (FilterQueryParamImpl) o;
-        return fieldName.equals(that.fieldName) &&
+        return criteriaName.equals(that.criteriaName) &&
             filterPropertyName.equals(that.filterPropertyName) &&
             paramValue.equals(that.paramValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fieldName, filterPropertyName, paramValue);
+        return Objects.hash(criteriaName, filterPropertyName, paramValue);
     }
 
     @Override
     public String toString() {
         return "FilterQueryParamImpl{" +
-            "fieldName='" + fieldName + '\'' +
+            "criteriaName='" + criteriaName + '\'' +
             ", filterPropertyName='" + filterPropertyName + '\'' +
             ", paramValue='" + paramValue + '\'' +
             ", paramValues=" + paramValues +

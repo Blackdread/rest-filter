@@ -33,18 +33,22 @@ import java.util.List;
 public interface FilterQueryParam {
 
     /**
-     * Name of field of a filter that may have been defined inside a criteria.
+     * Name of a filter that may have been defined inside a criteria.
      * <pre>
      *  class MyCriteria implements Criteria {
      *      // omitted functions/constructors/etc
      *      private LongFilter myFieldName;
      *      private BooleanFilter myFieldName2;
+     *
+     *      public LongFilter getMyFilterFromGetter() {
+     *          // ...
+     *      }
      *  }
      * </pre>
      *
-     * @return field name
+     * @return field or method name formatted
      */
-    String getFieldName();
+    String getCriteriaName();
 
 
     /**
@@ -61,14 +65,14 @@ public interface FilterQueryParam {
     String getFilterPropertyName();
 
     /**
-     * Concat {@link #getFieldName()} +
+     * Concat {@link #getCriteriaName()} +
      * {@link org.blackdread.lib.restfilter.criteria.CriteriaQueryParam#FIELD_NAME_AND_FILTER_SEPARATOR} +
      * {@link #getFilterPropertyName()}
      *
      * @return Concatenation of field name, separator and filter property name
      */
     default String getParamName() {
-        return getFieldName() + CriteriaQueryParam.FIELD_NAME_AND_FILTER_SEPARATOR + getFilterPropertyName();
+        return getCriteriaName() + CriteriaQueryParam.FIELD_NAME_AND_FILTER_SEPARATOR + getFilterPropertyName();
     }
 
     /**

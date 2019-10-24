@@ -36,15 +36,21 @@ public interface QueryParam {
      *      // omitted functions/constructors/etc
      *      private long myFieldName;
      *      private boolean myFieldName2;
+     *
+     *      &#64;CriteriaInclude
+     *      public Long getMyFilterFromGetter() {
+     *          // ...
+     *      }
      *  }
      * </pre>
      *
-     * @return field name
+     * @return field or method name formatted
+     * @deprecated might remove, too specific and value may come from a field or a method name
      */
-    String getFieldName(); // todo too specific? remove this one?
+    String getCriteriaName();
 
     default String getParamName() {
-        return getFieldName();
+        return getCriteriaName();
     }
 
     /**

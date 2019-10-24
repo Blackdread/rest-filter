@@ -23,12 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
-import org.blackdread.lib.restfilter.filter.BigDecimalFilter;
-import org.blackdread.lib.restfilter.filter.Filter;
-import org.blackdread.lib.restfilter.filter.InstantFilter;
-import org.blackdread.lib.restfilter.filter.LongFilter;
-import org.blackdread.lib.restfilter.filter.RangeFilter;
-import org.blackdread.lib.restfilter.filter.StringFilter;
+import org.blackdread.lib.restfilter.filter.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,11 +31,15 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 class CriteriaQueryParamBuilderTest {
@@ -185,5 +184,110 @@ class CriteriaQueryParamBuilderTest {
         Assertions.assertEquals("49996", o.get(BigDecimal.class).apply(BigDecimal.valueOf(49996)));
         Assertions.assertEquals("44", o.get(Integer.class).apply(44));
         Assertions.assertThrows(NullPointerException.class, () -> o.get(Object.class).apply(44));
+    }
+
+    @Test
+    void withTypeProperlyAddedAndPassed() {
+        final CriteriaQueryParam criteriaQueryParam = builder
+            .withTypeFormatter(Long.class, aLong -> {
+                throw new IllegalArgumentException("withTypeFormatter long");
+            })
+            .withBigDecimalFormatter(a -> {
+                throw new IllegalArgumentException("withBigDecimalFormatter");
+            })
+            .withBooleanFormatter(a -> {
+                throw new IllegalArgumentException("withBooleanFormatter");
+            })
+            .withDoubleFormatter(a -> {
+                throw new IllegalArgumentException("withDoubleFormatter");
+            })
+            .withDurationFormatter(a -> {
+                throw new IllegalArgumentException("withDurationFormatter");
+            })
+            .withEnumFormatter(a -> {
+                throw new IllegalArgumentException("withEnumFormatter");
+            })
+            .withFloatFormatter(a -> {
+                throw new IllegalArgumentException("withFloatFormatter");
+            })
+            .withInstantFormatter(a -> {
+                throw new IllegalArgumentException("withInstantFormatter");
+            })
+            .withLocalDateFormatter(a -> {
+                throw new IllegalArgumentException("withLocalDateFormatter");
+            })
+            .withLocalDateTimeFormatter(a -> {
+                throw new IllegalArgumentException("withLocalDateTimeFormatter");
+            })
+            .withUUIDFormatter(a -> {
+                throw new IllegalArgumentException("withUUIDFormatter");
+            })
+            .withZonedDateTimeFormatter(a -> {
+                throw new IllegalArgumentException("withZonedDateTimeFormatter");
+            })
+            .build();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setEquals(1L)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new BigDecimalFilter().setEquals(BigDecimal.TEN)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new BooleanFilter().setEquals(true)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new DoubleFilter().setEquals(4.0)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new DurationFilter().setEquals(Duration.ofDays(5))));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new CustomFilterEnum().setEquals(CustomEnum.CUSTOM_ENUM_2)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new FloatFilter().setEquals(1.0f)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new InstantFilter().setEquals(Instant.now())));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new LocalDateFilter().setEquals(LocalDate.now())));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new UUIDFilter().setEquals(UUID.randomUUID())));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new ZonedDateTimeFilter().setEquals(ZonedDateTime.now())));
+    }
+
+    @Test
+    void withCustomQueryParamFormatterMap() {
+        Map<Class<? extends Filter>, FilterQueryParamFormatter> map = new HashMap<>();
+        map.put(LongFilter.class, (fieldName, filter) -> {
+            throw new IllegalArgumentException("long");
+        });
+        map.put(StringFilter.class, (fieldName, filter) -> {
+            throw new IllegalArgumentException("string");
+        });
+        final CriteriaQueryParam criteriaQueryParam = builder
+            .withCustomQueryParamFormatterMap(map)
+            .build();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setEquals(1L)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new StringFilter().setEquals("a")));
+
+        final CriteriaQueryParam criteriaQueryParam2 = builder
+            .withCustomQueryParamFormatterMap(new HashMap<>())
+            .build();
+
+        Assertions.assertDoesNotThrow(() -> criteriaQueryParam2.getFilterQueryParams("a", new LongFilter().setEquals(1L)));
+        Assertions.assertDoesNotThrow(() -> criteriaQueryParam2.getFilterQueryParams("a", new StringFilter().setEquals("a")));
+    }
+
+    @Test
+    void putCustomQueryParamFormatter() {
+        final CriteriaQueryParam criteriaQueryParam = builder
+            .putCustomQueryParamFormatter(LongFilter.class, (fieldName, filter) -> {
+                throw new IllegalArgumentException("long");
+            })
+            .putCustomQueryParamFormatter(StringFilter.class, (fieldName, filter) -> {
+                throw new IllegalArgumentException("string");
+            })
+            .build();
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setEquals(1L)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new StringFilter().setEquals("a")));
+    }
+
+    @Test
+    void removeCustomQueryParamFormatter() {
+        final CriteriaQueryParam criteriaQueryParam = builder
+            .putCustomQueryParamFormatter(LongFilter.class, (fieldName, filter) -> {
+                throw new IllegalArgumentException("long");
+            })
+            .putCustomQueryParamFormatter(StringFilter.class, (fieldName, filter) -> {
+                throw new IllegalArgumentException("string");
+            })
+            .removeCustomQueryParamFormatter(LongFilter.class)
+            .build();
+        Assertions.assertDoesNotThrow(() -> criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setEquals(1L)));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> criteriaQueryParam.getFilterQueryParams("a", new StringFilter().setEquals("a")));
     }
 }

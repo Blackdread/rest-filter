@@ -226,6 +226,18 @@ class CriteriaQueryParamTest {
     @Test
     void buildWithManyEnum() {
         // todo configure multi enum type in builder
+        var filter = new MyEnumFilter();
+        filter.setEquals(MyEnum.ENUM_VAL_1);
+
+        var result = builder
+            .withTypeFormatter(MyEnum.class, myEnum -> "prefix-" + myEnum.name())
+            .build()
+            .buildQueryParams("myEnum", filter);
+
+        LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
+
+        expected.add("myEnum.equals", "prefix-ENUM_VAL_1");
+        Assertions.assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
