@@ -222,7 +222,7 @@ class CriteriaQueryParamTest {
         myCriteria.id = filter;
 
         final UnsupportedFilterForQueryParamException exception = assertThrows(UnsupportedFilterForQueryParamException.class, () -> criteriaQueryParam.buildQueryParams(myCriteria));
-        assertEquals("Field 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
+        assertEquals("Field/method 'id' did not match any formatter for filter 'class org.blackdread.lib.restfilter.criteria.CriteriaQueryParamTest$CustomLongFilter'", exception.getMessage());
     }
 
     private static class CustomLongFilter extends LongFilter {

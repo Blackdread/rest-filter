@@ -122,7 +122,7 @@ class CriteriaQueryParamBuilderTest {
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(CustomFilterEnum.class).getFilterQueryParams("myField", bigDecimalFilter));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(CustomFilterEnum.class).getFilterQueryParams("myField", instantFilter));
         List<FilterQueryParam> resultEnum = defaultFilterClassFormatterMap.get(CustomFilterEnum.class).getFilterQueryParams("myField", customFilterEnum);
-        Assertions.assertEquals("[FilterQueryParamImpl{fieldName='myField', filterPropertyName='notEquals', paramValue='CUSTOM_ENUM_2', paramValues=[CUSTOM_ENUM_2]}]", resultEnum.toString());
+        Assertions.assertEquals("[FilterQueryParamImpl{criteriaName='myField', filterPropertyName='notEquals', paramValue='CUSTOM_ENUM_2', paramValues=[CUSTOM_ENUM_2]}]", resultEnum.toString());
 
         // does not throw as there is no cast
         Assertions.assertDoesNotThrow(() -> defaultFilterClassFormatterMap.get(CustomFilterEnum2.class).getFilterQueryParams("myField", longFilter));
@@ -130,25 +130,25 @@ class CriteriaQueryParamBuilderTest {
         Assertions.assertDoesNotThrow(() -> defaultFilterClassFormatterMap.get(CustomFilterEnum2.class).getFilterQueryParams("myField", bigDecimalFilter));
         Assertions.assertDoesNotThrow(() -> defaultFilterClassFormatterMap.get(CustomFilterEnum2.class).getFilterQueryParams("myField", instantFilter));
         List<FilterQueryParam> resultCustomEnum2 = defaultFilterClassFormatterMap.get(CustomFilterEnum2.class).getFilterQueryParams("myField", customFilterEnum2);
-        Assertions.assertEquals("[FilterQueryParamImpl{fieldName='myField', filterPropertyName='equals', paramValue='hello', paramValues=[hello]}, FilterQueryParamImpl{fieldName='myField', filterPropertyName='notEquals', paramValue='hello', paramValues=[hello]}]", resultCustomEnum2.toString());
+        Assertions.assertEquals("[FilterQueryParamImpl{criteriaName='myField', filterPropertyName='equals', paramValue='hello', paramValues=[hello]}, FilterQueryParamImpl{criteriaName='myField', filterPropertyName='notEquals', paramValue='hello', paramValues=[hello]}]", resultCustomEnum2.toString());
 
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(LongFilter.class).getFilterQueryParams("myField", customFilterEnum));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(LongFilter.class).getFilterQueryParams("myField", bigDecimalFilter));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(LongFilter.class).getFilterQueryParams("myField", instantFilter));
         List<FilterQueryParam> resultLong = defaultFilterClassFormatterMap.get(LongFilter.class).getFilterQueryParams("myField", longFilter);
-        Assertions.assertEquals("[FilterQueryParamImpl{fieldName='myField', filterPropertyName='in', paramValue='5,6', paramValues=[5, 6]}]", resultLong.toString());
+        Assertions.assertEquals("[FilterQueryParamImpl{criteriaName='myField', filterPropertyName='in', paramValue='5,6', paramValues=[5, 6]}]", resultLong.toString());
 
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(BigDecimalFilter.class).getFilterQueryParams("myField", longFilter));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(BigDecimalFilter.class).getFilterQueryParams("myField", customFilterEnum));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(BigDecimalFilter.class).getFilterQueryParams("myField", instantFilter));
         List<FilterQueryParam> resultBigDecimal = defaultFilterClassFormatterMap.get(BigDecimalFilter.class).getFilterQueryParams("myField", bigDecimalFilter);
-        Assertions.assertEquals("[FilterQueryParamImpl{fieldName='myField', filterPropertyName='equals', paramValue='10', paramValues=[10]}]", resultBigDecimal.toString());
+        Assertions.assertEquals("[FilterQueryParamImpl{criteriaName='myField', filterPropertyName='equals', paramValue='10', paramValues=[10]}]", resultBigDecimal.toString());
 
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(InstantFilter.class).getFilterQueryParams("myField", longFilter));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(InstantFilter.class).getFilterQueryParams("myField", customFilterEnum));
         Assertions.assertThrows(ClassCastException.class, () -> defaultFilterClassFormatterMap.get(InstantFilter.class).getFilterQueryParams("myField", bigDecimalFilter));
         List<FilterQueryParam> resultInstant = defaultFilterClassFormatterMap.get(InstantFilter.class).getFilterQueryParams("myField", instantFilter);
-        Assertions.assertEquals("[FilterQueryParamImpl{fieldName='myField', filterPropertyName='equals', paramValue='2019-10-22T09:39:07Z', paramValues=[2019-10-22T09:39:07Z]}, FilterQueryParamImpl{fieldName='myField', filterPropertyName='greaterThan', paramValue='2019-10-22T09:39:07Z', paramValues=[2019-10-22T09:39:07Z]}]", resultInstant.toString());
+        Assertions.assertEquals("[FilterQueryParamImpl{criteriaName='myField', filterPropertyName='equals', paramValue='2019-10-22T09:39:07Z', paramValues=[2019-10-22T09:39:07Z]}, FilterQueryParamImpl{criteriaName='myField', filterPropertyName='greaterThan', paramValue='2019-10-22T09:39:07Z', paramValues=[2019-10-22T09:39:07Z]}]", resultInstant.toString());
 
     }
 
