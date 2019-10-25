@@ -69,26 +69,26 @@ public interface CriteriaQueryParam {
         return multiValueMap;
     }
 
-    default MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter) {
+    default MultiValueMap<String, String> buildQueryParams(final String filterName, final Filter filter) {
         final LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        getFilterQueryParams(fieldName, filter)
+        getFilterQueryParams(filterName, filter)
             .forEach(filterQueryParam -> map.addAll(filterQueryParam.getParamName(), filterQueryParam.getParamValues()));
         return map;
     }
 
     // todo add support for user to also get criteria in logic below to be able to create QueryParam from non Filter type fields?
 
-    default List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFieldName) {
-        return filtersByFieldName.entrySet().stream()
+    default List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFilterName) {
+        return filtersByFilterName.entrySet().stream()
             .flatMap(e -> getFilterQueryParams(e.getKey(), e.getValue()).stream())
             .collect(Collectors.toList());
     }
 
     /**
-     * @param fieldName field name of filter in criteria object
-     * @param filter    filter extract query params
+     * @param filterName name of filter (from field/method/etc)
+     * @param filter     filter to extract query params
      * @return list of query params, may be empty
      */
-    List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter);
+    List<FilterQueryParam> getFilterQueryParams(final String filterName, final Filter filter);
 }
 

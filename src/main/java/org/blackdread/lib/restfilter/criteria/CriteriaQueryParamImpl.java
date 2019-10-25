@@ -151,41 +151,6 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         log.debug("customQueryParamFormatterMap: {}", this.customQueryParamFormatterMap);
     }
 
-//    CriteriaQueryParamImpl(final Function<Enum, String> enumFormatter, final boolean matchSubclassForDefaultFilterFormatters, final Function<Boolean, String> booleanFormatter, final Function<BigDecimal, String> bigDecimalFormatter, final Function<Double, String> doubleFormatter, final Function<Float, String> floatFormatter, final Function<Instant, String> instantFormatter, final Function<LocalDate, String> localDateFormatter, final Function<LocalDateTime, String> localDateTimeFormatter, final Function<ZonedDateTime, String> zonedDateTimeFormatter, final Function<Duration, String> durationFormatter, final Function<UUID, String> uuidFormatter, @Nullable final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap) {
-//        this.enumFormatter = Objects.requireNonNull(enumFormatter);
-//        this.matchSubclassForDefaultFilterFormatters = matchSubclassForDefaultFilterFormatters;
-//
-//        this.booleanFormatter = Objects.requireNonNull(booleanFormatter);
-//        this.bigDecimalFormatter = Objects.requireNonNull(bigDecimalFormatter);
-//        this.doubleFormatter = Objects.requireNonNull(doubleFormatter);
-//        this.floatFormatter = Objects.requireNonNull(floatFormatter);
-//        this.instantFormatter = Objects.requireNonNull(instantFormatter);
-//        this.localDateFormatter = Objects.requireNonNull(localDateFormatter);
-//        this.localDateTimeFormatter = Objects.requireNonNull(localDateTimeFormatter);
-//        this.zonedDateTimeFormatter = Objects.requireNonNull(zonedDateTimeFormatter);
-//        this.durationFormatter = Objects.requireNonNull(durationFormatter);
-//        this.uuidFormatter = Objects.requireNonNull(uuidFormatter);
-//        this.customQueryParamFormatterMap = customQueryParamFormatterMap == null ? Map.of() : Map.copyOf(customQueryParamFormatterMap);
-//
-//
-//        if (!matchSubclassForDefaultFilterFormatters) {
-//            defaultFilterClassFormatterMap.put(StringFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (StringFilter) filter, stringFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(LongFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LongFilter) filter, longFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(InstantFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (InstantFilter) filter, instantFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(IntegerFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (IntegerFilter) filter, integerFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(DoubleFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DoubleFilter) filter, doubleFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(FloatFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (FloatFilter) filter, floatFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(ShortFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ShortFilter) filter, shortFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(BigDecimalFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BigDecimalFilter) filter, bigDecimalFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(LocalDateFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateFilter) filter, localDateFormatter, booleanFormatter));
-////            defaultQueryParamFormatterMap.put(LocalDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (LocalDateTimeFilter) filter, localDateTimeFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(ZonedDateTimeFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (ZonedDateTimeFilter) filter, zonedDateTimeFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(DurationFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (DurationFilter) filter, durationFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(BooleanFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (BooleanFilter) filter, booleanFormatter, booleanFormatter));
-//            defaultFilterClassFormatterMap.put(UUIDFilter.class, (fieldName, filter) -> FilterQueryParamUtil.buildQueryParams(fieldName, (UUIDFilter) filter, uuidFormatter, booleanFormatter));
-//        }
-//    }
-
     private static Function checkAndGet(final Class typeFormatter, final Map<Class, Function<Object, String>> simpleTypeFormatterMap) {
         return Objects.requireNonNull(simpleTypeFormatterMap.get(typeFormatter), () -> "Formatter is mandatory for type: " + typeFormatter.getName());
     }
@@ -207,34 +172,34 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     }
 
     @Override
-    public List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter) {
+    public List<FilterQueryParam> getFilterQueryParams(final String filterName, final Filter filter) {
         final Class<? extends Filter> filterClass = filter.getClass();
         if (!customQueryParamFormatterMap.isEmpty() && customQueryParamFormatterMap.containsKey(filterClass)) {
-            return customQueryParamFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
+            return customQueryParamFormatterMap.get(filterClass).getFilterQueryParams(filterName, filter);
         }
 
         if (matchSubclassForDefaultFilterFormatters) {
-            final List<FilterQueryParam> x = getFilterQueryParamsWithSubclass(fieldName, filter);
+            final List<FilterQueryParam> x = getFilterQueryParamsWithSubclass(filterName, filter);
             if (x != null) return x;
         } else {
             if (!defaultFilterClassFormatterMap.isEmpty() && defaultFilterClassFormatterMap.containsKey(filterClass)) {
-                return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(fieldName, filter);
+                return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(filterName, filter);
             }
         }
 
         final Class genericClass = filter.obtainGenericClass();
         if (genericClass.isEnum()) {
             if (typeFormatterBySimpleTypeMap.containsKey(genericClass)) {
-                return buildForEnum(fieldName, filter, typeFormatterBySimpleTypeMap.get(genericClass));
+                return buildForEnum(filterName, filter, typeFormatterBySimpleTypeMap.get(genericClass));
             }
-            return buildForEnum(fieldName, filter);
+            return buildForEnum(filterName, filter);
         }
 
         // todo do we try to find 'simpleTypeFormatterMap.containsKey(genericClass)' when not an enum ? Then try to apply a default formatter when we find the formatter for the genericClass
         // well no in theory since it should have been found by getFilterQueryParamsWithSubclass/defaultFilterClassFormatterMap/customQueryParamFormatterMap already
         log.info("Filter {} could not be formatted, generic class is '{}' and available formatter is '{}'", filter.getClass().getName(), genericClass.getName(), typeFormatterBySimpleTypeMap.containsKey(genericClass));
 
-        throw new UnsupportedFilterForQueryParamException(fieldName, filter);
+        throw new UnsupportedFilterForQueryParamException(filterName, filter);
     }
 
     @SuppressWarnings("unchecked")

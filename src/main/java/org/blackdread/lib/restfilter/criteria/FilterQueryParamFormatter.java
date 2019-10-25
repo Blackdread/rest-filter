@@ -37,13 +37,13 @@ interface FilterQueryParamFormatter {
 
     /**
      * Build query params from a filter
+     * <p>
+     * todo might return QueryParam instead so not only related to filters
      *
-     *  todo might return QueryParam instead so not only related to filters
-     *
-     * @param fieldName field name of filter
-     * @param filter    filter to extract FilterQueryParam (never null)
+     * @param filterName name of filter (from field/method/etc)
+     * @param filter     filter to extract FilterQueryParam (never null)
      * @return query params, may be empty
      */
-    List<FilterQueryParam> getFilterQueryParams(String fieldName, Filter filter);
+    List<FilterQueryParam> getFilterQueryParams(String filterName, Filter filter);
 
 }

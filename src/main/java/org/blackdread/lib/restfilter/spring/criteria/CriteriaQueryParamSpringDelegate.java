@@ -61,18 +61,18 @@ class CriteriaQueryParamSpringDelegate implements CriteriaQueryParamSpring {
     }
 
     @Override
-    public MultiValueMap<String, String> buildQueryParams(final String fieldName, final Filter filter) {
-        return delegate.buildQueryParams(fieldName, filter);
+    public MultiValueMap<String, String> buildQueryParams(final String filterName, final Filter filter) {
+        return delegate.buildQueryParams(filterName, filter);
     }
 
     @Override
-    public List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFieldName) {
-        return delegate.getFilterQueryParams(filtersByFieldName);
+    public List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFilterName) {
+        return delegate.getFilterQueryParams(filtersByFilterName);
     }
 
     @Override
-    public List<FilterQueryParam> getFilterQueryParams(final String fieldName, final Filter filter) {
-        return delegate.getFilterQueryParams(fieldName, filter);
+    public List<FilterQueryParam> getFilterQueryParams(final String filterName, final Filter filter) {
+        return delegate.getFilterQueryParams(filterName, filter);
     }
 
 }

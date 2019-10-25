@@ -36,7 +36,7 @@ import static org.blackdread.lib.restfilter.criteria.CriteriaQueryParam.*;
  *
  * @author Yoann CAPLAIN
  */
-class FilterQueryParamImpl implements FilterQueryParam {
+final class FilterQueryParamImpl implements FilterQueryParam {
 
     private static final Logger log = LoggerFactory.getLogger(FilterQueryParamImpl.class);
 
@@ -45,51 +45,51 @@ class FilterQueryParamImpl implements FilterQueryParam {
     private final String paramValue;
     private final List<String> paramValues;
 
-    public static FilterQueryParam ofEquals(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofEquals(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, EQUALS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofNotEquals(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofNotEquals(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, NOT_EQUALS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofIn(final String criteriaName, final List<String> paramValues) {
+    static FilterQueryParam ofIn(final String criteriaName, final List<String> paramValues) {
         return ofMultipleValues(criteriaName, IN_FILTER, paramValues);
     }
 
-    public static FilterQueryParam ofNotIn(final String criteriaName, final List<String> paramValues) {
+    static FilterQueryParam ofNotIn(final String criteriaName, final List<String> paramValues) {
         return ofMultipleValues(criteriaName, NOT_IN_FILTER, paramValues);
     }
 
-    public static FilterQueryParam ofSpecified(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofSpecified(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, SPECIFIED_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofGreaterThan(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofGreaterThan(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, GREATER_THAN_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofGreaterThanOrEqual(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofGreaterThanOrEqual(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, GREATER_THAN_OR_EQUAL_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofLessThan(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofLessThan(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, LESS_THAN_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofLessThanOrEqual(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofLessThanOrEqual(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, LESS_OR_EQUAL_THAN_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofContains(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofContains(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, CONTAINS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofNotContains(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofNotContains(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, NOT_CONTAINS_FILTER, paramValue);
     }
 
-    public static FilterQueryParam ofIgnoreCase(final String criteriaName, final String paramValue) {
+    static FilterQueryParam ofIgnoreCase(final String criteriaName, final String paramValue) {
         return ofSingleValue(criteriaName, IGNORE_CASE_FILTER, paramValue);
     }
 

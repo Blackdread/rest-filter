@@ -30,7 +30,7 @@ import java.util.Optional;
 public interface QueryParam {
 
     /**
-     * Name of field that may have been defined inside a criteria.
+     * Name of field/method/etc that may have been defined inside a criteria.
      * <pre>
      *  class MyCriteria implements Criteria {
      *      // omitted functions/constructors/etc
@@ -89,7 +89,9 @@ public interface QueryParam {
      *
      * @return value of a query param wrapped in Optional if none present
      */
-    Optional<String> getParamValueOpt();
+    default Optional<String> getParamValueOpt(){
+        return Optional.ofNullable(getParamValue());
+    }
 
     /**
      * @return param values (may be empty)

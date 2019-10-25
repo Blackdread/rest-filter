@@ -41,13 +41,14 @@ public interface FilterQueryParam extends QueryParam {
      *      private LongFilter myFieldName;
      *      private BooleanFilter myFieldName2;
      *
+     *      &#64;CriteriaInclude
      *      public LongFilter getMyFilterFromGetter() {
      *          // ...
      *      }
      *  }
      * </pre>
      *
-     * @return field or method name formatted
+     * @return field/method/etc name formatted
      */
     String getCriteriaName();
 

@@ -45,42 +45,30 @@ import java.util.function.Function;
 public class CriteriaQueryParamBuilder {
 
     // Default formatters
-    private static final Function<Enum, String> ENUM_FORMATTER = Enum::name;
-    private static final Function<String, String> STRING_FORMATTER = aString -> aString;
-    private static final Function<Boolean, String> BOOLEAN_FORMATTER = aBoolean -> Boolean.toString(aBoolean);
-    private static final Function<BigDecimal, String> BIG_DECIMAL_FORMATTER = BigDecimal::toString;
-    private static final Function<Integer, String> INTEGER_FORMATTER = integer -> Integer.toString(integer);
-    private static final Function<Long, String> LONG_FORMATTER = aLong -> Long.toString(aLong);
-    private static final Function<Short, String> SHORT_FORMATTER = aShort -> Short.toString(aShort);
-    private static final Function<Double, String> DOUBLE_FORMATTER = aDouble -> Double.toString(aDouble);
-    private static final Function<Float, String> FLOAT_FORMATTER = aFloat -> Float.toString(aFloat);
-    private static final Function<Instant, String> INSTANT_FORMATTER = DateTimeFormatter.ISO_INSTANT::format;
-    private static final Function<LocalDate, String> LOCAL_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE::format;
-    private static final Function<LocalDateTime, String> LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
-    private static final Function<ZonedDateTime, String> ZONED_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
-    private static final Function<Duration, String> DURATION_FORMATTER = Duration::toString;
-    private static final Function<UUID, String> UUID_FORMATTER = UUID::toString;
+    protected static final Function<Enum, String> ENUM_FORMATTER = Enum::name;
+    protected static final Function<String, String> STRING_FORMATTER = aString -> aString;
+    protected static final Function<Boolean, String> BOOLEAN_FORMATTER = aBoolean -> Boolean.toString(aBoolean);
+    protected static final Function<BigDecimal, String> BIG_DECIMAL_FORMATTER = BigDecimal::toString;
+    protected static final Function<Integer, String> INTEGER_FORMATTER = integer -> Integer.toString(integer);
+    protected static final Function<Long, String> LONG_FORMATTER = aLong -> Long.toString(aLong);
+    protected static final Function<Short, String> SHORT_FORMATTER = aShort -> Short.toString(aShort);
+    protected static final Function<Double, String> DOUBLE_FORMATTER = aDouble -> Double.toString(aDouble);
+    protected static final Function<Float, String> FLOAT_FORMATTER = aFloat -> Float.toString(aFloat);
+    protected static final Function<Instant, String> INSTANT_FORMATTER = DateTimeFormatter.ISO_INSTANT::format;
+    protected static final Function<LocalDate, String> LOCAL_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE::format;
+    protected static final Function<LocalDateTime, String> LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME::format;
+    protected static final Function<ZonedDateTime, String> ZONED_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_ZONED_DATE_TIME::format;
+    protected static final Function<Duration, String> DURATION_FORMATTER = Duration::toString;
+    protected static final Function<UUID, String> UUID_FORMATTER = UUID::toString;
 
     private boolean matchSubclassForDefaultFilterFormatters = false;
 
-//    private Function<Enum, String> enumFormatter = ENUM_FORMATTER_DEFAULT;
-//    private Function<Boolean, String> booleanFormatter = BOOLEAN_FORMATTER;
-//    private Function<BigDecimal, String> bigDecimalFormatter = BIG_DECIMAL_FORMATTER;
-//    private Function<Double, String> doubleFormatter = DOUBLE_FORMATTER;
-//    private Function<Float, String> floatFormatter = FLOAT_FORMATTER;
-//    private Function<Instant, String> instantFormatter = INSTANT_FORMATTER;
-//    private Function<LocalDate, String> localDateFormatter = LOCAL_DATE_FORMATTER;
-//    private Function<LocalDateTime, String> localDateTimeFormatter = LOCAL_DATE_TIME_FORMATTER;
-//    private Function<ZonedDateTime, String> zonedDateTimeFormatter = ZONED_DATE_TIME_FORMATTER;
-//    private Function<Duration, String> durationFormatter = DURATION_FORMATTER;
-//    private Function<UUID, String> uuidFormatter = UUID_FORMATTER;
-
-    private final Map<Class, Function<Object, String>> typeFormatterBySimpleTypeMap = new LinkedHashMap<>(16);
-    private final Map<Class<? extends Filter>, Class> typeFormatterByFilterClassMap = new LinkedHashMap<>(16);
+    protected final Map<Class, Function<Object, String>> typeFormatterBySimpleTypeMap = new LinkedHashMap<>(16);
+    protected final Map<Class<? extends Filter>, Class> typeFormatterByFilterClassMap = new LinkedHashMap<>(16);
 
 
-    //    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
-    private final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(6);
+    //    protected final Map<Class<? extends Filter>, FilterQueryParamFormatter> defaultFilterClassFormatterMap = new LinkedHashMap<>(16);
+    protected final Map<Class<? extends Filter>, FilterQueryParamFormatter> customQueryParamFormatterMap = new HashMap<>(6);
 
     @SuppressWarnings("unchecked")
     public CriteriaQueryParamBuilder() {
