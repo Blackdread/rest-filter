@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Yoann CAPLAIN
  */
-final class CriteriaData {
+public final class CriteriaData {
 
     private final Class<?> criteriaClass;
 

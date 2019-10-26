@@ -25,6 +25,7 @@ package org.blackdread.lib.restfilter.criteria.parser;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.blackdread.lib.restfilter.criteria.annotation.CriteriaIgnore;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.slf4j.Logger;
@@ -66,7 +67,7 @@ public final class CriteriaFieldParserUtil {
      *
      * @param criteria A criteria object used for filtering
      * @return All fields (and inherited) of criteria class, fields (not null) that extends {@link Filter}.
-     * @deprecated only provide Filter fields, need more
+     * @deprecated only provide Filter fields, need more, does not support Criteria annotations
      */
     @Deprecated
     public static Map<String, Filter> build(@Nullable final Object criteria) {
@@ -97,7 +98,7 @@ public final class CriteriaFieldParserUtil {
     private static List<Field> getFilterFields(final Class<?> clazz) {
         return cachedFilterFieldsOfClass
             .computeIfAbsent(clazz, clazzKey -> getFields(clazz).stream()
-                .filter(fieldEntry -> Filter.class.isAssignableFrom(fieldEntry.getType()))
+                .filter(fieldEntry -> isFilterType(fieldEntry.getType()))
                 .peek(fieldEntry -> fieldEntry.setAccessible(true))
                 .collect(Collectors.toList()));
     }
@@ -119,25 +120,71 @@ public final class CriteriaFieldParserUtil {
         return fields.values();
     }
 
-    private static CriteriaData getCriteriaData(final Object criteria) {
-        return cachedCriteriaDataByClass
-            .computeIfAbsent(criteria.getClass(), aClass -> {
-                // todo
-                return null;
-            });
+    /**
+     * Extract data from class, follow library rules for annotations and extracted fields/methods.
+     *
+     * @param criteria criteria to extract data
+     * @return data matching library rules
+     */
+    public static CriteriaData getCriteriaData(final Object criteria) {
+        return getCriteriaData(criteria.getClass());
     }
 
+    /**
+     * Extract data from class, follow library rules for annotations and extracted fields/methods.
+     *
+     * @param criteriaClass criteria class to extract data
+     * @return data matching library rules
+     */
+    public static CriteriaData getCriteriaData(final Class criteriaClass) {
+        return cachedCriteriaDataByClass
+            .computeIfAbsent(criteriaClass, CriteriaData::of);
+    }
+
+    /**
+     * Returns a list of {@code Field} objects reflecting all the fields
+     * declared by the class or interface represented by this {@code Class} object and <b>inherited classes</b>.
+     * <br>
+     * This includes public, protected, default (package) access, and private fields.
+     * <p>
+     * <br>
+     * Include all fields of type {@link Filter} and its subclasses.
+     * For non {@link Filter} field, it only includes if annotated with {@link CriteriaInclude}.
+     * <p>
+     * It skips fields annotated with {@link CriteriaIgnore}
+     *
+     * @param clazz to get fields
+     * @return compatible fields base on rules defined by library
+     */
     static List<Field> getCriteriaCompatibleFields(Class<?> clazz) {
-        final Class<?> baseClass = clazz;
-        final List<Field> fields = new ArrayList<>();
+        final List<Field> compatibleFields = new ArrayList<>();
         while (clazz != null) {
             final Field[] declaredFields = clazz.getDeclaredFields();
             for (Field field : declaredFields) {
-
+                // Duplicate field name is handled later (since can alias, etc)
+                if (field.isAnnotationPresent(CriteriaIgnore.class)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Field is ignored for compatible fields: {}", field.toString());
+                    }
+                    continue;
+                }
+                if (field.isAnnotationPresent(CriteriaInclude.class)) {
+                    compatibleFields.add(field);
+                    continue;
+                }
+                if (isFilterType(field.getType())) {
+                    compatibleFields.add(field);
+                    continue;
+                }
+                if (log.isDebugEnabled()) {
+                    log.debug("Skipped field for compatible fields: {}", field.toString());
+                }
             }
             clazz = clazz.getSuperclass();
         }
-        return fields;
+        // may not work with java 9+ modules but criteria class should be open to this module
+        compatibleFields.forEach(field -> field.setAccessible(true));
+        return compatibleFields;
     }
 
     /**
@@ -149,8 +196,8 @@ public final class CriteriaFieldParserUtil {
      * <br>
      * Only those with a return type of value (int, long, Integer, Long, Instant, etc), or of {@link Filter} type or of an {@link Iterable}.
      *
-     * @param clazz class
-     * @return methods
+     * @param clazz class to get methods
+     * @return compatible methods base on rules defined by library
      */
     static List<Method> getCriteriaCompatibleMethods(Class<?> clazz) {
         return Arrays.stream(clazz.getMethods())
@@ -181,7 +228,7 @@ public final class CriteriaFieldParserUtil {
         if (log.isDebugEnabled()) {
             log.debug("For method '{}', return type '{}', generic: '{}'", method.toString(), returnType.getName(), method.toGenericString());
         }
-        if (Filter.class.isAssignableFrom(returnType)) {
+        if (isFilterType(returnType)) {
             return true;
         }
         if (Void.class.equals(returnType)) {
@@ -258,6 +305,9 @@ public final class CriteriaFieldParserUtil {
     }
 
     /**
+     * Format the name of a method to be compatible for query params.
+     * Rules follow jackson mappings -> remove 'get', 'is', lowercase first letter, etc.
+     *
      * @param methodName method name
      * @return method name formatted
      * @throws IllegalArgumentException if after formatting, name is blank

@@ -15,12 +15,13 @@ import java.util.Optional;
  */
 @ThreadSafe
 @Immutable
-final class CriteriaFieldData {
+public final class CriteriaFieldData {
     private final Field field;
 
     private final boolean isValue;
     private final boolean isFilter;
     private final boolean isIterable;
+    private final boolean isArray;
 
     private final String fieldName;
     private final Class<?> fieldType;
@@ -45,8 +46,9 @@ final class CriteriaFieldData {
         this.field = field;
         this.isIterable = CriteriaFieldParserUtil.isIterableType(fieldType);
         this.isFilter = CriteriaFieldParserUtil.isFilterType(fieldType);
+        this.isArray = fieldType.isArray();
         // Default is value if none above
-        this.isValue = !isIterable && !isFilter;
+        this.isValue = !isIterable && !isFilter && !isArray;
 
         this.fieldName = field.getName();
         this.criteriaAlias = field.getAnnotation(CriteriaAlias.class);
