@@ -31,7 +31,9 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldDataUtil.checkFilter;
+import java.util.List;
+
+import static org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldDataUtil.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
@@ -67,10 +69,27 @@ class CriteriaFieldParserUtilAliasAnnotationTest {
 
         final CriteriaData result = CriteriaFieldParserUtil.getCriteriaData(criteria);
 
-        assertEquals(6, result.getMethods().size());
-        checkFilter(result.getMethods(), 0, "", "", null, null, null);
+        log.info("result: {}", result);
 
-        assertEquals(1, result.getFields().size());
-        CriteriaFieldDataUtil.checkFilter(result.getFields(), 0, "longFilter", LongFilter.class, null, null);
+        assertEquals(8, result.getMethods().size());
+        checkValue(result.getMethods(), 0, "getComputed1", "computed1", long.class, "getComputed1Alias", null);
+        checkValue(result.getMethods(), 1, "getComputed2", "computed2", Long.class, "getComputed2Alias", null);
+        checkFilter(result.getMethods(), 2, "getComputed3", "computed3", LongFilter.class, "getComputed3Alias", null);
+        checkValue(result.getMethods(), 3, "specialName", "specialName", long.class, null, null);
+        checkValue(result.getMethods(), 4, "specialNameExtra", "specialNameExtra", long.class, "specialNameAlias", null);
+        checkValue(result.getMethods(), 5, "withDot", "withDot", long.class, "myFilter.equals", null);
+        checkValue(result.getMethods(), 6, "withDotIn", "withDotIn", long.class, "myFilter2.in", null);
+        checkList(result.getMethods(), 7, "withDotIn2", "withDotIn2", List.class, "myFilter3.in", null);
+
+        assertEquals(8, result.getFields().size());
+        checkArray(result.getFields(), 0, "arrayLongFilter", LongFilter[].class, "arrayLongFilterAlias", null);
+        checkArray(result.getFields(), 1, "arrayObjectLong", Long[].class, "arrayObjectLongAlias", null);
+        checkArray(result.getFields(), 2, "arrayPrimitiveLong", long[].class, "arrayPrimitiveLongAlias", null);
+        checkList(result.getFields(), 3, "listLong", List.class, "listLongAlias", null);
+        checkList(result.getFields(), 4, "listLongFilter", List.class, "listLongFilterAlias", null);
+        checkFilter(result.getFields(), 5, "longFilter", LongFilter.class, "longFilterAlias", null);
+        checkValue(result.getFields(), 6, "objectLong", Long.class, "objectLongAlias", null);
+        checkValue(result.getFields(), 7, "primitiveLong", long.class, "primitiveLongAlias", null);
     }
+
 }

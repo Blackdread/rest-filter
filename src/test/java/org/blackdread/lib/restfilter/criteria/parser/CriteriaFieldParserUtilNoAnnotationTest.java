@@ -68,6 +68,8 @@ class CriteriaFieldParserUtilNoAnnotationTest {
 
         final CriteriaData result = CriteriaFieldParserUtil.getCriteriaData(criteria);
 
+        log.info("result: {}", result);
+
         assertEquals(List.of(), result.getMethods());
 
         assertEquals(1, result.getFields().size());

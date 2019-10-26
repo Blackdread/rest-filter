@@ -315,10 +315,10 @@ public final class CriteriaFieldParserUtil {
     static String formatMethodName(final String methodName) throws IllegalArgumentException {
         String result = methodName;
         if (result.startsWith("get")) {
-            return result.substring(3);
+            result = result.substring(3);
         }
         if (result.startsWith("is")) {
-            return result.substring(3);
+            result = result.substring(2);
         }
         final String firstCharLowercase = result.substring(0, 1).toLowerCase();
         result = firstCharLowercase + result.substring(1);

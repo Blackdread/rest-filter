@@ -61,11 +61,11 @@ public class NoAnnotationCriteria {
 
     private Long[] arrayObjectLong;
 
-    private LongFilter[] arrayLongFilter;
+    private LongFilter[] arrayLongFilter; // not supported but does not throw during parse
 
     private List<Long> listLong;
 
-    private List<LongFilter> listLongFilter;
+    private List<LongFilter> listLongFilter; // not supported but does not throw during parse
 
     private Map<String, Long> mapLong; // not supported
 

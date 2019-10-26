@@ -75,7 +75,7 @@ public class AliasAnnotationCriteria {
 
     @CriteriaInclude
     @CriteriaAlias("arrayLongFilterAlias")
-    private LongFilter[] arrayLongFilter;
+    private LongFilter[] arrayLongFilter; // not supported but does not throw during parse
 
     @CriteriaAlias("arrayLongFilterNotIncludedAlias")
     private LongFilter[] arrayLongFilterNotIncluded;
@@ -143,10 +143,12 @@ public class AliasAnnotationCriteria {
         return 1;
     }
 
+    @CriteriaInclude // will be ignored
     public Long getWithParam2(long param) {
         return 1L;
     }
 
+    @CriteriaInclude // will be ignored
     public LongFilter getWithParam3(long param) {
         return new LongFilter();
     }

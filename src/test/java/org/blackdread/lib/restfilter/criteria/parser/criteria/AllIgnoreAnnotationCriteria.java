@@ -65,13 +65,13 @@ public class AllIgnoreAnnotationCriteria {
     private Long[] arrayObjectLong;
 
     @CriteriaIgnore
-    private LongFilter[] arrayLongFilter;
+    private LongFilter[] arrayLongFilter; // not supported but does not throw during parse
 
     @CriteriaIgnore
     private List<Long> listLong;
 
     @CriteriaIgnore
-    private List<LongFilter> listLongFilter;
+    private List<LongFilter> listLongFilter; // not supported but does not throw during parse
 
     public long getComputed1() {
         return 1;
