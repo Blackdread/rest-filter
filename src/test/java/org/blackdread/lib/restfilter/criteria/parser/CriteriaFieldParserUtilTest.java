@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.criteria;
+package org.blackdread.lib.restfilter.criteria.parser;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.assertj.core.util.Lists;
-import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
+import org.blackdread.lib.restfilter.criteria.CriteriaUtil;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 import org.blackdread.lib.restfilter.filter.StringFilter;
