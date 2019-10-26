@@ -23,19 +23,27 @@
  */
 package org.blackdread.lib.restfilter.criteria.parser;
 
+import org.blackdread.lib.restfilter.criteria.parser.criteria.NoAnnotationCriteria;
+import org.blackdread.lib.restfilter.filter.LongFilter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * <p>Created on 2019/10/26.</p>
  *
  * @author Yoann CAPLAIN
  */
-class CriteriaFieldParserUtilCriteriaDataTest {
+class CriteriaFieldParserUtilNoAnnotationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(CriteriaFieldParserUtilCriteriaDataTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CriteriaFieldParserUtilNoAnnotationTest.class);
 
     @BeforeEach
     void setUp() {
@@ -43,5 +51,26 @@ class CriteriaFieldParserUtilCriteriaDataTest {
 
     @AfterEach
     void tearDown() {
+    }
+
+    @Test
+    void classesAreCached() {
+        final CriteriaData result = CriteriaFieldParserUtil.getCriteriaData(NoAnnotationCriteria.class);
+        final CriteriaData result2 = CriteriaFieldParserUtil.getCriteriaData(NoAnnotationCriteria.class);
+
+        assertEquals(result, result2);
+        assertSame(result, result2);
+    }
+
+    @Test
+    void onlyFilterFieldsAreParsedByDefault() {
+        final NoAnnotationCriteria criteria = new NoAnnotationCriteria();
+
+        final CriteriaData result = CriteriaFieldParserUtil.getCriteriaData(criteria);
+
+        assertEquals(List.of(), result.getMethods());
+
+        assertEquals(1, result.getFields().size());
+        CriteriaFieldDataUtil.checkFilter(result.getFields(), 0, "longFilter", LongFilter.class, null, null);
     }
 }

@@ -35,7 +35,24 @@ import java.util.Map;
  *
  * @author Yoann CAPLAIN
  */
-class AliasAnnotationCriteria {
+public class AliasAnnotationCriteria {
+
+    public static AliasAnnotationCriteria allWithValue() {
+        final AliasAnnotationCriteria criteria = new AliasAnnotationCriteria();
+        criteria.primitiveLong = 1L;
+        criteria.objectLong = 1L;
+        criteria.longFilter = new LongFilter();
+        criteria.longFilter.setEquals(1L);
+        criteria.arrayPrimitiveLong = new long[]{1L, 2L};
+        criteria.arrayObjectLong = new Long[]{1L, 2L};
+        criteria.arrayLongFilter = new LongFilter[]{new LongFilter(), new LongFilter()};
+        criteria.arrayLongFilterNotIncluded = new LongFilter[]{new LongFilter(), new LongFilter()};
+        criteria.listLong = List.of(1L, 2L);
+        criteria.listLongFilter = List.of(new LongFilter(), new LongFilter());
+        criteria.mapLong = Map.of("first", 1L, "second", 2L);
+        criteria.mapLongFilter = Map.of("first", new LongFilter(), "second", new LongFilter());
+        return criteria;
+    }
 
     @CriteriaInclude
     @CriteriaAlias("primitiveLongAlias")

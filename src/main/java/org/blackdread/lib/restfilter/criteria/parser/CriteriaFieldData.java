@@ -105,6 +105,10 @@ public final class CriteriaFieldData {
         return isIterable;
     }
 
+    public boolean isArray() {
+        return isArray;
+    }
+
     /**
      * Same as {@link Field#getName()}
      */
@@ -139,5 +143,22 @@ public final class CriteriaFieldData {
      */
     public Optional<Class<?>> getUserDefinedType() {
         return Optional.ofNullable(userDefinedType);
+    }
+
+    @Override
+    public String toString() {
+        return "CriteriaFieldData{" +
+            "field=" + field +
+            ", isValue=" + isValue +
+            ", isFilter=" + isFilter +
+            ", isIterable=" + isIterable +
+            ", isArray=" + isArray +
+            ", fieldName='" + fieldName + '\'' +
+            ", fieldType=" + fieldType +
+            ", criteriaAlias=" + criteriaAlias +
+            ", formattedAliasName='" + formattedAliasName + '\'' +
+            ", criteriaInclude=" + criteriaInclude +
+            ", userDefinedType=" + userDefinedType +
+            '}';
     }
 }

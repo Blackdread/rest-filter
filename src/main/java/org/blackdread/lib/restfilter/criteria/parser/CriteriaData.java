@@ -23,6 +23,9 @@
  */
 package org.blackdread.lib.restfilter.criteria.parser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,6 +39,8 @@ import java.util.Objects;
  * @author Yoann CAPLAIN
  */
 public final class CriteriaData {
+
+    private static final Logger log = LoggerFactory.getLogger(CriteriaData.class);
 
     private final Class<?> criteriaClass;
 
@@ -56,6 +61,9 @@ public final class CriteriaData {
 
         final Collection<Method> methods = CriteriaFieldParserUtil.getCriteriaCompatibleMethods(criteriaClass);
         methods.forEach(method -> this.methods.add(CriteriaMethodData.of(method)));
+
+        // todo log if found name/alias that may clash
+
     }
 
     public Class<?> getCriteriaClass() {
@@ -83,4 +91,12 @@ public final class CriteriaData {
         return Objects.hash(criteriaClass);
     }
 
+    @Override
+    public String toString() {
+        return "CriteriaData{" +
+            "criteriaClass=" + criteriaClass +
+            ", fields=" + fields +
+            ", methods=" + methods +
+            '}';
+    }
 }

@@ -152,4 +152,22 @@ public final class CriteriaMethodData {
     public Optional<Class<?>> getUserDefinedType() {
         return Optional.ofNullable(userDefinedType);
     }
+
+    @Override
+    public String toString() {
+        return "CriteriaMethodData{" +
+            "method=" + method +
+            ", methodReturnType=" + methodReturnType +
+            ", isValue=" + isValue +
+            ", isFilter=" + isFilter +
+            ", isIterable=" + isIterable +
+            ", isArray=" + isArray +
+            ", methodName='" + methodName + '\'' +
+            ", formattedMethodName='" + formattedMethodName + '\'' +
+            ", criteriaAlias=" + criteriaAlias +
+            ", methodAliasName='" + methodAliasName + '\'' +
+            ", criteriaInclude=" + criteriaInclude +
+            ", userDefinedType=" + userDefinedType +
+            '}';
+    }
 }

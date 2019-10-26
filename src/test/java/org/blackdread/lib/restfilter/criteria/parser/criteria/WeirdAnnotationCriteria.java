@@ -36,7 +36,23 @@ import java.util.Map;
  *
  * @author Yoann CAPLAIN
  */
-class WeirdAnnotationCriteria {
+public class WeirdAnnotationCriteria {
+
+    public static WeirdAnnotationCriteria allWithValue() {
+        final WeirdAnnotationCriteria criteria = new WeirdAnnotationCriteria();
+        criteria.wontInclude1 = 1L;
+        criteria.wontInclude2 = 1L;
+        criteria.wontInclude3 = new LongFilter();
+        criteria.wontInclude3.setEquals(1L);
+        criteria.arrayPrimitiveLong = new long[]{1L, 2L};
+        criteria.arrayObjectLong = new Long[]{1L, 2L};
+        criteria.arrayLongFilter = new LongFilter[]{new LongFilter(), new LongFilter()};
+        criteria.listLong = List.of(1L, 2L);
+        criteria.listLongFilter = List.of(new LongFilter(), new LongFilter());
+        criteria.mapLong = Map.of("first", 1L, "second", 2L);
+        criteria.mapLongFilter = Map.of("first", new LongFilter(), "second", new LongFilter());
+        return criteria;
+    }
 
     @CriteriaIgnore
     @CriteriaInclude

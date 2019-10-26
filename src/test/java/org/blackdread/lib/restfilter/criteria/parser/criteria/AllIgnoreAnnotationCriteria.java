@@ -33,7 +33,21 @@ import java.util.List;
  *
  * @author Yoann CAPLAIN
  */
-class AllIgnoreAnnotationCriteria {
+public class AllIgnoreAnnotationCriteria {
+
+    public static AllIgnoreAnnotationCriteria allWithValue() {
+        final AllIgnoreAnnotationCriteria criteria = new AllIgnoreAnnotationCriteria();
+        criteria.primitiveLong = 1L;
+        criteria.objectLong = 1L;
+        criteria.longFilter = new LongFilter();
+        criteria.longFilter.setEquals(1L);
+        criteria.arrayPrimitiveLong = new long[]{1L, 2L};
+        criteria.arrayObjectLong = new Long[]{1L, 2L};
+        criteria.arrayLongFilter = new LongFilter[]{new LongFilter(), new LongFilter()};
+        criteria.listLong = List.of(1L, 2L);
+        criteria.listLongFilter = List.of(new LongFilter(), new LongFilter());
+        return criteria;
+    }
 
     @CriteriaIgnore
     private long primitiveLong;
