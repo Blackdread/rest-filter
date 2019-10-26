@@ -38,7 +38,7 @@ interface FilterQueryParamFormatter {
     /**
      * Build query params from a filter
      * <p>
-     * todo might return QueryParam instead so not only related to filters
+     * todo: might return QueryParam instead so not only related to filters -> not sure, any field in a filter should be part of a filter in back-end as well
      *
      * @param filterName name of filter (from field/method/etc)
      * @param filter     filter to extract FilterQueryParam (never null)

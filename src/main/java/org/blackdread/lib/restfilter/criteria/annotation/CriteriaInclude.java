@@ -11,14 +11,18 @@ import java.lang.annotation.Target;
  * <p>
  * This annotation is mostly useful for boolean values mostly as other type should prefer to use actual implementation of {@link org.blackdread.lib.restfilter.filter.Filter}
  * <p>
+ * Annotated methods must not take any parameter and must return a single value (filter type or not), must be public.
+ * <p>
+ * Iterable types can only be of simple types like Integer, Long, String, Instant, etc.
+ * <p>
  * Examples:
  * <pre>
  * public class MyCriteria implements Criteria {
  *   &#64;CriteriaInclude
- *   public String name;
+ *   private String name;
  *
  *   &#64;CriteriaInclude
- *   public boolean showHidden;
+ *   private boolean showHidden;
  *
  *   &#64;CriteriaAlias("fullName.contains"})
  *   &#64;CriteriaInclude
@@ -45,6 +49,9 @@ public @interface CriteriaInclude {
     /**
      * Type of field or method return type when it cannot be determined,
      * or a different one should be used when formatting the value.
+     * When put on a iterable/collection wrapper, this field define the type that wrapper is containing.
+     *
+     * @deprecated not sure if needed
      */
     Class<?> type() default Void.class;
 

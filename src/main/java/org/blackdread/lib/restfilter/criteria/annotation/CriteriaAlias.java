@@ -17,14 +17,14 @@ import java.lang.annotation.Target;
  * public class MyCriteria implements Criteria {
  *   &#64;CriteriaInclude
  *   &#64;CriteriaAlias("userName"})
- *   public String name;
+ *   private String name;
  *
  *   &#64;CriteriaInclude
  *   &#64;CriteriaAlias("createTime.greaterThan"}) // can use like if back-end use Filter class but client code is not
- *   public Instant createdAfter;
+ *   private Instant createdAfter;
  *
  *   &#64;CriteriaAlias("updateTime"})
- *   public InstantFilter updatedAt;
+ *   private InstantFilter updatedAt;
  *
  *   &#64;CriteriaInclude
  *   &#64;CriteriaAlias("extraName"})
@@ -48,10 +48,10 @@ public @interface CriteriaAlias {
      * For methods, it use alias instead of method name (method name automatically removes
      * 'get' or 'is' or etc depending on options set when initializing the library.
      * <p>
-     * For basic type (Boolean, String, etc), name may use '.' if back-end is using some Filter class but criteria is not using.
+     * For basic type (Boolean, String, etc), name may use '.' if back-end is using some Filter class but client code criteria is not using.
      * <br>
      * For filter type, if '.' is used, behavior is unknown. May throw or ignore any character after first '.'.
      */
-    String name() default "";
+    String name();
 
 }

@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.blackdread.lib.restfilter.util.MultiValueMap;

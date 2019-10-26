@@ -24,7 +24,7 @@
 package org.blackdread.lib.restfilter.spring.criteria;
 
 import org.blackdread.lib.restfilter.criteria.Criteria;
-import org.blackdread.lib.restfilter.criteria.CriteriaFieldParserUtil;
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
 import org.blackdread.lib.restfilter.criteria.CriteriaQueryParam;
 import org.blackdread.lib.restfilter.criteria.FilterQueryParam;
 import org.blackdread.lib.restfilter.filter.Filter;
