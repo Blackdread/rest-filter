@@ -76,7 +76,7 @@ public final class CriteriaFieldData {
         this.fieldName = field.getName();
         this.criteriaAlias = field.getAnnotation(CriteriaAlias.class);
         if (criteriaAlias != null) {
-            this.formattedAliasName = CriteriaFieldParserUtil.formatFieldAlias(criteriaAlias.name(), isFilter);
+            this.formattedAliasName = CriteriaFieldParserUtil.formatFieldAlias(criteriaAlias.value(), isFilter);
         } else {
             formattedAliasName = null;
         }

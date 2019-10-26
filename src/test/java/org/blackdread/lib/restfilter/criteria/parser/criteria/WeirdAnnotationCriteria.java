@@ -24,6 +24,7 @@
 package org.blackdread.lib.restfilter.criteria.parser.criteria;
 
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaAlias;
+import org.blackdread.lib.restfilter.criteria.annotation.CriteriaIgnore;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 
@@ -35,89 +36,54 @@ import java.util.Map;
  *
  * @author Yoann CAPLAIN
  */
-class AliasAnnotationCriteria {
+class WeirdAnnotationCriteria {
 
+    @CriteriaIgnore
     @CriteriaInclude
-    @CriteriaAlias("primitiveLongAlias")
-    private long primitiveLong;
+    @CriteriaAlias("any")
+    private long wontInclude1;
 
+    @CriteriaIgnore
     @CriteriaInclude
-    @CriteriaAlias("objectLongAlias")
-    private Long objectLong;
+    @CriteriaAlias("any")
+    private Long wontInclude2;
 
-    @CriteriaAlias("longFilterAlias")
-    private LongFilter longFilter;
-
+    @CriteriaIgnore
     @CriteriaInclude
-    @CriteriaAlias("arrayPrimitiveLongAlias")
+    @CriteriaAlias("any")
+    private LongFilter wontInclude3;
+
     private long[] arrayPrimitiveLong;
 
-    @CriteriaInclude
-    @CriteriaAlias("arrayObjectLongAlias")
     private Long[] arrayObjectLong;
 
-    @CriteriaInclude
-    @CriteriaAlias("arrayLongFilterAlias")
     private LongFilter[] arrayLongFilter;
 
-    @CriteriaAlias("arrayLongFilterNotIncludedAlias")
-    private LongFilter[] arrayLongFilterNotIncluded;
-
-    @CriteriaInclude
-    @CriteriaAlias("listLongAlias")
     private List<Long> listLong;
 
-    @CriteriaInclude
-    @CriteriaAlias("listLongFilterAlias")
     private List<LongFilter> listLongFilter;
 
     private Map<String, Long> mapLong; // not supported
 
     private Map<String, LongFilter> mapLongFilter; // not supported
 
-    @CriteriaAlias("myFilter.equals")
-    @CriteriaInclude
-    public long withDot() {
-        return 1;
-    }
-
-    @CriteriaAlias("myFilter2.in")
-    @CriteriaInclude
-    public long withDotIn() {
-        return 1;
-    }
-
-    @CriteriaAlias("myFilter3.in")
-    @CriteriaInclude
-    public List<Long> withDotIn2() {
-        return List.of(1L, 2L);
-    }
-
-    @CriteriaInclude
-    public long specialName() {
-        return 1;
-    }
-
-    @CriteriaInclude
-    @CriteriaAlias("specialNameAlias")
-    public long specialNameExtra() {
-        return 1;
-    }
-
-    @CriteriaInclude
-    @CriteriaAlias("getComputed1Alias")
     public long getComputed1() {
         return 1;
     }
 
-    @CriteriaInclude
-    @CriteriaAlias("getComputed2Alias")
+    @CriteriaInclude(type = String.class)
     public Long getComputed2() {
         return 1L;
     }
 
+    @CriteriaIgnore
     @CriteriaInclude
-    @CriteriaAlias("getComputed3Alias")
+    public LongFilter wontInclude3() {
+        return new LongFilter();
+    }
+
+    @CriteriaIgnore
+    @CriteriaInclude
     public LongFilter getComputed3() {
         return new LongFilter();
     }
@@ -134,28 +100,30 @@ class AliasAnnotationCriteria {
         return new LongFilter();
     }
 
-    public long getPrimitiveLong() {
-        return primitiveLong;
+    public long getWontInclude1() {
+        return wontInclude1;
     }
 
-    public void setPrimitiveLong(final long primitiveLong) {
-        this.primitiveLong = primitiveLong;
+    public void setWontInclude1(final long wontInclude1) {
+        this.wontInclude1 = wontInclude1;
     }
 
-    public Long getObjectLong() {
-        return objectLong;
+    @CriteriaAlias("include2ButFromMethod")
+    @CriteriaInclude
+    public Long getWontInclude2() {
+        return wontInclude2;
     }
 
-    public void setObjectLong(final Long objectLong) {
-        this.objectLong = objectLong;
+    public void setWontInclude2(final Long wontInclude2) {
+        this.wontInclude2 = wontInclude2;
     }
 
-    public LongFilter getLongFilter() {
-        return longFilter;
+    public LongFilter getWontInclude3() {
+        return wontInclude3;
     }
 
-    public void setLongFilter(final LongFilter longFilter) {
-        this.longFilter = longFilter;
+    public void setWontInclude3(final LongFilter wontInclude3) {
+        this.wontInclude3 = wontInclude3;
     }
 
     public long[] getArrayPrimitiveLong() {

@@ -72,7 +72,9 @@ public @interface CriteriaInclude {
     /**
      * Type of field or method return type when it cannot be determined,
      * or a different one should be used when formatting the value.
+     * <br>
      * When put on a iterable/collection wrapper, this field define the type that wrapper is containing.
+     * Which is type to use when formatting.
      *
      * @deprecated not sure if needed
      */

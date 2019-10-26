@@ -75,6 +75,6 @@ public @interface CriteriaAlias {
      * <br>
      * For filter type, if '.' is used, behavior is unknown. May throw or ignore any character after first '.'.
      */
-    String name();
+    String value();
 
 }

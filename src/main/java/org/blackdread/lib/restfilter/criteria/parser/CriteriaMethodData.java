@@ -80,7 +80,7 @@ public final class CriteriaMethodData {
 
         this.criteriaAlias = method.getAnnotation(CriteriaAlias.class);
         if (criteriaAlias != null) {
-            this.methodAliasName = criteriaAlias.name();
+            this.methodAliasName = criteriaAlias.value();
         } else {
             methodAliasName = null;
         }
