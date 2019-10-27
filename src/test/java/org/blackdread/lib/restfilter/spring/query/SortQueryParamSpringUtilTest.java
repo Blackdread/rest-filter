@@ -92,11 +92,11 @@ class SortQueryParamSpringUtilTest {
     }
 
     @Test
-    void formatFull() {
-        final String formatFull = SortQueryParamSpringUtil.formatFull(Sort.Order.asc("name"));
+    void formatOrder() {
+        final String formatFull = SortQueryParamSpringUtil.formatOrder(Sort.Order.asc("name"));
         assertEquals("sort=name,asc", formatFull);
 
-        final String formatFull2 = SortQueryParamSpringUtil.formatFull(Sort.Order.desc("createTime"));
+        final String formatFull2 = SortQueryParamSpringUtil.formatOrder(Sort.Order.desc("createTime"));
         assertEquals("sort=createTime,desc", formatFull2);
     }
 

@@ -25,47 +25,44 @@ package org.blackdread.lib.restfilter.spring.query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.util.UriBuilder;
-
-import java.util.StringJoiner;
 
 /**
  * <p>Created on 2019/10/27.</p>
  *
  * @author Yoann CAPLAIN
  */
-public final class SortQueryParamSpringUtil {
+public final class PageableQueryParamSpringUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(SortQueryParamSpringUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(PageableQueryParamSpringUtil.class);
 
-    private static final String SORT_KEY = "sort";
-
-    private SortQueryParamSpringUtil() {
+    private PageableQueryParamSpringUtil() {
     }
 
-    // todo later will not be static so can configure better
+    // todo later will not be static so can configure param key (page & size can be different for some back-end since it can be configured)
 
-    public static UriBuilder addSortQueryParams(final Sort sort, UriBuilder builder) {
-        for (final Sort.Order order : sort) {
-            builder = builder.queryParam(SORT_KEY, formatParamValue(order));
-        }
-        return builder;
+    public static UriBuilder addPageAndSortQueryParams(final Pageable pageable, UriBuilder builder) {
+        if(pageable.isUnpaged())
+            return builder;
+        builder = addPageOnlyQueryParams(pageable, builder);
+        return SortQueryParamSpringUtil.addSortQueryParams(pageable.getSort(), builder);
     }
 
-    public static String formatSort(final Sort sort) {
-        final StringJoiner builder = new StringJoiner("&");
-        for (final Sort.Order order : sort) {
-            builder.add(formatOrder(order));
-        }
-        return builder.toString();
+    public static UriBuilder addPageOnlyQueryParams(final Pageable pageable, UriBuilder builder) {
+        if(pageable.isUnpaged())
+            return builder;
+        return builder
+            .queryParam("page", pageable.getPageNumber())
+            .queryParam("size", pageable.getPageSize());
     }
 
-    public static String formatOrder(final Sort.Order order) {
-        return SORT_KEY + "=" + formatParamValue(order);
+    public static String formatPage(final Pageable pageable) {
+        return "page=" + pageable.getPageNumber();
     }
 
-    public static String formatParamValue(final Sort.Order order) {
-        return order.getProperty() + "," + order.getDirection().name().toLowerCase();
+    public static String formatPageSize(final Pageable pageable) {
+        return "size=" + pageable.getPageSize();
     }
+
 }
