@@ -24,15 +24,20 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
+import org.blackdread.lib.restfilter.filter.StringFilter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.Instant;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test if can have a way to specify a query param without any value -&gt; only key
@@ -74,6 +79,16 @@ class CriteriaQueryParamKeyOnlyTest {
         assertEquals(expected, result);
     }
 
+    @Test
+    void throwsWhenKeyOnlyOnWrongType() {
+        final IllegalArgumentException ex1 = assertThrows(IllegalArgumentException.class, () -> CriteriaFieldParserUtil.getCriteriaData(Throws1Criteria.class));
+        final IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () -> CriteriaFieldParserUtil.getCriteriaData(Throws2Criteria.class));
+        final IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class, () -> CriteriaFieldParserUtil.getCriteriaData(Throws3Criteria.class));
+        assertEquals("Key only option is only available on boolean field and method return type", ex1.getMessage());
+        assertEquals("Key only option is only available on boolean field and method return type", ex2.getMessage());
+        assertEquals("Key only option is only available on boolean field and method return type", ex3.getMessage());
+    }
+
     static class MyCriteria {
 
         @CriteriaInclude(keyOnly = true)
@@ -90,6 +105,29 @@ class CriteriaQueryParamKeyOnlyTest {
         @CriteriaInclude(keyOnly = true)
         public Boolean getBooleanFalse() {
             return false;
+        }
+
+    }
+
+    static class Throws1Criteria {
+
+        @CriteriaInclude(keyOnly = true)
+        Instant instant = Instant.now();
+
+    }
+
+    static class Throws2Criteria {
+
+        @CriteriaInclude(keyOnly = true)
+        Long valueLong = 1L;
+
+    }
+
+    static class Throws3Criteria {
+
+        @CriteriaInclude(keyOnly = true)
+        public StringFilter getStringFilter() {
+            return new StringFilter();
         }
 
     }
