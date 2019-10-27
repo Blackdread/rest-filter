@@ -59,6 +59,7 @@ public final class CriteriaMethodData {
     private final CriteriaInclude criteriaInclude;
     @Nullable
     private final Class<?> wrappedType;
+    private final boolean keyOnly;
 
     static CriteriaMethodData of(final Method method) {
         return new CriteriaMethodData(Objects.requireNonNull(method));
@@ -88,8 +89,14 @@ public final class CriteriaMethodData {
         this.criteriaInclude = method.getAnnotation(CriteriaInclude.class);
         if (criteriaInclude != null) {
             this.wrappedType = criteriaInclude.value().equals(Void.class) ? null : criteriaInclude.value();
+            this.keyOnly = criteriaInclude.keyOnly();
         } else {
             wrappedType = null;
+            keyOnly = false;
+        }
+
+        if (keyOnly && !(methodReturnType.equals(boolean.class) || methodReturnType.equals(Boolean.class))) {
+            throw new IllegalArgumentException("Key only option is only available on boolean field and method return type");
         }
     }
 
@@ -169,6 +176,10 @@ public final class CriteriaMethodData {
         return Optional.ofNullable(wrappedType);
     }
 
+    public boolean isKeyOnly() {
+        return keyOnly;
+    }
+
     @Override
     public String toString() {
         return "CriteriaMethodData{" +
@@ -184,6 +195,7 @@ public final class CriteriaMethodData {
             ", methodAliasName='" + methodAliasName + '\'' +
             ", criteriaInclude=" + criteriaInclude +
             ", wrappedType=" + wrappedType +
+            ", keyOnly=" + keyOnly +
             '}';
     }
 }

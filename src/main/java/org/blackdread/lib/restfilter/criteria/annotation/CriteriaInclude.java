@@ -85,6 +85,14 @@ public @interface CriteriaInclude {
      */
     Class<?> value() default Void.class;
 
+    /**
+     * Can only be true on boolean field and method with a return type of boolean.
+     * If found on others, an exception will be thrown.
+     *
+     * @return true if value is not formatted, so only key is kept for query param
+     */
+    boolean keyOnly() default false;
+
     /*
      * If {@link #value()} is defined, it is not necessary to set this type, if set then it will use the formatter matching the {@code type()} class.
      */

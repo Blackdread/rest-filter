@@ -63,7 +63,7 @@ class CriteriaQueryParamInstantTest {
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withEnumFilter(boolean matchSubclass) {
+    void withInstantFilter(boolean matchSubclass) {
         var criteria = new FilterCriteria();
 
         var result = builder
@@ -80,7 +80,7 @@ class CriteriaQueryParamInstantTest {
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withEnumValue(boolean matchSubclass) {
+    void withInstantValue(boolean matchSubclass) {
         var criteria = new ValueCriteria();
 
         var result = builder
@@ -97,7 +97,7 @@ class CriteriaQueryParamInstantTest {
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withEnumArray(boolean matchSubclass) {
+    void withInstantArray(boolean matchSubclass) {
         var criteria = new ArrayCriteria();
 
         var result = builder
@@ -116,7 +116,7 @@ class CriteriaQueryParamInstantTest {
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withEnumList(boolean matchSubclass) {
+    void withInstantList(boolean matchSubclass) {
         var criteria = new ListCriteria();
 
         var result = builder

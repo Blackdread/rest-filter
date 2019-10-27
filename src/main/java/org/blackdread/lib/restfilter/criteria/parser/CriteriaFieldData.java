@@ -58,6 +58,7 @@ public final class CriteriaFieldData {
     private final CriteriaInclude criteriaInclude;
     @Nullable
     private final Class<?> wrappedType;
+    private final boolean keyOnly;
 
     static CriteriaFieldData of(final Field field) {
         return new CriteriaFieldData(Objects.requireNonNull(field));
@@ -84,9 +85,16 @@ public final class CriteriaFieldData {
         this.criteriaInclude = field.getAnnotation(CriteriaInclude.class);
         if (criteriaInclude != null) {
             this.wrappedType = criteriaInclude.value().equals(Void.class) ? null : criteriaInclude.value();
+            this.keyOnly = criteriaInclude.keyOnly();
         } else {
             wrappedType = null;
+            keyOnly = false;
         }
+
+        if (keyOnly && !(fieldType.equals(boolean.class) || fieldType.equals(Boolean.class))) {
+            throw new IllegalArgumentException("Key only option is only available on boolean field and method return type");
+        }
+
     }
 
     public Field getField() {
@@ -161,6 +169,10 @@ public final class CriteriaFieldData {
         return Optional.ofNullable(wrappedType);
     }
 
+    public boolean isKeyOnly() {
+        return keyOnly;
+    }
+
     @Override
     public String toString() {
         return "CriteriaFieldData{" +
@@ -175,6 +187,7 @@ public final class CriteriaFieldData {
             ", formattedAliasName='" + formattedAliasName + '\'' +
             ", criteriaInclude=" + criteriaInclude +
             ", wrappedType=" + wrappedType +
+            ", keyOnly=" + keyOnly +
             '}';
     }
 }

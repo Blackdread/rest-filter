@@ -24,7 +24,7 @@
 package org.blackdread.lib.restfilter.criteria;
 
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
-import org.blackdread.lib.restfilter.filter.LongFilter;
+import org.blackdread.lib.restfilter.filter.BooleanFilter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Yoann CAPLAIN
  */
-class CriteriaQueryParamLongTest {
+class CriteriaQueryParamBooleanTest {
 
     private CriteriaQueryParamBuilder builder;
 
@@ -59,7 +59,7 @@ class CriteriaQueryParamLongTest {
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withLongFilter(boolean matchSubclass) {
+    void withBooleanFilter(boolean matchSubclass) {
         var criteria = new FilterCriteria();
 
         var result = builder
@@ -68,15 +68,15 @@ class CriteriaQueryParamLongTest {
             .buildQueryParamsMap(criteria);
 
         var expected = new LinkedMultiValueMap<>();
-        expected.add("filterField.equals", "1");
-        expected.add("filter.equals", "1");
+        expected.add("filterField.equals", "true");
+        expected.add("filter.equals", "true");
 
         assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withLongValue(boolean matchSubclass) {
+    void withBooleanValue(boolean matchSubclass) {
         var criteria = new ValueCriteria();
 
         var result = builder
@@ -85,15 +85,15 @@ class CriteriaQueryParamLongTest {
             .buildQueryParamsMap(criteria);
 
         var expected = new LinkedMultiValueMap<>();
-        expected.add("valueField", "1");
-        expected.add("value", "1");
+        expected.add("valueField", "true");
+        expected.add("value", "true");
 
         assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withLongArray(boolean matchSubclass) {
+    void withBooleanArray(boolean matchSubclass) {
         var criteria = new ArrayCriteria();
 
         var result = builder
@@ -102,17 +102,17 @@ class CriteriaQueryParamLongTest {
             .buildQueryParamsMap(criteria);
 
         var expected = new LinkedMultiValueMap<String, String>();
-        expected.add("arrayField", "1");
-        expected.add("arrayField", "2");
-        expected.add("array", "1");
-        expected.add("array", "2");
+        expected.add("arrayField", "true");
+        expected.add("arrayField", "false");
+        expected.add("array", "true");
+        expected.add("array", "false");
 
         assertEquals(expected, result);
     }
 
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
-    void withLongList(boolean matchSubclass) {
+    void withBooleanList(boolean matchSubclass) {
         var criteria = new ListCriteria();
 
         var result = builder
@@ -121,10 +121,10 @@ class CriteriaQueryParamLongTest {
             .buildQueryParamsMap(criteria);
 
         var expected = new LinkedMultiValueMap<>();
-        expected.add("fieldList", "1");
-        expected.add("fieldList", "2");
-        expected.add("list", "1");
-        expected.add("list", "2");
+        expected.add("fieldList", "true");
+        expected.add("fieldList", "false");
+        expected.add("list", "true");
+        expected.add("list", "false");
 
         assertEquals(expected, result);
     }
@@ -132,15 +132,15 @@ class CriteriaQueryParamLongTest {
     static class FilterCriteria {
 
         public FilterCriteria() {
-            final LongFilter filter = new LongFilter();
-            filter.setEquals(1L);
+            final BooleanFilter filter = new BooleanFilter();
+            filter.setEquals(true);
             filterField = filter;
         }
 
-        LongFilter filterField;
+        BooleanFilter filterField;
 
         @CriteriaInclude
-        public LongFilter getFilter() {
+        public BooleanFilter getFilter() {
             return filterField;
         }
 
@@ -149,35 +149,35 @@ class CriteriaQueryParamLongTest {
     static class ValueCriteria {
 
         @CriteriaInclude
-        Long valueField = 1L;
+        Boolean valueField = true;
 
         @CriteriaInclude
-        public Long getValue() {
-            return 1L;
+        public Boolean getValue() {
+            return true;
         }
 
     }
 
     static class ArrayCriteria {
 
-        @CriteriaInclude(Long.class)
-        Long[] arrayField = new Long[]{1L, 2L};
+        @CriteriaInclude(Boolean.class)
+        Boolean[] arrayField = new Boolean[]{true, false};
 
-        @CriteriaInclude(Long.class)
-        public Long[] getArray() {
-            return new Long[]{1L, 2L};
+        @CriteriaInclude(Boolean.class)
+        public Boolean[] getArray() {
+            return new Boolean[]{true, false};
         }
 
     }
 
     static class ListCriteria {
 
-        @CriteriaInclude(Long.class)
-        List<Long> fieldList = List.of(1L, 2L);
+        @CriteriaInclude(Boolean.class)
+        List<Boolean> fieldList = List.of(true, false);
 
-        @CriteriaInclude(Long.class)
-        public List<Long> getList() {
-            return List.of(1L, 2L);
+        @CriteriaInclude(Boolean.class)
+        public List<Boolean> getList() {
+            return List.of(true, false);
         }
 
     }

@@ -213,7 +213,8 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             if (fieldData.isFilter()) {
                 result.addAll(getFilterQueryParams(paramName, (Filter) fieldValue));
             } else if (fieldData.isValue()) {
-                result.add(getQueryParamForValue(paramName, fieldValue, fieldData.getFieldType()));
+                getQueryParamForValue(fieldData, null, paramName, fieldValue)
+                    .ifPresent(result::add);
             } else if (fieldData.isIterable()) {
                 getQueryParamForIterable(fieldData, paramName, (Iterable) fieldValue)
                     .ifPresent(result::add);
@@ -245,7 +246,8 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             if (methodData.isFilter()) {
                 result.addAll(getFilterQueryParams(paramName, (Filter) returnValue));
             } else if (methodData.isValue()) {
-                result.add(getQueryParamForValue(paramName, returnValue, methodData.getMethodReturnType()));
+                getQueryParamForValue(null, methodData, paramName, returnValue)
+                    .ifPresent(result::add);
             } else if (methodData.isIterable()) {
                 getQueryParamForIterable(methodData, paramName, (Iterable) returnValue)
                     .ifPresent(result::add);
@@ -260,14 +262,32 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         return result;
     }
 
-    private QueryParam getQueryParamForValue(final String paramName, final Object value, final Class<?> valueType) {
+    private Optional<QueryParam> getQueryParamForValue(final CriteriaFieldData fieldData, final CriteriaMethodData methodData, final String paramName, final Object value) {
+        final Class<?> valueType;
+        final boolean isKeyOnly;
+        if (fieldData != null) {
+            valueType = fieldData.getFieldType();
+            isKeyOnly = fieldData.isKeyOnly();
+        } else {
+            valueType = methodData.getMethodReturnType();
+            isKeyOnly = methodData.isKeyOnly();
+        }
+
+        if (isKeyOnly) {
+            if ((boolean) value && (valueType.equals(boolean.class) || valueType.equals(Boolean.class))) {
+                return Optional.of(QueryParamImpl.ofNameOnly(paramName));
+            } else {
+                return Optional.empty();
+            }
+        }
+
         final String formattedValue;
         if (valueType.isEnum() && !typeFormatterBySimpleTypeMap.containsKey(valueType)) {
             formattedValue = enumFormatter.apply((Enum) value);
         } else {
             formattedValue = typeFormatterBySimpleTypeMap.get(valueType).apply(value);
         }
-        return QueryParamImpl.ofSingleValue(paramName, formattedValue);
+        return Optional.of(QueryParamImpl.ofSingleValue(paramName, formattedValue));
     }
 
     private Optional<QueryParam> getQueryParamForIterable(final CriteriaFieldData fieldData, final String paramName, final Iterable iterable) {
