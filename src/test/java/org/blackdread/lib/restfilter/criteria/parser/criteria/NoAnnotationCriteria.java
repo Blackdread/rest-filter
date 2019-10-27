@@ -33,6 +33,7 @@ import java.util.Map;
  *
  * @author Yoann CAPLAIN
  */
+@SuppressWarnings("unused")
 public class NoAnnotationCriteria {
 
     public static NoAnnotationCriteria allWithValue() {

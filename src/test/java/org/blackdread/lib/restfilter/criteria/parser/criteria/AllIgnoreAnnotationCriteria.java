@@ -34,6 +34,7 @@ import java.util.List;
  *
  * @author Yoann CAPLAIN
  */
+@SuppressWarnings("unused")
 public class AllIgnoreAnnotationCriteria {
 
     public static AllIgnoreAnnotationCriteria allWithValue() {

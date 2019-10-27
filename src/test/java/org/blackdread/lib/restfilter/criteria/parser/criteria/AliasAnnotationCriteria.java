@@ -35,6 +35,7 @@ import java.util.Map;
  *
  * @author Yoann CAPLAIN
  */
+@SuppressWarnings("unused")
 public class AliasAnnotationCriteria {
 
     public static AliasAnnotationCriteria allWithValue() {

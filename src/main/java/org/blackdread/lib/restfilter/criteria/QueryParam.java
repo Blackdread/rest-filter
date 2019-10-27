@@ -44,8 +44,8 @@ public interface QueryParam {
      *  }
      * </pre>
      *
-     * @return field or method name formatted
-     * @deprecated might remove, too specific and value may come from a field or a method name
+     * @return field or method name or alias formatted
+     * @deprecated might remove, too specific and value may come from a field or a method name or other
      */
     String getCriteriaName();
 

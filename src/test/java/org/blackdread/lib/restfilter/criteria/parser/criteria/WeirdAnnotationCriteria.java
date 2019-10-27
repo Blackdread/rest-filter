@@ -36,6 +36,7 @@ import java.util.Map;
  *
  * @author Yoann CAPLAIN
  */
+@SuppressWarnings("unused")
 public class WeirdAnnotationCriteria {
 
     public static WeirdAnnotationCriteria allWithValue() {

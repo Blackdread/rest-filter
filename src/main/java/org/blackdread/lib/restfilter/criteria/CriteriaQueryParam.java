@@ -77,6 +77,8 @@ public interface CriteriaQueryParam {
         return map;
     }
 
+    List<QueryParam> getQueryParams(final Object criteria);
+
     // todo add support for user to also get criteria in logic below to be able to create QueryParam from non Filter type fields?
 
     default List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFilterName) {
