@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  *
  * @author Yoann CAPLAIN
  */
-class CriteriaQueryParamExtraTest {
+class CriteriaQueryParamEnumTest {
 
     private CriteriaQueryParamBuilder builder;
 
