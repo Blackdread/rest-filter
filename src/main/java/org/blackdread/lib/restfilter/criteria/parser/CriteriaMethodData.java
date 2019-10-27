@@ -104,18 +104,30 @@ public final class CriteriaMethodData {
         return methodReturnType;
     }
 
+    /**
+     * @return true when is none of {@link #isFilter()}, {@link #isIterable()} and {@link #isArray()}
+     */
     public boolean isValue() {
         return isValue;
     }
 
+    /**
+     * @return true if field is of type {@link org.blackdread.lib.restfilter.filter.Filter} or subclass.
+     */
     public boolean isFilter() {
         return isFilter;
     }
 
+    /**
+     * @return true if field is of type {@link java.util.Iterator} or subclass.
+     */
     public boolean isIterable() {
         return isIterable;
     }
 
+    /**
+     * @return true if field is of type array
+     */
     public boolean isArray() {
         return isArray;
     }

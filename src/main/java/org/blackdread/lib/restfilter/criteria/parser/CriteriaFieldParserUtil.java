@@ -122,6 +122,8 @@ public final class CriteriaFieldParserUtil {
 
     /**
      * Extract data from class, follow library rules for annotations and extracted fields/methods.
+     * <p>
+     * Data is cached for efficiency.
      *
      * @param criteria criteria to extract data
      * @return data matching library rules
@@ -132,6 +134,8 @@ public final class CriteriaFieldParserUtil {
 
     /**
      * Extract data from class, follow library rules for annotations and extracted fields/methods.
+     * <p>
+     * Data is cached for efficiency.
      *
      * @param criteriaClass criteria class to extract data
      * @return data matching library rules

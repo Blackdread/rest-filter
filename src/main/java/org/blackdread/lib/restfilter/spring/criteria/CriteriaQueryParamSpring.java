@@ -24,14 +24,13 @@
 package org.blackdread.lib.restfilter.spring.criteria;
 
 import org.blackdread.lib.restfilter.criteria.Criteria;
-import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
 import org.blackdread.lib.restfilter.criteria.CriteriaQueryParam;
 import org.blackdread.lib.restfilter.criteria.FilterQueryParam;
+import org.blackdread.lib.restfilter.criteria.QueryParam;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.springframework.web.util.UriBuilder;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Same as {@link CriteriaQueryParam} but with functionality dependent on Spring.
@@ -50,16 +49,18 @@ public interface CriteriaQueryParamSpring extends CriteriaQueryParam {
     }
 
     default UriBuilder buildQueryParams(final Object criteria, UriBuilder builder) {
-        final Map<String, Filter> filtersByFieldName = CriteriaFieldParserUtil.build(criteria);
-        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(filtersByFieldName);
-        for (final FilterQueryParam filterQueryParam : filterQueryParams) {
-            builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
+        final List<QueryParam> queryParams = buildQueryParams(criteria);
+        for (final QueryParam queryParam : queryParams) {
+            builder = builder.queryParam(queryParam.getParamName(), queryParam.getParamValues());
         }
         return builder;
     }
 
-    default UriBuilder buildQueryParams(final String fieldName, final Filter filter, UriBuilder builder){
-        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(fieldName, filter);
+    /**
+     * @deprecated not sure to keep as public API
+     */
+    default UriBuilder buildQueryParams(final String paramName, final Filter filter, UriBuilder builder){
+        final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(paramName, filter);
         for (final FilterQueryParam filterQueryParam : filterQueryParams) {
             builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
         }

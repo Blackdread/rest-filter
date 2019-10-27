@@ -15,36 +15,36 @@ final class QueryParamImpl implements QueryParam {
 
     private static final Logger log = LoggerFactory.getLogger(QueryParamImpl.class);
 
-    private final String criteriaName;
+    private final String paramName;
     private final String paramValue;
     private final List<String> paramValues;
 
-    static QueryParam ofNameOnly(final String criteriaName) {
-        return new QueryParamImpl(criteriaName);
+    static QueryParam ofNameOnly(final String paramName) {
+        return new QueryParamImpl(paramName);
     }
 
-    static QueryParam ofSingleValue(final String criteriaName, final String paramValue) {
-        return new QueryParamImpl(criteriaName, paramValue);
+    static QueryParam ofSingleValue(final String paramName, final String paramValue) {
+        return new QueryParamImpl(paramName, paramValue);
     }
 
-    static QueryParam ofMultipleValues(final String criteriaName, final List<String> paramValues) {
-        return new QueryParamImpl(criteriaName, paramValues);
+    static QueryParam ofMultipleValues(final String paramName, final List<String> paramValues) {
+        return new QueryParamImpl(paramName, paramValues);
     }
 
-    private QueryParamImpl(final String criteriaName) {
-        this.criteriaName = Objects.requireNonNull(criteriaName);
+    private QueryParamImpl(final String paramName) {
+        this.paramName = Objects.requireNonNull(paramName);
         this.paramValue = null;
         this.paramValues = List.of();
     }
 
-    private QueryParamImpl(final String criteriaName, final String paramValue) {
-        this.criteriaName = Objects.requireNonNull(criteriaName);
+    private QueryParamImpl(final String paramName, final String paramValue) {
+        this.paramName = Objects.requireNonNull(paramName);
         this.paramValue = Objects.requireNonNull(paramValue);
         this.paramValues = List.of(paramValue);
     }
 
-    private QueryParamImpl(final String criteriaName, final List<String> paramValues) {
-        this.criteriaName = Objects.requireNonNull(criteriaName);
+    private QueryParamImpl(final String paramName, final List<String> paramValues) {
+        this.paramName = Objects.requireNonNull(paramName);
         this.paramValues = List.copyOf(paramValues);
         this.paramValue = String.join(",", this.paramValues);
     }
@@ -52,7 +52,7 @@ final class QueryParamImpl implements QueryParam {
 
     @Override
     public String getCriteriaName() {
-        return criteriaName;
+        return paramName;
     }
 
     @Override
@@ -80,19 +80,19 @@ final class QueryParamImpl implements QueryParam {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         final QueryParamImpl that = (QueryParamImpl) o;
-        return criteriaName.equals(that.criteriaName) &&
+        return paramName.equals(that.paramName) &&
             paramValue.equals(that.paramValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(criteriaName, paramValue);
+        return Objects.hash(paramName, paramValue);
     }
 
     @Override
     public String toString() {
         return "FilterQueryParamImpl{" +
-            "criteriaName='" + criteriaName + '\'' +
+            "paramName='" + paramName + '\'' +
             ", paramValue='" + paramValue + '\'' +
             ", paramValues=" + paramValues +
             '}';

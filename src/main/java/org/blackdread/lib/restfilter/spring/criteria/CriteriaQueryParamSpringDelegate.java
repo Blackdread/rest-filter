@@ -26,6 +26,7 @@ package org.blackdread.lib.restfilter.spring.criteria;
 import org.blackdread.lib.restfilter.criteria.Criteria;
 import org.blackdread.lib.restfilter.criteria.CriteriaQueryParam;
 import org.blackdread.lib.restfilter.criteria.FilterQueryParam;
+import org.blackdread.lib.restfilter.criteria.QueryParam;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.slf4j.Logger;
@@ -51,18 +52,23 @@ class CriteriaQueryParamSpringDelegate implements CriteriaQueryParamSpring {
     }
 
     @Override
-    public MultiValueMap<String, String> buildQueryParams(final Criteria criteria) {
-        return delegate.buildQueryParams(criteria);
+    public MultiValueMap<String, String> buildQueryParamsMap(final Criteria criteria) {
+        return delegate.buildQueryParamsMap(criteria);
     }
 
     @Override
-    public MultiValueMap<String, String> buildQueryParams(final Object criteria) {
-        return delegate.buildQueryParams(criteria);
+    public MultiValueMap<String, String> buildQueryParamsMap(final Object criteria) {
+        return delegate.buildQueryParamsMap(criteria);
     }
 
     @Override
-    public MultiValueMap<String, String> buildQueryParams(final String filterName, final Filter filter) {
-        return delegate.buildQueryParams(filterName, filter);
+    public MultiValueMap<String, String> buildQueryParamsMap(final String paramName, final Filter filter) {
+        return delegate.buildQueryParamsMap(paramName, filter);
+    }
+
+    @Override
+    public List<QueryParam> buildQueryParams(final Object criteria) {
+        return delegate.buildQueryParams(criteria);
     }
 
     @Override
@@ -71,8 +77,8 @@ class CriteriaQueryParamSpringDelegate implements CriteriaQueryParamSpring {
     }
 
     @Override
-    public List<FilterQueryParam> getFilterQueryParams(final String filterName, final Filter filter) {
-        return delegate.getFilterQueryParams(filterName, filter);
+    public List<FilterQueryParam> getFilterQueryParams(final String paramName, final Filter filter) {
+        return delegate.getFilterQueryParams(paramName, filter);
     }
 
 }

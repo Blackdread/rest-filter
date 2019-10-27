@@ -23,6 +23,10 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaData;
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldData;
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
+import org.blackdread.lib.restfilter.criteria.parser.CriteriaMethodData;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.filter.RangeFilter;
 import org.blackdread.lib.restfilter.filter.StringFilter;
@@ -36,6 +40,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -172,44 +178,92 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
     }
 
     @Override
-    public List<FilterQueryParam> getFilterQueryParams(final String filterName, final Filter filter) {
+    public List<QueryParam> buildQueryParams(final Object criteria) {
+        if (criteria == null) {
+            return Collections.emptyList();
+        }
+        final CriteriaData criteriaData = CriteriaFieldParserUtil.getCriteriaData(criteria);
+        final List<CriteriaFieldData> fields = criteriaData.getFields();
+        final List<CriteriaMethodData> methods = criteriaData.getMethods();
+
+        final List<QueryParam> result = new ArrayList<>(fields.size() + methods.size());
+
+        for (final CriteriaFieldData fieldData : fields) {
+            final String paramName = fieldData.getFormattedAliasName()
+                .orElse(fieldData.getFieldName());
+            final Object fieldValue;
+            try {
+                fieldValue = fieldData.getField().get(criteria);
+            } catch (IllegalAccessException e) {
+                throw new IllegalStateException("Could not access field", e);
+            }
+
+            if (fieldValue == null) {
+                log.trace("Skipped field as is null: {}", fieldData.getField());
+                continue;
+            }
+
+            if (fieldData.isFilter()) {
+                result.addAll(getFilterQueryParams(paramName, (Filter) fieldValue));
+            } else if (fieldData.isValue()) {
+
+            } else if (fieldData.isIterable()) {
+
+            } else if (fieldData.isArray()) {
+
+            } else {
+                throw new IllegalStateException("Does not support field data: " + fieldData);
+            }
+        }
+
+        for (final CriteriaMethodData methodData : methods) {
+            if (methodData.isFilter()) {
+
+            }
+        }
+
+        return result;
+    }
+
+    @Override
+    public List<FilterQueryParam> getFilterQueryParams(final String paramName, final Filter filter) {
         final Class<? extends Filter> filterClass = filter.getClass();
         if (!customQueryParamFormatterMap.isEmpty() && customQueryParamFormatterMap.containsKey(filterClass)) {
-            return customQueryParamFormatterMap.get(filterClass).getFilterQueryParams(filterName, filter);
+            return customQueryParamFormatterMap.get(filterClass).getFilterQueryParams(paramName, filter);
         }
 
         if (matchSubclassForDefaultFilterFormatters) {
-            final List<FilterQueryParam> x = getFilterQueryParamsWithSubclass(filterName, filter);
+            final List<FilterQueryParam> x = getFilterQueryParamsWithSubclass(paramName, filter);
             if (x != null) return x;
         } else {
             if (!defaultFilterClassFormatterMap.isEmpty() && defaultFilterClassFormatterMap.containsKey(filterClass)) {
-                return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(filterName, filter);
+                return defaultFilterClassFormatterMap.get(filterClass).getFilterQueryParams(paramName, filter);
             }
         }
 
         final Class genericClass = filter.obtainGenericClass();
         if (genericClass.isEnum()) {
             if (typeFormatterBySimpleTypeMap.containsKey(genericClass)) {
-                return buildForEnum(filterName, filter, typeFormatterBySimpleTypeMap.get(genericClass));
+                return buildForEnum(paramName, filter, typeFormatterBySimpleTypeMap.get(genericClass));
             }
-            return buildForEnum(filterName, filter);
+            return buildForEnum(paramName, filter);
         }
 
         // todo do we try to find 'simpleTypeFormatterMap.containsKey(genericClass)' when not an enum ? Then try to apply a default formatter when we find the formatter for the genericClass
         // well no in theory since it should have been found by getFilterQueryParamsWithSubclass/defaultFilterClassFormatterMap/customQueryParamFormatterMap already
         log.info("Filter {} could not be formatted, generic class is '{}' and available formatter is '{}'", filter.getClass().getName(), genericClass.getName(), typeFormatterBySimpleTypeMap.containsKey(genericClass));
 
-        throw new UnsupportedFilterForQueryParamException(filterName, filter);
+        throw new UnsupportedFilterForQueryParamException(paramName, filter);
     }
 
     @SuppressWarnings("unchecked")
-    private List<FilterQueryParam> buildForEnum(final String fieldName, final Filter filter) {
-        return FilterQueryParamUtil.buildQueryParams(fieldName, filter, enumFormatter);
+    private List<FilterQueryParam> buildForEnum(final String paramName, final Filter filter) {
+        return FilterQueryParamUtil.buildQueryParams(paramName, filter, enumFormatter);
     }
 
     @SuppressWarnings("unchecked")
-    private List<FilterQueryParam> buildForEnum(final String fieldName, final Filter filter, final Function enumFormatter) {
-        return FilterQueryParamUtil.buildQueryParams(fieldName, filter, enumFormatter);
+    private List<FilterQueryParam> buildForEnum(final String paramName, final Filter filter, final Function enumFormatter) {
+        return FilterQueryParamUtil.buildQueryParams(paramName, filter, enumFormatter);
     }
 
     private List<FilterQueryParam> getFilterQueryParamsWithSubclass(final String fieldName, final Filter filter) {

@@ -23,7 +23,6 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
-import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.blackdread.lib.restfilter.util.MultiValueMap;
@@ -56,31 +55,64 @@ public interface CriteriaQueryParam {
     String NOT_CONTAINS_FILTER = "notContains";
     String IGNORE_CASE_FILTER = "ignoreCase";
 
-    default MultiValueMap<String, String> buildQueryParams(final Criteria criteria) {
-        return buildQueryParams((Object) criteria);
+    /**
+     * Extract criteria params from {@code criteria} and map the param name as key.
+     *
+     * @param criteria criteria
+     * @return Map with param name as key
+     */
+    default MultiValueMap<String, String> buildQueryParamsMap(final Criteria criteria) {
+        return buildQueryParamsMap((Object) criteria);
     }
 
-    default MultiValueMap<String, String> buildQueryParams(final Object criteria) {
-        final Map<String, Filter> filters = CriteriaFieldParserUtil.build(criteria);
-        final List<MultiValueMap<String, String>> maps = filters.entrySet().stream()
-            .map(entry -> buildQueryParams(entry.getKey(), entry.getValue()))
-            .collect(Collectors.toList());
+    /**
+     * Extract criteria params from {@code criteria} and map the param name as key.
+     *
+     * @param criteria criteria
+     * @return Map with param name as key
+     */
+    default MultiValueMap<String, String> buildQueryParamsMap(final Object criteria) {
         final LinkedMultiValueMap<String, String> multiValueMap = new LinkedMultiValueMap<>();
-        maps.forEach(multiValueMap::addAll);
+        buildQueryParams(criteria)
+            .forEach(queryParam -> {
+                multiValueMap.addAll(queryParam.getParamName(), queryParam.getParamValues());
+            });
         return multiValueMap;
     }
 
-    default MultiValueMap<String, String> buildQueryParams(final String filterName, final Filter filter) {
+    /**
+     * @deprecated not sure to keep
+     */
+    default MultiValueMap<String, String> buildQueryParamsMap(final String paramName, final Filter filter) {
         final LinkedMultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        getFilterQueryParams(filterName, filter)
+        getFilterQueryParams(paramName, filter)
             .forEach(filterQueryParam -> map.addAll(filterQueryParam.getParamName(), filterQueryParam.getParamValues()));
         return map;
     }
 
-    List<QueryParam> getQueryParams(final Object criteria);
+    /**
+     * Extract {@link QueryParam} from criteria object
+     *
+     * @param criteria criteria to extract {@link QueryParam}
+     * @return query params from given criteria
+     */
+    default List<QueryParam> buildQueryParams(final Criteria criteria) {
+        return buildQueryParams((Object) criteria);
+    }
 
-    // todo add support for user to also get criteria in logic below to be able to create QueryParam from non Filter type fields?
+    /**
+     * Extract {@link QueryParam} from criteria object
+     *
+     * @param criteria criteria to extract {@link QueryParam}
+     * @return query params from given criteria
+     */
+    List<QueryParam> buildQueryParams(final Object criteria);
 
+    /**
+     * todo might be better to return QueryParam
+     *
+     * @deprecated not sure to keep as public API
+     */
     default List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFilterName) {
         return filtersByFilterName.entrySet().stream()
             .flatMap(e -> getFilterQueryParams(e.getKey(), e.getValue()).stream())
@@ -88,10 +120,13 @@ public interface CriteriaQueryParam {
     }
 
     /**
-     * @param filterName name of filter (from field/method/etc)
-     * @param filter     filter to extract query params
+     * todo might be better to return QueryParam
+     *
+     * @param paramName name of filter (from field/method/alias/etc)
+     * @param filter    filter to extract query params
      * @return list of query params, may be empty
+     * @deprecated not sure to keep as public API
      */
-    List<FilterQueryParam> getFilterQueryParams(final String filterName, final Filter filter);
+    List<FilterQueryParam> getFilterQueryParams(final String paramName, final Filter filter);
 }
 
