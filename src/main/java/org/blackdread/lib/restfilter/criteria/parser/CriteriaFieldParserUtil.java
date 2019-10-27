@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaIgnore;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.Filter;
+import org.blackdread.lib.restfilter.util.IterableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,11 +39,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -212,12 +211,17 @@ public final class CriteriaFieldParserUtil {
     }
 
     private static boolean isAnnotationCriteriaIncludePresent(final Method method) {
+        if(SKIP_METHODS.contains(method))
+            return false;
         final boolean annotationPresent = method.isAnnotationPresent(CriteriaInclude.class);
         if (!annotationPresent && log.isDebugEnabled()) {
             log.debug("Annotation CriteriaInclude not present for method: {}", method.toString());
         }
         return annotationPresent;
     }
+
+    private static final List<Method> SKIP_METHODS =
+        Arrays.asList(Object.class.getMethods());
 
     private static boolean isNoParameter(final Method method) {
         final int parameterCount = method.getParameterCount();
@@ -246,31 +250,12 @@ public final class CriteriaFieldParserUtil {
     /**
      * Iterable passed should have not side-effect since it will be iterated for its first value if exist
      *
-     * @param iterable iterable
-     * @return first value if present and <b>not null</b>
-     */
-    static <T> Optional<T> getFirstValue(final Iterable<T> iterable) {
-        final Iterator<T> iterator = iterable.iterator();
-        if (iterator.hasNext()) {
-            final T firstValue = iterator.next();
-            if (firstValue == null) { // null are forbidden, no further test
-                log.warn("Got null in an iterable");
-                return Optional.empty();
-            }
-            return Optional.of(firstValue);
-        }
-        return Optional.empty();
-    }
-
-    /**
-     * Iterable passed should have not side-effect since it will be iterated for its first value if exist
-     *
      * @param iterable            iterable
      * @param valueClassPredicate test the class of the first value from the {@code iterable}
      * @return true if no value or first value type is supported
      */
     static boolean isIterableValueTypeSupported(final Iterable<?> iterable, final Predicate<Class> valueClassPredicate) {
-        return getFirstValue(iterable)
+        return IterableUtil.getFirstValue(iterable)
             .map(value -> valueClassPredicate.test(value.getClass()))
             .orElse(true);
     }
