@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.concurrent.Immutable;
 import javax.annotation.concurrent.ThreadSafe;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.Instant;
@@ -50,6 +52,7 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * <p>Created on 2019/10/19.</p>
@@ -188,6 +191,8 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
         final List<QueryParam> result = new ArrayList<>(fields.size() + methods.size());
 
+        // todo below, refactor after initial tests passing
+
         for (final CriteriaFieldData fieldData : fields) {
             final String paramName = fieldData.getFormattedAliasName()
                 .orElse(fieldData.getFieldName());
@@ -207,31 +212,92 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
                 result.addAll(getFilterQueryParams(paramName, (Filter) fieldValue));
             } else if (fieldData.isValue()) {
                 // todo not tested, see with enums, custom classes, etc
-                result.add(QueryParamImpl.ofSingleValue(paramName, typeFormatterBySimpleTypeMap.get(fieldData.getFieldType()).apply(fieldValue)));
+                final String formattedValue = typeFormatterBySimpleTypeMap.get(fieldData.getFieldType()).apply(fieldValue);
+                result.add(QueryParamImpl.ofSingleValue(paramName, formattedValue));
             } else if (fieldData.isIterable()) {
                 // todo not tested, see with enums, custom classes, etc
+                final Class<?> wrappedType = fieldData.getWrappedType()
+                    .orElseThrow();
+//                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
+                final List<String> formattedValues = formatAll((Iterable) fieldValue, typeFormatterBySimpleTypeMap.get(wrappedType));
+                // todo add option to skip field if iterable is empty? -> as annotation?
+                result.add(QueryParamImpl.ofMultipleValues(paramName, formattedValues));
             } else if (fieldData.isArray()) {
                 // todo not tested, see with enums, custom classes, etc
+
+                final Class<?> wrappedType = fieldData.getWrappedType()
+                    .orElseThrow();
+//                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
+
+                final Function<Object, String> objectStringFormatter = typeFormatterBySimpleTypeMap.get(wrappedType);
+
+                final int length = Array.getLength(fieldValue);
+                final List<String> formattedValues = IntStream.rangeClosed(0, length)
+                    .mapToObj(index -> Array.get(fieldValue, index))
+                    .map(objectStringFormatter)
+                    .collect(Collectors.toList());
+                result.add(QueryParamImpl.ofMultipleValues(paramName, formattedValues));
             } else {
                 throw new IllegalStateException("Does not support field data: " + fieldData);
             }
         }
 
         for (final CriteriaMethodData methodData : methods) {
-            if (methodData.isFilter()) {
+            final String paramName = methodData.getMethodAliasName()
+                .orElse(methodData.getFormattedMethodName());
+            final Object returnValue;
+            try {
+                returnValue = methodData.getMethod().invoke(criteria);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new IllegalStateException("Could not access/invoke method", e);
+            }
 
+            if (returnValue == null) {
+                log.trace("Skipped method return value as is null: {}", methodData.getMethod());
+                continue;
+            }
+
+            if (methodData.isFilter()) {
+                result.addAll(getFilterQueryParams(paramName, (Filter) returnValue));
             } else if (methodData.isValue()) {
                 // todo not tested, see with enums, custom classes, etc
-
+                final String formattedValue = typeFormatterBySimpleTypeMap.get(methodData.getMethodReturnType()).apply(returnValue);
+                result.add(QueryParamImpl.ofSingleValue(paramName, formattedValue));
             } else if (methodData.isIterable()) {
                 // todo not tested, see with enums, custom classes, etc
+                final Class<?> wrappedType = methodData.getWrappedType()
+                    .orElseThrow();
+//                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
+                final List<String> formattedValues = formatAll((Iterable) returnValue, typeFormatterBySimpleTypeMap.get(wrappedType));
+                // todo add option to skip field if iterable is empty? -> as annotation?
+                result.add(QueryParamImpl.ofMultipleValues(paramName, formattedValues));
             } else if (methodData.isArray()) {
                 // todo not tested, see with enums, custom classes, etc
+                final Class<?> wrappedType = methodData.getWrappedType()
+                    .orElseThrow();
+//                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
+
+                final Function<Object, String> objectStringFormatter = typeFormatterBySimpleTypeMap.get(wrappedType);
+
+                final int length = Array.getLength(returnValue);
+                final List<String> formattedValues = IntStream.rangeClosed(0, length)
+                    .mapToObj(index -> Array.get(returnValue, index))
+                    .map(objectStringFormatter)
+                    .collect(Collectors.toList());
+                result.add(QueryParamImpl.ofMultipleValues(paramName, formattedValues));
             } else {
                 throw new IllegalStateException("Does not support method data: " + methodData);
             }
         }
 
+        return result;
+    }
+
+    private List<String> formatAll(Iterable iterable, Function<Object, String> objectToStringFormatter) {
+        final List<String> result = new ArrayList<>();
+        for (final Object o : iterable) {
+            result.add(objectToStringFormatter.apply(o));
+        }
         return result;
     }
 
