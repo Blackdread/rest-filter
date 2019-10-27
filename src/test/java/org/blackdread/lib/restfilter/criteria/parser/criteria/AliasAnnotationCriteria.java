@@ -80,7 +80,7 @@ public class AliasAnnotationCriteria {
     @CriteriaAlias("arrayLongFilterNotIncludedAlias")
     private LongFilter[] arrayLongFilterNotIncluded;
 
-    @CriteriaInclude
+    @CriteriaInclude(Long.class)
     @CriteriaAlias("listLongAlias")
     private List<Long> listLong;
 
@@ -105,7 +105,7 @@ public class AliasAnnotationCriteria {
     }
 
     @CriteriaAlias("myFilter3.in")
-    @CriteriaInclude
+    @CriteriaInclude(Long.class)
     public List<Long> withDotIn2() {
         return List.of(1L, 2L);
     }

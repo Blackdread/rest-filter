@@ -58,6 +58,11 @@ import java.lang.annotation.Target;
  *   public boolean isAnything(){
  *       // ...
  *   }
+ *
+ *   &#64;CriteriaInclude(Long.class)
+ *   public List<Long> anything2(){
+ *       // ...
+ *   }
  * }
  * </pre>
  * <p>Created on 2019/10/23.</p>
@@ -70,15 +75,15 @@ import java.lang.annotation.Target;
 public @interface CriteriaInclude {
 
     /**
-     * Type of field or method return type when it cannot be determined,
-     * or a different one should be used when formatting the value.
-     * <br>
-     * When put on a iterable/collection wrapper, this field define the type that wrapper is containing.
-     * Which is type to use when formatting.
-     *
-     * @deprecated not sure if needed
+     * Type of object contained in an iterable/collection/array.
+     * Type of field that should be used when formatting values for query params.
      */
-    Class<?> type() default Void.class;
+    Class<?> value() default Void.class;
+
+    /*
+     * If {@link #value()} is defined, it is not necessary to set this type, if set then it will use the formatter matching the {@code type()} class.
+     */
+//    Class<?> formatterType() default Void.class;
 
     // similar to validation groups but not used for now, simple logic for now
 //    Class<?>[] groups() default {};

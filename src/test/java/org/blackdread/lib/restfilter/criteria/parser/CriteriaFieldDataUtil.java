@@ -42,7 +42,7 @@ public class CriteriaFieldDataUtil {
     private static final Logger log = LoggerFactory.getLogger(CriteriaFieldDataUtil.class);
 
 
-    public static CriteriaFieldData checkValue(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class userDefinedType) {
+    public static CriteriaFieldData checkValue(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaFieldData::getFieldName));
         final CriteriaFieldData data = list.get(index);
         assertEquals(fieldName, data.getFieldName());
@@ -52,19 +52,19 @@ public class CriteriaFieldDataUtil {
         assertFalse(data.isIterable());
         assertFalse(data.isArray());
         assertEquals(Optional.ofNullable(formattedAliasName), data.getFormattedAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
-    public static CriteriaFieldData checkFilter(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class userDefinedType) {
+    public static CriteriaFieldData checkFilter(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaFieldData::getFieldName));
         final CriteriaFieldData data = list.get(index);
         assertEquals(fieldName, data.getFieldName());
@@ -74,19 +74,19 @@ public class CriteriaFieldDataUtil {
         assertFalse(data.isIterable());
         assertFalse(data.isArray());
         assertEquals(Optional.ofNullable(formattedAliasName), data.getFormattedAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
-    public static CriteriaFieldData checkList(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class userDefinedType) {
+    public static CriteriaFieldData checkList(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaFieldData::getFieldName));
         final CriteriaFieldData data = list.get(index);
         assertEquals(fieldName, data.getFieldName());
@@ -96,19 +96,19 @@ public class CriteriaFieldDataUtil {
         assertTrue(data.isIterable());
         assertFalse(data.isArray());
         assertEquals(Optional.ofNullable(formattedAliasName), data.getFormattedAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
-    public static CriteriaFieldData checkArray(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class userDefinedType) {
+    public static CriteriaFieldData checkArray(List<CriteriaFieldData> list, int index, String fieldName, Class fieldType, String formattedAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaFieldData::getFieldName));
         final CriteriaFieldData data = list.get(index);
         assertEquals(fieldName, data.getFieldName());
@@ -118,20 +118,20 @@ public class CriteriaFieldDataUtil {
         assertFalse(data.isIterable());
         assertTrue(data.isArray());
         assertEquals(Optional.ofNullable(formattedAliasName), data.getFormattedAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
 
-    public static CriteriaMethodData checkValue(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class userDefinedType) {
+    public static CriteriaMethodData checkValue(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaMethodData::getMethodName));
         final CriteriaMethodData data = list.get(index);
         assertEquals(methodName, data.getMethodName());
@@ -142,19 +142,19 @@ public class CriteriaFieldDataUtil {
         assertFalse(data.isIterable());
         assertFalse(data.isArray());
         assertEquals(Optional.ofNullable(methodAliasName), data.getMethodAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
-    public static CriteriaMethodData checkFilter(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class userDefinedType) {
+    public static CriteriaMethodData checkFilter(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaMethodData::getMethodName));
         final CriteriaMethodData data = list.get(index);
         assertEquals(methodName, data.getMethodName());
@@ -165,19 +165,19 @@ public class CriteriaFieldDataUtil {
         assertFalse(data.isIterable());
         assertFalse(data.isArray());
         assertEquals(Optional.ofNullable(methodAliasName), data.getMethodAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
-    public static CriteriaMethodData checkList(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class userDefinedType) {
+    public static CriteriaMethodData checkList(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaMethodData::getMethodName));
         final CriteriaMethodData data = list.get(index);
         assertEquals(methodName, data.getMethodName());
@@ -188,19 +188,19 @@ public class CriteriaFieldDataUtil {
         assertTrue(data.isIterable());
         assertFalse(data.isArray());
         assertEquals(Optional.ofNullable(methodAliasName), data.getMethodAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 
-    public static CriteriaMethodData checkArray(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class userDefinedType) {
+    public static CriteriaMethodData checkArray(List<CriteriaMethodData> list, int index, String methodName, String formattedMethodName, Class methodReturnType, String methodAliasName, Class wrappedType) {
         list.sort(Comparator.comparing(CriteriaMethodData::getMethodName));
         final CriteriaMethodData data = list.get(index);
         assertEquals(methodName, data.getMethodName());
@@ -211,15 +211,15 @@ public class CriteriaFieldDataUtil {
         assertFalse(data.isIterable());
         assertTrue(data.isArray());
         assertEquals(Optional.ofNullable(methodAliasName), data.getMethodAliasName());
-        assertEquals(Optional.ofNullable(userDefinedType), data.getUserDefinedType());
+        assertEquals(Optional.ofNullable(wrappedType), data.getWrappedType());
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
             assertTrue(data.getCriteriaAlias().isEmpty());
-        if(userDefinedType != null)
-            assertTrue(data.getUserDefinedType().isPresent());
+        if(wrappedType != null)
+            assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getUserDefinedType().isEmpty());
+            assertTrue(data.getWrappedType().isEmpty());
         return data;
     }
 }

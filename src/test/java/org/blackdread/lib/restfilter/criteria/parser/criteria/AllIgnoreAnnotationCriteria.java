@@ -24,6 +24,7 @@
 package org.blackdread.lib.restfilter.criteria.parser.criteria;
 
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaIgnore;
+import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 
 import java.util.List;
@@ -53,9 +54,11 @@ public class AllIgnoreAnnotationCriteria {
     private long primitiveLong;
 
     @CriteriaIgnore
+    @CriteriaInclude // will be ignored
     private Long objectLong;
 
     @CriteriaIgnore
+    @CriteriaInclude // will be ignored
     private LongFilter longFilter;
 
     @CriteriaIgnore

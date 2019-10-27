@@ -58,7 +58,7 @@ public final class CriteriaMethodData {
     @Nullable
     private final CriteriaInclude criteriaInclude;
     @Nullable
-    private final Class<?> userDefinedType;
+    private final Class<?> wrappedType;
 
     static CriteriaMethodData of(final Method method) {
         return new CriteriaMethodData(Objects.requireNonNull(method));
@@ -87,9 +87,9 @@ public final class CriteriaMethodData {
 
         this.criteriaInclude = method.getAnnotation(CriteriaInclude.class);
         if (criteriaInclude != null) {
-            this.userDefinedType = criteriaInclude.type().equals(Void.class) ? null : criteriaInclude.getClass();
+            this.wrappedType = criteriaInclude.value().equals(Void.class) ? null : criteriaInclude.value();
         } else {
-            userDefinedType = null;
+            wrappedType = null;
         }
     }
 
@@ -147,10 +147,10 @@ public final class CriteriaMethodData {
     }
 
     /**
-     * @return type from {@link CriteriaInclude#type()} but empty if is default value
+     * @return type from {@link CriteriaInclude#value()} ()} but empty if is default value
      */
-    public Optional<Class<?>> getUserDefinedType() {
-        return Optional.ofNullable(userDefinedType);
+    public Optional<Class<?>> getWrappedType() {
+        return Optional.ofNullable(wrappedType);
     }
 
     @Override
@@ -167,7 +167,7 @@ public final class CriteriaMethodData {
             ", criteriaAlias=" + criteriaAlias +
             ", methodAliasName='" + methodAliasName + '\'' +
             ", criteriaInclude=" + criteriaInclude +
-            ", userDefinedType=" + userDefinedType +
+            ", wrappedType=" + wrappedType +
             '}';
     }
 }

@@ -87,7 +87,7 @@ public class WeirdAnnotationCriteria {
         return 1;
     }
 
-    @CriteriaInclude(type = String.class)
+    @CriteriaInclude(Long.class) // useless and may throw
     public Long getComputed2() {
         return 1L;
     }
