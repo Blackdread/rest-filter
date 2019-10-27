@@ -42,3 +42,13 @@ The query url would look something like:
 `http://myWebsite.com?id.equals=1&otherProperty.in=name,other,etc&createTime.greaterThan=2019-01-01T05:04:01Z&sort=createTime,desc&sort=id,desc`
 
 With that the filtering and sorting would work and be consistent through the app.
+
+# Auto filter query param
+The class [CriteriaQueryParam](https://github.com/Blackdread/rest-filter/blob/master/src/main/java/org/blackdread/lib/restfilter/criteria/CriteriaQueryParam.java) allow to create query params automatically with reflection from a criteria class.
+
+# Auto page query param
+The class [PageableQueryParamSpringUtil](https://github.com/Blackdread/rest-filter/blob/master/src/main/java/org/blackdread/lib/restfilter/spring/query/PageableQueryParamSpringUtil.java) allow to create page query params automatically from Pageable class.
+
+# Auto sort query param
+The class [SortQueryParamSpringUtil](https://github.com/Blackdread/rest-filter/blob/master/src/main/java/org/blackdread/lib/restfilter/spring/query/SortQueryParamSpringUtil.java) allow to create sort query params automatically from Sort class.
+
