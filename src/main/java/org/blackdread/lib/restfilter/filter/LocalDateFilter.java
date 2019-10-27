@@ -45,6 +45,11 @@ public class LocalDateFilter extends RangeFilter<LocalDate> {
         super(filter);
     }
 
+    @Override
+    public Class<LocalDate> obtainGenericClass() {
+        return LocalDate.class;
+    }
+
     /**
      * {@inheritDoc}
      */

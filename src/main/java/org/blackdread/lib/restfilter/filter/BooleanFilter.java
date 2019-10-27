@@ -48,6 +48,11 @@ public class BooleanFilter extends Filter<Boolean> {
         super(filter);
     }
 
+    @Override
+    public Class<Boolean> obtainGenericClass() {
+        return Boolean.class;
+    }
+
     /**
      * {@inheritDoc}
      */

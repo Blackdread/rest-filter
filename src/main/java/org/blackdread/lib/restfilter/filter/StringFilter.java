@@ -60,6 +60,11 @@ public class StringFilter extends Filter<String> {
         this.ignoreCase = filter.ignoreCase;
     }
 
+    @Override
+    public Class<String> obtainGenericClass() {
+        return String.class;
+    }
+
     /**
      * {@inheritDoc}
      */

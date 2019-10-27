@@ -41,6 +41,11 @@ public class LongFilter extends RangeFilter<Long> {
         super(filter);
     }
 
+    @Override
+    public Class<Long> obtainGenericClass() {
+        return Long.class;
+    }
+
     /**
      * {@inheritDoc}
      */

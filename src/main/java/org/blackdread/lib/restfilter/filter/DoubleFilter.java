@@ -41,6 +41,11 @@ public class DoubleFilter extends RangeFilter<Double> {
         super(filter);
     }
 
+    @Override
+    public Class<Double> obtainGenericClass() {
+        return Double.class;
+    }
+
     /**
      * {@inheritDoc}
      */

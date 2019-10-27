@@ -45,6 +45,11 @@ public class InstantFilter extends RangeFilter<Instant> {
         super(filter);
     }
 
+    @Override
+    public Class<Instant> obtainGenericClass() {
+        return Instant.class;
+    }
+
     /**
      * {@inheritDoc}
      */

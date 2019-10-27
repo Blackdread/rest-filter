@@ -41,6 +41,11 @@ public class ShortFilter extends RangeFilter<Short> {
         super(filter);
     }
 
+    @Override
+    public Class<Short> obtainGenericClass() {
+        return Short.class;
+    }
+
     /**
      * {@inheritDoc}
      */

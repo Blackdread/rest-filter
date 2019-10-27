@@ -41,6 +41,11 @@ public class FloatFilter extends RangeFilter<Float> {
         super(filter);
     }
 
+    @Override
+    public Class<Float> obtainGenericClass() {
+        return Float.class;
+    }
+
     /**
      * {@inheritDoc}
      */

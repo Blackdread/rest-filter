@@ -45,6 +45,11 @@ public class ZonedDateTimeFilter extends RangeFilter<ZonedDateTime> {
         super(filter);
     }
 
+    @Override
+    public Class<ZonedDateTime> obtainGenericClass() {
+        return ZonedDateTime.class;
+    }
+
     /**
      * {@inheritDoc}
      */

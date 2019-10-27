@@ -41,6 +41,11 @@ public class IntegerFilter extends RangeFilter<Integer> {
         super(filter);
     }
 
+    @Override
+    public Class<Integer> obtainGenericClass() {
+        return Integer.class;
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -42,6 +42,11 @@ public class DurationFilter extends RangeFilter<Duration> {
         super(filter);
     }
 
+    @Override
+    public Class<Duration> obtainGenericClass() {
+        return Duration.class;
+    }
+
     /**
      * {@inheritDoc}
      */

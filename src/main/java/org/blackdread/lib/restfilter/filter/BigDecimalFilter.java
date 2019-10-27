@@ -42,6 +42,11 @@ public class BigDecimalFilter extends RangeFilter<BigDecimal> {
         super(filter);
     }
 
+    @Override
+    public Class<BigDecimal> obtainGenericClass() {
+        return BigDecimal.class;
+    }
+
     /**
      * {@inheritDoc}
      */

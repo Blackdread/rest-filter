@@ -42,6 +42,11 @@ public class UUIDFilter extends Filter<UUID> {
         super(filter);
     }
 
+    @Override
+    public Class<UUID> obtainGenericClass() {
+        return UUID.class;
+    }
+
     /**
      * {@inheritDoc}
      */
