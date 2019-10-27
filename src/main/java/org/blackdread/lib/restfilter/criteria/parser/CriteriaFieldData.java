@@ -123,6 +123,8 @@ public final class CriteriaFieldData {
 
     /**
      * Same as {@link Field#getName()}
+     *
+     * @return field name unchanged
      */
     public String getFieldName() {
         return fieldName;
@@ -130,6 +132,8 @@ public final class CriteriaFieldData {
 
     /**
      * Same as {@link Field#getType()}
+     *
+     * @return field type
      */
     public Class<?> getFieldType() {
         return fieldType;

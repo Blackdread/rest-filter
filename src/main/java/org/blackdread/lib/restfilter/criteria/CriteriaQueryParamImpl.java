@@ -206,11 +206,12 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
             if (fieldData.isFilter()) {
                 result.addAll(getFilterQueryParams(paramName, (Filter) fieldValue));
             } else if (fieldData.isValue()) {
-
+                // todo not tested, see with enums, custom classes, etc
+                result.add(QueryParamImpl.ofSingleValue(paramName, typeFormatterBySimpleTypeMap.get(fieldData.getFieldType()).apply(fieldValue)));
             } else if (fieldData.isIterable()) {
-
+                // todo not tested, see with enums, custom classes, etc
             } else if (fieldData.isArray()) {
-
+                // todo not tested, see with enums, custom classes, etc
             } else {
                 throw new IllegalStateException("Does not support field data: " + fieldData);
             }
@@ -219,6 +220,15 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
         for (final CriteriaMethodData methodData : methods) {
             if (methodData.isFilter()) {
 
+            } else if (methodData.isValue()) {
+                // todo not tested, see with enums, custom classes, etc
+
+            } else if (methodData.isIterable()) {
+                // todo not tested, see with enums, custom classes, etc
+            } else if (methodData.isArray()) {
+                // todo not tested, see with enums, custom classes, etc
+            } else {
+                throw new IllegalStateException("Does not support method data: " + methodData);
             }
         }
 

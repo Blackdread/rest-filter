@@ -81,6 +81,8 @@ public interface CriteriaQueryParam {
     }
 
     /**
+     * @param paramName a
+     * @param filter a
      * @deprecated not sure to keep
      */
     default MultiValueMap<String, String> buildQueryParamsMap(final String paramName, final Filter filter) {
@@ -111,6 +113,8 @@ public interface CriteriaQueryParam {
     /**
      * todo might be better to return QueryParam
      *
+     * @param filtersByFilterName a
+     * @return a
      * @deprecated not sure to keep as public API
      */
     default List<FilterQueryParam> getFilterQueryParams(final Map<String, Filter> filtersByFilterName) {

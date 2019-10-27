@@ -99,6 +99,8 @@ public final class CriteriaMethodData {
 
     /**
      * Same as {@link Method#getReturnType()}
+     *
+     * @return method return type
      */
     public Class<?> getMethodReturnType() {
         return methodReturnType;
@@ -134,6 +136,8 @@ public final class CriteriaMethodData {
 
     /**
      * Same as {@link Method#getName()}
+     *
+     * @return method name unchanged
      */
     public String getMethodName() {
         return methodName;

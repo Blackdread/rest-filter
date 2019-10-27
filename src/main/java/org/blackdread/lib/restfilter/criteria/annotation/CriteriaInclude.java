@@ -47,6 +47,9 @@ import java.lang.annotation.Target;
  *   &#64;CriteriaInclude
  *   private boolean showHidden;
  *
+ *   &#64;CriteriaInclude
+ *   private MyEnum status;
+ *
  *   &#64;CriteriaAlias("fullName.contains"})
  *   &#64;CriteriaInclude
  *   public String getFullName(){
@@ -60,7 +63,7 @@ import java.lang.annotation.Target;
  *   }
  *
  *   &#64;CriteriaInclude(Long.class)
- *   public List<Long> anything2(){
+ *   public List&lt;Long&gt; anything2(){
  *       // ...
  *   }
  * }
@@ -77,6 +80,8 @@ public @interface CriteriaInclude {
     /**
      * Type of object contained in an iterable/collection/array.
      * Type of field that should be used when formatting values for query params.
+     *
+     * @return type of wrapped value in iterable/collection/array
      */
     Class<?> value() default Void.class;
 

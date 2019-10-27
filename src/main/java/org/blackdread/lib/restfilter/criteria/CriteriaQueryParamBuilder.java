@@ -120,6 +120,7 @@ public class CriteriaQueryParamBuilder {
     /**
      * Formatter should not have side-effect.
      *
+     * @param tClass    class type to format
      * @param formatter transform {@link T} to query param compatible {@code String}
      * @param <T>       type to be formatted to {@code String}
      * @return same {@code CriteriaQueryParamBuilder} instance (for chaining)

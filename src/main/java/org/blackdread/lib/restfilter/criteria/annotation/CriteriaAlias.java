@@ -74,6 +74,8 @@ public @interface CriteriaAlias {
      * For basic type (Boolean, String, etc), name may use '.' if back-end is using some Filter class but client code criteria is not using.
      * <br>
      * For filter type, if '.' is used, behavior is unknown. May throw or ignore any character after first '.'.
+     *
+     * @return alias to use for param name
      */
     String value();
 

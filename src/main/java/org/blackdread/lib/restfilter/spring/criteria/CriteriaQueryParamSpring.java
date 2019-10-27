@@ -57,9 +57,13 @@ public interface CriteriaQueryParamSpring extends CriteriaQueryParam {
     }
 
     /**
+     * @param paramName a
+     * @param filter    a
+     * @param builder   a
+     * @return a
      * @deprecated not sure to keep as public API
      */
-    default UriBuilder buildQueryParams(final String paramName, final Filter filter, UriBuilder builder){
+    default UriBuilder buildQueryParams(final String paramName, final Filter filter, UriBuilder builder) {
         final List<FilterQueryParam> filterQueryParams = getFilterQueryParams(paramName, filter);
         for (final FilterQueryParam filterQueryParam : filterQueryParams) {
             builder = builder.queryParam(filterQueryParam.getParamName(), filterQueryParam.getParamValues());
