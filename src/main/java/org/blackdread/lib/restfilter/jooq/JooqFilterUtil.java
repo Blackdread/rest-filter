@@ -139,7 +139,7 @@ public class JooqFilterUtil {
      * @return condition
      * @deprecated prefer {@link #buildCondition(StringFilter, Field)} as it supports conditional ignore case
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     public static <T extends Field<String>> Condition buildConditionIgnoreCase(final StringFilter filter, final T field) {
         if (filter.getEquals() != null) {
             return field.equalIgnoreCase(filter.getEquals());

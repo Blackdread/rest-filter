@@ -23,9 +23,11 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,14 +62,14 @@ class CriteriaQueryParamEnumTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withEnumFilter(boolean matchSubclass) {
-        var criteria = new EnumFilterCriteria();
+        EnumFilterCriteria criteria = new EnumFilterCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("enumField.equals", "ENUM_VAL_1");
         expected.add("enum.equals", "ENUM_VAL_1");
 
@@ -77,14 +79,14 @@ class CriteriaQueryParamEnumTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withEnumValue(boolean matchSubclass) {
-        var criteria = new EnumValueCriteria();
+        EnumValueCriteria criteria = new EnumValueCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("enumField", "ENUM_VAL_1");
         expected.add("enum", "ENUM_VAL_1");
 
@@ -94,14 +96,14 @@ class CriteriaQueryParamEnumTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withEnumArray(boolean matchSubclass) {
-        var criteria = new EnumArrayCriteria();
+        EnumArrayCriteria criteria = new EnumArrayCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<String, String>();
         expected.add("enumArray", "ENUM_VAL_1");
         expected.add("enumArray", "ENUM_VAL_2");
         expected.add("array", "ENUM_VAL_1");
@@ -113,14 +115,14 @@ class CriteriaQueryParamEnumTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withEnumList(boolean matchSubclass) {
-        var criteria = new EnumListCriteria();
+        EnumListCriteria criteria = new EnumListCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("enumList", "ENUM_VAL_1");
         expected.add("enumList", "ENUM_VAL_2");
         expected.add("list", "ENUM_VAL_1");
@@ -173,11 +175,11 @@ class CriteriaQueryParamEnumTest {
     static class EnumListCriteria {
 
         @CriteriaInclude(MyEnum.class)
-        List<MyEnum> enumList = List.of(MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
+        List<MyEnum> enumList = List2.of(MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
 
         @CriteriaInclude(MyEnum.class)
         public List<MyEnum> getList() {
-            return List.of(MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
+            return List2.of(MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
         }
 
     }

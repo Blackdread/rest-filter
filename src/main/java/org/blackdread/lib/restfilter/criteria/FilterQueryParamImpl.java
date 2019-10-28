@@ -26,6 +26,8 @@ package org.blackdread.lib.restfilter.criteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -94,11 +96,11 @@ final class FilterQueryParamImpl implements FilterQueryParam {
     }
 
     private static FilterQueryParam ofSingleValue(final String criteriaName, final String filterPropertyName, final String paramValue) {
-        return new FilterQueryParamImpl(criteriaName, filterPropertyName, paramValue, List.of(paramValue));
+        return new FilterQueryParamImpl(criteriaName, filterPropertyName, paramValue, Collections.singletonList(paramValue));
     }
 
     private static FilterQueryParam ofMultipleValues(final String criteriaName, final String filterPropertyName, final List<String> paramValues) {
-        return new FilterQueryParamImpl(criteriaName, filterPropertyName, String.join(",", paramValues), List.copyOf(paramValues));
+        return new FilterQueryParamImpl(criteriaName, filterPropertyName, String.join(",", paramValues), Collections.unmodifiableList(new ArrayList<>(paramValues)));
     }
 
     private FilterQueryParamImpl(final String criteriaName, final String filterPropertyName, final String paramValue, final List<String> paramValues) {

@@ -3,6 +3,8 @@ package org.blackdread.lib.restfilter.criteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,18 +36,18 @@ final class QueryParamImpl implements QueryParam {
     private QueryParamImpl(final String paramName) {
         this.paramName = Objects.requireNonNull(paramName);
         this.paramValue = null;
-        this.paramValues = List.of();
+        this.paramValues = Collections.emptyList();
     }
 
     private QueryParamImpl(final String paramName, final String paramValue) {
         this.paramName = Objects.requireNonNull(paramName);
         this.paramValue = Objects.requireNonNull(paramValue);
-        this.paramValues = List.of(paramValue);
+        this.paramValues = Collections.singletonList(paramValue);
     }
 
     private QueryParamImpl(final String paramName, final List<String> paramValues) {
         this.paramName = Objects.requireNonNull(paramName);
-        this.paramValues = List.copyOf(paramValues);
+        this.paramValues = Collections.unmodifiableList(new ArrayList<>(paramValues));
         this.paramValue = String.join(",", this.paramValues);
     }
 

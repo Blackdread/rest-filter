@@ -23,6 +23,8 @@
  */
 package org.blackdread.lib.restfilter.criteria.parser.criteria;
 
+import org.blackdread.lib.restfilter.List2;
+import org.blackdread.lib.restfilter.Map2;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 
 import java.util.List;
@@ -45,10 +47,10 @@ public class NoAnnotationCriteria {
         criteria.arrayPrimitiveLong = new long[]{1L, 2L};
         criteria.arrayObjectLong = new Long[]{1L, 2L};
         criteria.arrayLongFilter = new LongFilter[]{new LongFilter(), new LongFilter()};
-        criteria.listLong = List.of(1L, 2L);
-        criteria.listLongFilter = List.of(new LongFilter(), new LongFilter());
-        criteria.mapLong = Map.of("first", 1L, "second", 2L);
-        criteria.mapLongFilter = Map.of("first", new LongFilter(), "second", new LongFilter());
+        criteria.listLong = List2.of(1L, 2L);
+        criteria.listLongFilter = List2.of(new LongFilter(), new LongFilter());
+        criteria.mapLong = Map2.of("first", 1L, "second", 2L);
+        criteria.mapLongFilter = Map2.of("first", new LongFilter(), "second", new LongFilter());
         return criteria;
     }
 

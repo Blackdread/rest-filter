@@ -27,6 +27,7 @@ import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.criteria.parser.CriteriaFieldParserUtil;
 import org.blackdread.lib.restfilter.filter.StringFilter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -65,14 +66,14 @@ class CriteriaQueryParamKeyOnlyTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void canHaveKeyOnly(boolean matchSubclass) {
-        var criteria = new MyCriteria();
+        MyCriteria criteria = new MyCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.addAll("boolTrue", Collections.emptyList());
         expected.addAll("boolean", Collections.emptyList());
 

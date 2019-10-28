@@ -23,9 +23,11 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,14 +62,14 @@ class CriteriaQueryParamLongTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withLongFilter(boolean matchSubclass) {
-        var criteria = new FilterCriteria();
+        FilterCriteria criteria = new FilterCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("filterField.equals", "1");
         expected.add("filter.equals", "1");
 
@@ -77,14 +79,14 @@ class CriteriaQueryParamLongTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withLongValue(boolean matchSubclass) {
-        var criteria = new ValueCriteria();
+        ValueCriteria criteria = new ValueCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("valueField", "1");
         expected.add("value", "1");
 
@@ -94,14 +96,14 @@ class CriteriaQueryParamLongTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withLongArray(boolean matchSubclass) {
-        var criteria = new ArrayCriteria();
+        ArrayCriteria criteria = new ArrayCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("arrayField", "1");
         expected.add("arrayField", "2");
         expected.add("array", "1");
@@ -113,14 +115,14 @@ class CriteriaQueryParamLongTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withLongList(boolean matchSubclass) {
-        var criteria = new ListCriteria();
+        ListCriteria criteria = new ListCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("fieldList", "1");
         expected.add("fieldList", "2");
         expected.add("list", "1");
@@ -173,11 +175,11 @@ class CriteriaQueryParamLongTest {
     static class ListCriteria {
 
         @CriteriaInclude(Long.class)
-        List<Long> fieldList = List.of(1L, 2L);
+        List<Long> fieldList = List2.of(1L, 2L);
 
         @CriteriaInclude(Long.class)
         public List<Long> getList() {
-            return List.of(1L, 2L);
+            return List2.of(1L, 2L);
         }
 
     }

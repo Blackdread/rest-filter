@@ -42,15 +42,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -292,7 +284,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private Optional<QueryParam> getQueryParamForIterable(final CriteriaFieldData fieldData, final String paramName, final Iterable iterable) {
         final Class<?> wrappedType = fieldData.getWrappedType()
-            .orElseThrow();
+            .orElseThrow(NoSuchElementException::new);
 //                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
 
         final Function<Object, String> objectStringFormatter;
@@ -312,7 +304,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private Optional<QueryParam> getQueryParamForIterable(final CriteriaMethodData methodData, final String paramName, final Iterable iterable) {
         final Class<?> wrappedType = methodData.getWrappedType()
-            .orElseThrow();
+            .orElseThrow(NoSuchElementException::new);
 //                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
 
         final Function<Object, String> objectStringFormatter;
@@ -332,7 +324,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private Optional<QueryParam> getQueryParamForArray(final CriteriaFieldData fieldData, final String paramName, final Object array) {
         final Class<?> wrappedType = fieldData.getWrappedType()
-            .orElseThrow();
+            .orElseThrow(NoSuchElementException::new);
 //                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
 
         final Function<Object, String> objectStringFormatter;
@@ -356,7 +348,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private Optional<QueryParam> getQueryParamForArray(final CriteriaMethodData methodData, final String paramName, final Object array) {
         final Class<?> wrappedType = methodData.getWrappedType()
-            .orElseThrow();
+            .orElseThrow(NoSuchElementException::new);
 //                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
 
         final Function<Object, String> objectStringFormatter;

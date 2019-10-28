@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.spring.validation;
 
+import org.blackdread.lib.restfilter.List2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -65,13 +67,13 @@ class FileSizeValidatorTest {
     private FileSizeValidatorForMultipart fileSizeValidatorForMultipart;
 
     private final File notExistFile = new File("fake.txt");
-    private final Path notExistPath = Path.of("fake.txt");
+    private final Path notExistPath = Paths.get("fake.txt");
 
     private final File file1KB = new File("src/test/resources/1KB.txt");
     private final File file1MB = new File("src/test/resources/1MB.txt");
 
-    private final Path path1KB = Path.of("src/test/resources/1KB.txt");
-    private final Path path1MB = Path.of("src/test/resources/1MB.txt");
+    private final Path path1KB = Paths.get("src/test/resources/1KB.txt");
+    private final Path path1MB = Paths.get("src/test/resources/1MB.txt");
 
     private MyPojo myPojo;
 
@@ -129,7 +131,7 @@ class FileSizeValidatorTest {
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.toList());
-        assertEquals(List.of("Failed to get file size: fake.txt"), actualConstraints);
+        assertEquals(Collections.singletonList("Failed to get file size: fake.txt"), actualConstraints);
     }
 
     @Test
@@ -177,7 +179,7 @@ class FileSizeValidatorTest {
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.toList());
-        assertEquals(List.of("File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive)."), actualConstraints);
+        assertEquals(List2.of("File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1000001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive).", "File size must be higher than 1001 bytes (inclusive) and lower than 9223372036854775807 bytes (inclusive)."), actualConstraints);
     }
 
     @Test
@@ -188,7 +190,7 @@ class FileSizeValidatorTest {
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.toList());
-        assertEquals(List.of("File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive)."), actualConstraints);
+        assertEquals(List2.of("File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive).", "File size must be higher than 0 byte (inclusive) and lower than 999999 bytes (inclusive)."), actualConstraints);
     }
 
     @Test
@@ -223,7 +225,7 @@ class FileSizeValidatorTest {
     private static class MyPojo {
 
         @FileSize(groups = NotExist.class, max = Long.MAX_VALUE)
-        private final Path notExistPath = Path.of("fake.txt");
+        private final Path notExistPath = Paths.get("fake.txt");
 
         @FileSize(groups = MinLessThan0.class, min = -1, max = Long.MAX_VALUE)
         @FileSize(groups = MaxLessThan0.class, max = -1)
@@ -248,13 +250,13 @@ class FileSizeValidatorTest {
         @FileSize(groups = FileTooBig.class, max = 999)
         @FileSize(groups = MinInclusive.class, min = 1000, max = Long.MAX_VALUE)
         @FileSize(groups = MaxInclusive.class, max = 1000)
-        private final Path path1KB = Path.of("src/test/resources/1KB.txt");
+        private final Path path1KB = Paths.get("src/test/resources/1KB.txt");
 
         @FileSize(groups = FileTooSmall.class, min = 1_000_001, max = Long.MAX_VALUE)
         @FileSize(groups = FileTooBig.class, max = 999_999)
         @FileSize(groups = MinInclusive.class, min = 1000, max = Long.MAX_VALUE)
         @FileSize(groups = MaxInclusive.class, max = 1_000_000)
-        private final Path path1MB = Path.of("src/test/resources/1MB.txt");
+        private final Path path1MB = Paths.get("src/test/resources/1MB.txt");
 
 
         @FileSize(groups = MinLessThan0.class, min = -1, max = Long.MAX_VALUE)

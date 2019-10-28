@@ -23,9 +23,11 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.BooleanFilter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -60,14 +62,14 @@ class CriteriaQueryParamBooleanTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withBooleanFilter(boolean matchSubclass) {
-        var criteria = new FilterCriteria();
+        FilterCriteria criteria = new FilterCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("filterField.equals", "true");
         expected.add("filter.equals", "true");
 
@@ -77,14 +79,14 @@ class CriteriaQueryParamBooleanTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withBooleanValue(boolean matchSubclass) {
-        var criteria = new ValueCriteria();
+        ValueCriteria criteria = new ValueCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("valueField", "true");
         expected.add("value", "true");
 
@@ -94,14 +96,14 @@ class CriteriaQueryParamBooleanTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withBooleanArray(boolean matchSubclass) {
-        var criteria = new ArrayCriteria();
+        ArrayCriteria criteria = new ArrayCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("arrayField", "true");
         expected.add("arrayField", "false");
         expected.add("array", "true");
@@ -113,14 +115,14 @@ class CriteriaQueryParamBooleanTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withBooleanList(boolean matchSubclass) {
-        var criteria = new ListCriteria();
+        ListCriteria criteria = new ListCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("fieldList", "true");
         expected.add("fieldList", "false");
         expected.add("list", "true");
@@ -173,11 +175,11 @@ class CriteriaQueryParamBooleanTest {
     static class ListCriteria {
 
         @CriteriaInclude(Boolean.class)
-        List<Boolean> fieldList = List.of(true, false);
+        List<Boolean> fieldList = List2.of(true, false);
 
         @CriteriaInclude(Boolean.class)
         public List<Boolean> getList() {
-            return List.of(true, false);
+            return List2.of(true, false);
         }
 
     }

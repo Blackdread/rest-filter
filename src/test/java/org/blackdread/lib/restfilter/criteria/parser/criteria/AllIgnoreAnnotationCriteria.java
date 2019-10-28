@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria.parser.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaIgnore;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.LongFilter;
@@ -46,8 +47,8 @@ public class AllIgnoreAnnotationCriteria {
         criteria.arrayPrimitiveLong = new long[]{1L, 2L};
         criteria.arrayObjectLong = new Long[]{1L, 2L};
         criteria.arrayLongFilter = new LongFilter[]{new LongFilter(), new LongFilter()};
-        criteria.listLong = List.of(1L, 2L);
-        criteria.listLongFilter = List.of(new LongFilter(), new LongFilter());
+        criteria.listLong = List2.of(1L, 2L);
+        criteria.listLongFilter = List2.of(new LongFilter(), new LongFilter());
         return criteria;
     }
 

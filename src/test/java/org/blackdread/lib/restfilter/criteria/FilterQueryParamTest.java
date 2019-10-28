@@ -1,5 +1,6 @@
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -116,7 +117,7 @@ class FilterQueryParamTest {
 
         assertFalse(filterQueryParam.hasMultipleParamValue());
 
-        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List.of(1L, 2L))).get(0);
+        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List2.of(1L, 2L))).get(0);
 
         assertTrue(filterQueryParam2.hasMultipleParamValue());
     }
@@ -127,7 +128,7 @@ class FilterQueryParamTest {
 
         assertTrue(filterQueryParam.isOnlyOneParamValue());
 
-        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List.of(1L, 2L))).get(0);
+        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List2.of(1L, 2L))).get(0);
 
         assertFalse(filterQueryParam2.isOnlyOneParamValue());
     }
@@ -138,7 +139,7 @@ class FilterQueryParamTest {
 
         assertEquals("1", filterQueryParam.getParamValue());
 
-        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List.of(1L, 2L))).get(0);
+        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List2.of(1L, 2L))).get(0);
 
         assertEquals("1,2", filterQueryParam2.getParamValue());
     }
@@ -147,10 +148,10 @@ class FilterQueryParamTest {
     void getParamValues() {
         final FilterQueryParam filterQueryParam = criteriaQueryParam.getFilterQueryParams("a", longFilter).get(0);
 
-        assertEquals(List.of("1"), filterQueryParam.getParamValues());
+        assertEquals(List2.of("1"), filterQueryParam.getParamValues());
 
-        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List.of(1L, 2L))).get(0);
+        final FilterQueryParam filterQueryParam2 = criteriaQueryParam.getFilterQueryParams("a", new LongFilter().setIn(List2.of(1L, 2L))).get(0);
 
-        assertEquals(List.of("1", "2"), filterQueryParam2.getParamValues());
+        assertEquals(List2.of("1", "2"), filterQueryParam2.getParamValues());
     }
 }

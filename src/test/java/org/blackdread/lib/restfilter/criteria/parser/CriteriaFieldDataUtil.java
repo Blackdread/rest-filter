@@ -56,11 +56,11 @@ public class CriteriaFieldDataUtil {
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -78,11 +78,11 @@ public class CriteriaFieldDataUtil {
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -100,11 +100,11 @@ public class CriteriaFieldDataUtil {
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -122,11 +122,11 @@ public class CriteriaFieldDataUtil {
         if(formattedAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -146,11 +146,11 @@ public class CriteriaFieldDataUtil {
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -169,11 +169,11 @@ public class CriteriaFieldDataUtil {
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -192,11 +192,11 @@ public class CriteriaFieldDataUtil {
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 
@@ -215,11 +215,11 @@ public class CriteriaFieldDataUtil {
         if(methodAliasName != null)
             assertTrue(data.getCriteriaAlias().isPresent());
         else
-            assertTrue(data.getCriteriaAlias().isEmpty());
+            assertFalse(data.getCriteriaAlias().isPresent());
         if(wrappedType != null)
             assertTrue(data.getWrappedType().isPresent());
         else
-            assertTrue(data.getWrappedType().isEmpty());
+            assertFalse(data.getWrappedType().isPresent());
         return data;
     }
 }

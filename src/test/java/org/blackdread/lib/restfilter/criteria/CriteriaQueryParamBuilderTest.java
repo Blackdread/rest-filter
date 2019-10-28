@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.filter.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -105,7 +106,7 @@ class CriteriaQueryParamBuilderTest {
         Assertions.assertEquals(5, defaultFilterClassFormatterMap.size());
 
         LongFilter longFilter = new LongFilter();
-        longFilter.setIn(List.of(5L, 6L));
+        longFilter.setIn(List2.of(5L, 6L));
         BigDecimalFilter bigDecimalFilter = new BigDecimalFilter();
         bigDecimalFilter.setEquals(BigDecimal.TEN);
         CustomFilterEnum customFilterEnum = new CustomFilterEnum();

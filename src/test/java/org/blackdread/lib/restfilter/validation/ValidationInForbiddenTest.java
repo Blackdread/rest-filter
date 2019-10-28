@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.validation;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.Criteria;
 import org.blackdread.lib.restfilter.criteria.CriteriaUtil;
 import org.blackdread.lib.restfilter.criteria.CriteriaUtilTest;
@@ -38,7 +39,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -74,7 +74,7 @@ class ValidationInForbiddenTest {
 
     @Test
     void hasViolation() {
-        myCriteria.longFilter = CriteriaUtil.buildInCriteria(List.of(5L, 6L));
+        myCriteria.longFilter = CriteriaUtil.buildInCriteria(List2.of(5L, 6L));
 
         final Set<ConstraintViolation<MyCriteria>> constraintViolations = validator.validate(myCriteria);
 
@@ -97,7 +97,7 @@ class ValidationInForbiddenTest {
     void violationCanBeTranslated() {
         Locale.setDefault(Locale.FRANCE);
 
-        myCriteria.longFilter = CriteriaUtil.buildInCriteria(List.of(5L, 6L));
+        myCriteria.longFilter = CriteriaUtil.buildInCriteria(List2.of(5L, 6L));
 
         final Set<ConstraintViolation<MyCriteria>> constraintViolations = validator.validate(myCriteria);
 

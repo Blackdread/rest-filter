@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.validation;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.Criteria;
 import org.blackdread.lib.restfilter.criteria.CriteriaUtilTest;
 import org.blackdread.lib.restfilter.filter.LongFilter;
@@ -88,7 +89,7 @@ class ValidationFilterRestrictTest {
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.toList());
-        assertEquals(List.of("Contains filter is not allowed", "Equals filter is not allowed", "Equals filter is not allowed", "GreaterThan filter is not allowed", "GreaterThanOrEqual filter is not allowed", "In filter is not allowed", "In filter is not allowed", "LessThan filter is not allowed", "LessThanOrEqual filter is not allowed", "NotContains filter is not allowed", "NotEquals filter is not allowed", "NotEquals filter is not allowed", "NotIn filter is not allowed", "NotIn filter is not allowed", "Specified filter is not allowed", "Specified filter is not allowed"), actualConstraints);
+        assertEquals(List2.of("Contains filter is not allowed", "Equals filter is not allowed", "Equals filter is not allowed", "GreaterThan filter is not allowed", "GreaterThanOrEqual filter is not allowed", "In filter is not allowed", "In filter is not allowed", "LessThan filter is not allowed", "LessThanOrEqual filter is not allowed", "NotContains filter is not allowed", "NotEquals filter is not allowed", "NotEquals filter is not allowed", "NotIn filter is not allowed", "NotIn filter is not allowed", "Specified filter is not allowed", "Specified filter is not allowed"), actualConstraints);
     }
 
     @Test
@@ -117,7 +118,7 @@ class ValidationFilterRestrictTest {
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.toList());
-        assertEquals(List.of("Le filtre Contains n'est pas autorisé", "Le filtre Equals n'est pas autorisé", "Le filtre Equals n'est pas autorisé", "Le filtre GreaterThan n'est pas autorisé", "Le filtre GreaterThanOrEqual n'est pas autorisé", "Le filtre In n'est pas autorisé", "Le filtre In n'est pas autorisé", "Le filtre LessThan n'est pas autorisé", "Le filtre LessThanOrEqual n'est pas autorisé", "Le filtre NotContains n'est pas autorisé", "Le filtre NotEquals n'est pas autorisé", "Le filtre NotEquals n'est pas autorisé", "Le filtre NotIn n'est pas autorisé", "Le filtre NotIn n'est pas autorisé", "Le filtre Specified n'est pas autorisé", "Le filtre Specified n'est pas autorisé"), actualConstraints);
+        assertEquals(List2.of("Le filtre Contains n'est pas autorisé", "Le filtre Equals n'est pas autorisé", "Le filtre Equals n'est pas autorisé", "Le filtre GreaterThan n'est pas autorisé", "Le filtre GreaterThanOrEqual n'est pas autorisé", "Le filtre In n'est pas autorisé", "Le filtre In n'est pas autorisé", "Le filtre LessThan n'est pas autorisé", "Le filtre LessThanOrEqual n'est pas autorisé", "Le filtre NotContains n'est pas autorisé", "Le filtre NotEquals n'est pas autorisé", "Le filtre NotEquals n'est pas autorisé", "Le filtre NotIn n'est pas autorisé", "Le filtre NotIn n'est pas autorisé", "Le filtre Specified n'est pas autorisé", "Le filtre Specified n'est pas autorisé"), actualConstraints);
     }
 
     @Test

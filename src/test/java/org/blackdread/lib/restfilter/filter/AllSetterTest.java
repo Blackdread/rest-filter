@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.filter;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.CriteriaUtilTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +37,6 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -66,8 +66,8 @@ class AllSetterTest {
         CriteriaUtilTest.fillAll(filter, value, value2);
         assertEquals(value, filter.getEquals());
         assertEquals(value, filter.getNotEquals());
-        assertEquals(List.of(value,value2), filter.getIn());
-        assertEquals(List.of(value,value2), filter.getNotIn());
+        assertEquals(List2.of(value,value2), filter.getIn());
+        assertEquals(List2.of(value,value2), filter.getNotIn());
         assertEquals(true, filter.getSpecified());
     }
 
@@ -92,8 +92,8 @@ class AllSetterTest {
         CriteriaUtilTest.fillAll(filter, value, value2);
         assertEquals(value, filter.getEquals());
         assertEquals(value, filter.getNotEquals());
-        assertEquals(List.of(value,value2), filter.getIn());
-        assertEquals(List.of(value,value2), filter.getNotIn());
+        assertEquals(List2.of(value,value2), filter.getIn());
+        assertEquals(List2.of(value,value2), filter.getNotIn());
         assertEquals(true, filter.getSpecified());
         assertEquals(value, filter.getGreaterThan());
         assertEquals(value, filter.getGreaterThanOrEqual());
@@ -107,8 +107,8 @@ class AllSetterTest {
         CriteriaUtilTest.fillAll(filter);
         assertEquals("any", filter.getEquals());
         assertEquals("any", filter.getNotEquals());
-        assertEquals(List.of("any","any2"), filter.getIn());
-        assertEquals(List.of("any","any2"), filter.getNotIn());
+        assertEquals(List2.of("any","any2"), filter.getIn());
+        assertEquals(List2.of("any","any2"), filter.getNotIn());
         assertEquals(true, filter.getSpecified());
         assertEquals("any", filter.getContains());
         assertEquals("any", filter.getNotContains());

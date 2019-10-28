@@ -23,9 +23,11 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.annotation.CriteriaInclude;
 import org.blackdread.lib.restfilter.filter.InstantFilter;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
+import org.blackdread.lib.restfilter.util.MultiValueMap;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -64,14 +66,14 @@ class CriteriaQueryParamInstantTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withInstantFilter(boolean matchSubclass) {
-        var criteria = new FilterCriteria();
+        FilterCriteria criteria = new FilterCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("filterField.equals", "2019-10-27T20:10:10Z");
         expected.add("filter.equals", "2019-10-27T20:10:10Z");
 
@@ -81,14 +83,14 @@ class CriteriaQueryParamInstantTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withInstantValue(boolean matchSubclass) {
-        var criteria = new ValueCriteria();
+        ValueCriteria criteria = new ValueCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("valueField", "2019-10-27T20:10:10Z");
         expected.add("value", "2019-10-27T20:10:10Z");
 
@@ -98,14 +100,14 @@ class CriteriaQueryParamInstantTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withInstantArray(boolean matchSubclass) {
-        var criteria = new ArrayCriteria();
+        ArrayCriteria criteria = new ArrayCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<String, String>();
         expected.add("arrayField", "2019-10-27T20:10:10Z");
         expected.add("arrayField", "2020-02-02T02:10:10Z");
         expected.add("array", "2019-10-27T20:10:10Z");
@@ -117,14 +119,14 @@ class CriteriaQueryParamInstantTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void withInstantList(boolean matchSubclass) {
-        var criteria = new ListCriteria();
+        ListCriteria criteria = new ListCriteria();
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(criteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("fieldList", "2019-10-27T20:10:10Z");
         expected.add("fieldList", "2020-02-02T02:10:10Z");
         expected.add("list", "2019-10-27T20:10:10Z");
@@ -177,11 +179,11 @@ class CriteriaQueryParamInstantTest {
     static class ListCriteria {
 
         @CriteriaInclude(Instant.class)
-        List<Instant> fieldList = List.of(instant1, instant2);
+        List<Instant> fieldList = List2.of(instant1, instant2);
 
         @CriteriaInclude(Instant.class)
         public List<Instant> getList() {
-            return List.of(instant1, instant2);
+            return List2.of(instant1, instant2);
         }
 
     }

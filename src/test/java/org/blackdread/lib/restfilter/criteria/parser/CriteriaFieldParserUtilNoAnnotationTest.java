@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria.parser;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.criteria.parser.criteria.NoAnnotationCriteria;
 import org.blackdread.lib.restfilter.filter.LongFilter;
 import org.junit.jupiter.api.AfterEach;
@@ -30,8 +31,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -70,7 +69,7 @@ class CriteriaFieldParserUtilNoAnnotationTest {
 
         log.info("result: {}", result);
 
-        assertEquals(List.of(), result.getMethods());
+        assertEquals(List2.of(), result.getMethods());
 
         assertEquals(1, result.getFields().size());
         CriteriaFieldDataUtil.checkFilter(result.getFields(), 0, "longFilter", LongFilter.class, null, null);

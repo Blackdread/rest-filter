@@ -58,7 +58,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     default <X> Specification<ENTITY> buildSpecification(Filter<X> filter, SingularAttribute<? super ENTITY, X> field) {
         return buildSpecification(filter, root -> root.get(field));
     }
@@ -169,7 +169,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     default <X extends Comparable<? super X>> Specification<ENTITY> buildRangeSpecification(RangeFilter<X> filter,
                                                                                             SingularAttribute<? super ENTITY, X> field) {
         return buildSpecification(filter, root -> root.get(field));
@@ -237,7 +237,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SingularAttribute<? super ENTITY, OTHER> reference,
                                                                                SingularAttribute<? super OTHER, X> valueField) {
@@ -263,7 +263,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     default <OTHER, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                SetAttribute<ENTITY, OTHER> reference,
                                                                                SingularAttribute<OTHER, X> valueField) {
@@ -293,7 +293,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     default <OTHER, MISC, X> Specification<ENTITY> buildReferringEntitySpecification(Filter<X> filter,
                                                                                      Function<Root<ENTITY>, SetJoin<MISC, OTHER>> functionToEntity,
                                                                                      Function<SetJoin<MISC, OTHER>, Expression<X>> entityToColumn) {
@@ -339,7 +339,7 @@ public interface QueryService<ENTITY> {
      * @return a Specification
      * @deprecated prefer methods with metaclassFunction
      */
-    @Deprecated(since = "2.0.1", forRemoval = true)
+    @Deprecated
     default <OTHER, X extends Comparable<? super X>> Specification<ENTITY> buildReferringEntitySpecification(RangeFilter<X> filter,
                                                                                                              SetAttribute<ENTITY, OTHER> reference,
                                                                                                              SingularAttribute<OTHER, X> valueField) {
@@ -453,13 +453,13 @@ public interface QueryService<ENTITY> {
         return (root, query, builder) -> builder.notLike(builder.upper(metaclassFunction.apply(root)), wrapLikeUpperQuery(value));
     }
 
-    @Deprecated(since = "2.0.1")
+    @Deprecated
     default Specification<ENTITY> likeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
                                                          String value) {
         return likeIgnoreCaseSpecification(metaclassFunction, value);
     }
 
-    @Deprecated(since = "2.0.1")
+    @Deprecated
     default Specification<ENTITY> notLikeUpperSpecification(Function<Root<ENTITY>, Expression<String>> metaclassFunction,
                                                             String value) {
         return notLikeIgnoreCaseSpecification(metaclassFunction, value);

@@ -23,6 +23,7 @@
  */
 package org.blackdread.lib.restfilter.criteria;
 
+import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.filter.*;
 import org.blackdread.lib.restfilter.util.LinkedMultiValueMap;
 import org.blackdread.lib.restfilter.util.MultiValueMap;
@@ -127,12 +128,12 @@ class CriteriaQueryParamTest {
 
         myCriteria.id = CriteriaUtil.buildEqualsCriteria(5L);
         myCriteria.name = CriteriaUtil.buildEqualsCriteria("aaa");
-        myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List.of("bbb", "ccc"));
+        myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List2.of("bbb", "ccc"));
         myCriteria.active = CriteriaUtil.buildEqualsCriteria(false);
 
-        var result = criteriaQueryParam.buildQueryParamsMap(myCriteria);
+        final MultiValueMap<String, String> result = criteriaQueryParam.buildQueryParamsMap(myCriteria);
 
-        var expected = new LinkedMultiValueMap<>();
+        final MultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("duration.equals", "PT55M");
         expected.add("name.equals", "aaa");
         expected.add("name.in", "bbb");
@@ -150,10 +151,10 @@ class CriteriaQueryParamTest {
 
         myCriteria.id = CriteriaUtil.buildEqualsCriteria(5L);
         myCriteria.name = CriteriaUtil.buildEqualsCriteria("aaa");
-        myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List.of("bbb", "ccc"));
+        myCriteria.name = CriteriaUtil.buildInCriteria(myCriteria.name, List2.of("bbb", "ccc"));
         myCriteria.active = CriteriaUtil.buildEqualsCriteria(false);
 
-        var result = criteriaQueryParam.buildQueryParamsMap((Object) myCriteria);
+        final MultiValueMap<String, String> result = criteriaQueryParam.buildQueryParamsMap((Object) myCriteria);
 
         LinkedMultiValueMap<String, String> expected = new LinkedMultiValueMap<>();
         expected.add("duration.equals", "PT55M");
@@ -168,7 +169,7 @@ class CriteriaQueryParamTest {
 
     @Test
     void customFormatterMatchByClassOnlyAndNoSubclass() {
-        var filter = new CustomLongFilter();
+        CustomLongFilter filter = new CustomLongFilter();
         CriteriaUtilTest.fillAll(filter, 1L, 2L);
 
         myCriteria.id = filter;
@@ -188,12 +189,12 @@ class CriteriaQueryParamTest {
 
     @Test
     void defaultFormatterMatchByClassOnlyAndNoSubclass() {
-        var filter = new CustomLongFilter();
+        CustomLongFilter filter = new CustomLongFilter();
         CriteriaUtilTest.fillAll(filter, 1L, 2L);
 
         myCriteria.id = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(true)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -216,7 +217,7 @@ class CriteriaQueryParamTest {
 
     @Test
     void defaultFormatterCanMatchSubclass() {
-        var filter = new CustomLongFilter();
+        CustomLongFilter filter = new CustomLongFilter();
         CriteriaUtilTest.fillAll(filter, 1L, 2L);
 
         myCriteria.id = filter;
@@ -232,10 +233,10 @@ class CriteriaQueryParamTest {
     @Test
     void buildWithManyEnum() {
         // todo configure multi enum type in builder
-        var filter = new MyEnumFilter();
+        MyEnumFilter filter = new MyEnumFilter();
         filter.setEquals(MyEnum.ENUM_VAL_1);
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .withTypeFormatter(MyEnum.class, myEnum -> "prefix-" + myEnum.name())
             .build()
             .buildQueryParamsMap("myEnum", filter);
@@ -249,12 +250,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithEnum(boolean matchSubclass) {
-        var filter = new MyEnumFilter();
+        MyEnumFilter filter = new MyEnumFilter();
         CriteriaUtilTest.fillAll(filter, MyEnum.ENUM_VAL_1, MyEnum.ENUM_VAL_2);
 
         myCriteria.myEnum = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -274,12 +275,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithLong(boolean matchSubclass) {
-        var filter = new LongFilter();
+        LongFilter filter = new LongFilter();
         CriteriaUtilTest.fillAll(filter, 1L, 2L);
 
         myCriteria.id = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -303,12 +304,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithInteger(boolean matchSubclass) {
-        var filter = new IntegerFilter();
+        IntegerFilter filter = new IntegerFilter();
         CriteriaUtilTest.fillAll(filter, 1, 2);
 
         myCriteria.count = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -332,12 +333,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithDouble(boolean matchSubclass) {
-        var filter = new DoubleFilter();
+        DoubleFilter filter = new DoubleFilter();
         CriteriaUtilTest.fillAll(filter, 1.01, 2.02);
 
         myCriteria.aDouble = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -361,12 +362,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithFloat(boolean matchSubclass) {
-        var filter = new FloatFilter();
+        FloatFilter filter = new FloatFilter();
         CriteriaUtilTest.fillAll(filter, 1.01f, 2.02f);
 
         myCriteria.aFloat = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -390,12 +391,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithBigDecimal(boolean matchSubclass) {
-        var filter = new BigDecimalFilter();
+        BigDecimalFilter filter = new BigDecimalFilter();
         CriteriaUtilTest.fillAll(filter, BigDecimal.valueOf(1555.0351), BigDecimal.valueOf(155566.03519));
 
         myCriteria.total = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -419,12 +420,12 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithBoolean(boolean matchSubclass) {
-        var filter = new BooleanFilter();
+        BooleanFilter filter = new BooleanFilter();
         CriteriaUtilTest.fillAll(filter, true, false);
 
         myCriteria.active = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -444,16 +445,16 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithDuration(boolean matchSubclass) {
-        var filter = new DurationFilter();
-        var value1 = Duration.ofSeconds(959599774);
-        var value2 = Duration.ofSeconds(314623697);
+        DurationFilter filter = new DurationFilter();
+        Duration value1 = Duration.ofSeconds(959599774);
+        Duration value2 = Duration.ofSeconds(314623697);
         CriteriaUtilTest.fillAll(filter, value1, value2);
-        var v1 = value1.toString();
-        var v2 = value2.toString();
+        String v1 = value1.toString();
+        String v2 = value2.toString();
 
         myCriteria.duration = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -477,16 +478,16 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithInstant(boolean matchSubclass) {
-        var filter = new InstantFilter();
-        var value1 = Instant.parse("2019-01-05T09:05:35Z");
-        var value2 = Instant.parse("1999-12-05T09:05:35Z");
+        InstantFilter filter = new InstantFilter();
+        Instant value1 = Instant.parse("2019-01-05T09:05:35Z");
+        Instant value2 = Instant.parse("1999-12-05T09:05:35Z");
         CriteriaUtilTest.fillAll(filter, value1, value2);
-        var v1 = value1.toString();
-        var v2 = value2.toString();
+        String v1 = value1.toString();
+        String v2 = value2.toString();
 
         myCriteria.createTime = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -510,16 +511,16 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithLocalDate(boolean matchSubclass) {
-        var filter = new LocalDateFilter();
-        var value1 = LocalDate.parse("2019-01-05");
-        var value2 = LocalDate.parse("1999-12-05");
+        LocalDateFilter filter = new LocalDateFilter();
+        LocalDate value1 = LocalDate.parse("2019-01-05");
+        LocalDate value2 = LocalDate.parse("1999-12-05");
         CriteriaUtilTest.fillAll(filter, value1, value2);
-        var v1 = value1.toString();
-        var v2 = value2.toString();
+        String v1 = value1.toString();
+        String v2 = value2.toString();
 
         myCriteria.localDate = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -543,16 +544,16 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithShort(boolean matchSubclass) {
-        var filter = new ShortFilter();
+        ShortFilter filter = new ShortFilter();
         short value1 = 1;
         short value2 = 2;
         CriteriaUtilTest.fillAll(filter, value1, value2);
-        var v1 = Short.toString(value1);
-        var v2 = Short.toString(value2);
+        String v1 = Short.toString(value1);
+        String v2 = Short.toString(value2);
 
         myCriteria.aShort = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -576,15 +577,15 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithString(boolean matchSubclass) {
-        var filter = new StringFilter();
+        StringFilter filter = new StringFilter();
         CriteriaUtilTest.fillAll(filter);
-        var v1 = "any";
-        var v2 = "any2";
+        String v1 = "any";
+        String v2 = "any2";
 
         myCriteria.name = filter;
         myCriteria.name.setIgnoreCase(false);
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -607,16 +608,16 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithUUID(boolean matchSubclass) {
-        var filter = new UUIDFilter();
-        var value1 = UUID.randomUUID();
-        var value2 = UUID.randomUUID();
+        UUIDFilter filter = new UUIDFilter();
+        UUID value1 = UUID.randomUUID();
+        UUID value2 = UUID.randomUUID();
         CriteriaUtilTest.fillAll(filter, value1, value2);
-        var v1 = value1.toString();
-        var v2 = value2.toString();
+        String v1 = value1.toString();
+        String v2 = value2.toString();
 
         myCriteria.uuid = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
@@ -639,16 +640,16 @@ class CriteriaQueryParamTest {
     @ValueSource(booleans = {true, false})
     @ParameterizedTest
     void buildWithZonedDateTime(boolean matchSubclass) {
-        var filter = new ZonedDateTimeFilter();
-        var value1 = ZonedDateTime.parse("2019-01-05T09:05:35+05:35");
-        var value2 = ZonedDateTime.parse("1999-12-05T09:05:35-10:10");
+        ZonedDateTimeFilter filter = new ZonedDateTimeFilter();
+        ZonedDateTime value1 = ZonedDateTime.parse("2019-01-05T09:05:35+05:35");
+        ZonedDateTime value2 = ZonedDateTime.parse("1999-12-05T09:05:35-10:10");
         CriteriaUtilTest.fillAll(filter, value1, value2);
-        var v1 = value1.toString();
-        var v2 = value2.toString();
+        String v1 = value1.toString();
+        String v2 = value2.toString();
 
         myCriteria.zonedDateTime = filter;
 
-        var result = builder
+        MultiValueMap<String, String> result = builder
             .matchSubclassForDefaultFilterFormatters(matchSubclass)
             .build()
             .buildQueryParamsMap(myCriteria);
