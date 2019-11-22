@@ -12,6 +12,8 @@ It tries to make use of Spring Framework optional but filters already have some 
 
 If Spring Framework is used, it will be added only in specific package and dependencies will be made optional (true) to limit impact if not used.
 
+Support java 8+.
+
 # Filter of enum
 When need to filter on an enum, just declare a class or static class like:
     
