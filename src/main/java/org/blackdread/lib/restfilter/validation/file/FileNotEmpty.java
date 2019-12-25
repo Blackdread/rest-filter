@@ -40,6 +40,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <p>Created on 22/04/2018</p>
  *
  * @author Yoann CAPLAIN
+ * @since 2.2.1
  */
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
 @Retention(RUNTIME)

@@ -10,3 +10,6 @@ org.blackdread.lib.restfilter.validation.file.internal.IsAbsolutePathValidatorFo
 org.blackdread.lib.restfilter.validation.file.internal.IsAbsolutePathValidatorForPath
 org.blackdread.lib.restfilter.validation.file.internal.PathExistValidatorForFile
 org.blackdread.lib.restfilter.validation.file.internal.PathExistValidatorForPath
+org.blackdread.lib.restfilter.validation.nullability.internal.AllOrNoneNullValidator
+org.blackdread.lib.restfilter.validation.nullability.internal.NullOrMaxNotNullValidator
+org.blackdread.lib.restfilter.validation.nullability.internal.OneNotNullValidator

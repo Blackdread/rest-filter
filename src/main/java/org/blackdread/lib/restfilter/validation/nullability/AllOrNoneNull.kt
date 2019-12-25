@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019-2020 Yoann CAPLAIN
+ * Copyright (c) 2018-2020 Yoann CAPLAIN
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,48 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation.file;
+package org.blackdread.lib.restfilter.validation.nullability
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Repeatable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.*;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import javax.validation.Constraint
+import javax.validation.Payload
+import kotlin.annotation.AnnotationRetention.RUNTIME
+import kotlin.annotation.AnnotationTarget.ANNOTATION_CLASS
+import kotlin.annotation.AnnotationTarget.CLASS
+import kotlin.reflect.KClass
 
 /**
- * Asserts that the annotated File or Path exist.
- * <p>Created on 2018/4/5.</p>
+ * Check that fields passed **are all null** or **all are not null**.
+ *
+ * If any field is not found by reflection, it will throw an exception.
+ *
+ * At least two field names must be passed otherwise throw exception.
+ *
+ * Same behavior can be done with [org.hibernate.validator.constraints.ScriptAssert] but here is easier
+ *
+ * <p>Created on 2019/12/22.</p>
  *
  * @author Yoann CAPLAIN
  * @since 2.2.1
  */
-@Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
+@MustBeDocumented
+@Constraint(validatedBy = [])
+@Target(ANNOTATION_CLASS, CLASS)
 @Retention(RUNTIME)
-@Constraint(validatedBy = {})
-@Documented
-@Repeatable(PathExist.List.class)
-public @interface PathExist {
+@Repeatable
+annotation class AllOrNoneNull(
 
-    String message() default "{org.blackdread.lib.restfilter.validation.PathExist.message}";
+    val message: String = "{org.blackdread.lib.restfilter.validation.AllOrNoneNull.message}",
 
-    Class<?>[] groups() default {};
+    val groups: Array<KClass<out Any>> = [],
 
-    Class<? extends Payload>[] payload() default {};
+    val payload: Array<KClass<out Payload>> = [],
 
     /**
-     * Defines several {@link PathExist} annotations on the same element.
-     *
-     * @see PathExist
+     * Field names
      */
-    @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER})
-    @Retention(RUNTIME)
-    @Documented
-    @interface List {
-
-        PathExist[] value();
-    }
-}
+    val value: Array<String> = []
+)
