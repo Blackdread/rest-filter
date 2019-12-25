@@ -67,6 +67,8 @@ public @interface FileExtension {
     String[] value();
 
     /**
+     * If true, {@link #value()} defines extensions forbidden
+     *
      * @return if true, result of isValid is inverse
      */
     boolean inverse() default false;
