@@ -21,3 +21,7 @@
 //    exports org.blackdread.lib.restfilter.spring.filter;
 //    exports org.blackdread.lib.restfilter.spring.sort;
 //}
+
+// TODO See later
+// https://docs.jboss.org/hibernate/stable/validator/reference/en-US/html_single/#section-resource-bundle-locator
+// https://in.relation.to/2016/06/17/bean-validation-and-the-jigsaw-liaison/
