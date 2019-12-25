@@ -41,6 +41,6 @@ public class FileSizeValidatorForFile extends FileSizeValidator implements Const
         if (value == null)
             return true;
         final long fileSize = value.length();
-        return fileSize > minBytes && fileSize < maxBytes;
+        return fileSize >= minBytes && fileSize <= maxBytes;
     }
 }

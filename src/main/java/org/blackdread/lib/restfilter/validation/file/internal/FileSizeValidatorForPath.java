@@ -47,8 +47,12 @@ public class FileSizeValidatorForPath extends FileSizeValidator implements Const
         try {
             fileSize = Files.size(value);
         } catch (IOException e) {
-            throw new UncheckedIOException("Failed to get file size", e);
+            context.disableDefaultConstraintViolation();
+            context
+                .buildConstraintViolationWithTemplate("Failed to get file size: " + e.getMessage())
+                .addConstraintViolation();
+            return false;
         }
-        return fileSize > minBytes && fileSize < maxBytes;
+        return fileSize >= minBytes && fileSize <= maxBytes;
     }
 }

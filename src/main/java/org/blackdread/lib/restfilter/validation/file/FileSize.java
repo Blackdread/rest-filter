@@ -59,12 +59,16 @@ public @interface FileSize {
 //    Class<? extends FileUploadValidation> service();
 
     /**
-     * @return minBytes file size accepted in Bytes, must be higher or equal to
+     * 1 Byte = 8 bit
+     *
+     * @return minBytes file size accepted in <b>Bytes</b>, must be higher or equal to
      */
     long min() default 0;
 
     /**
-     * @return maxBytes file size accepted in Bytes, must be lower or equal to
+     * 1 Byte = 8 bit
+     *
+     * @return maxBytes file size accepted in <b>Bytes</b>, must be lower or equal to
      */
     long max();
 
