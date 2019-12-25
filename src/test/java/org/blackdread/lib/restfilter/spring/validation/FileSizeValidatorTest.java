@@ -24,6 +24,11 @@
 package org.blackdread.lib.restfilter.spring.validation;
 
 import org.blackdread.lib.restfilter.List2;
+import org.blackdread.lib.restfilter.validation.file.FileSize;
+import org.blackdread.lib.restfilter.validation.file.internal.FileSizeValidatorForFile;
+import org.blackdread.lib.restfilter.validation.file.internal.FileSizeValidatorForMultipartFile;
+import org.blackdread.lib.restfilter.validation.file.internal.FileSizeValidatorForPart;
+import org.blackdread.lib.restfilter.validation.file.internal.FileSizeValidatorForPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +69,7 @@ class FileSizeValidatorTest {
     private FileSizeValidatorForPath fileSizeValidatorForPath;
     private FileSizeValidatorForFile fileSizeValidatorForFile;
     private FileSizeValidatorForPart fileSizeValidatorForPart;
-    private FileSizeValidatorForMultipart fileSizeValidatorForMultipart;
+    private FileSizeValidatorForMultipartFile fileSizeValidatorForMultipart;
 
     private final File notExistFile = new File("fake.txt");
     private final Path notExistPath = Paths.get("fake.txt");
@@ -89,7 +94,7 @@ class FileSizeValidatorTest {
         fileSizeValidatorForPath = new FileSizeValidatorForPath();
         fileSizeValidatorForFile = new FileSizeValidatorForFile();
         fileSizeValidatorForPart = new FileSizeValidatorForPart();
-        fileSizeValidatorForMultipart = new FileSizeValidatorForMultipart();
+        fileSizeValidatorForMultipart = new FileSizeValidatorForMultipartFile();
 
         myPojo = new MyPojo();
     }
