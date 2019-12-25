@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria;
+
+import org.blackdread.lib.restfilter.validation.criteria.internal.GreaterThanOrEqualForbiddenValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -32,7 +34,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.blackdread.lib.restfilter.validation.EqualsForbidden.List;
+import static org.blackdread.lib.restfilter.validation.criteria.GreaterThanOrEqualForbidden.List;
 
 /**
  *
@@ -41,27 +43,27 @@ import static org.blackdread.lib.restfilter.validation.EqualsForbidden.List;
  * @author Yoann CAPLAIN
  */
 @Documented
-@Constraint(validatedBy = EqualsForbiddenValidator.class)
+@Constraint(validatedBy = GreaterThanOrEqualForbiddenValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Repeatable(List.class)
-public @interface EqualsForbidden {
+public @interface GreaterThanOrEqualForbidden {
 
-    String message() default "{org.blackdread.lib.restfilter.validation.EqualsForbidden.message}";
+    String message() default "{org.blackdread.lib.restfilter.validation.GreaterThanOrEqualForbidden.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Defines several {@code @EqualsForbidden} constraints on the same element.
+     * Defines several {@code @GreaterThanOrEqualForbidden} constraints on the same element.
      *
-     * @see EqualsForbidden
+     * @see GreaterThanOrEqualForbidden
      */
     @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
     @Retention(RUNTIME)
     @Documented
     public @interface List {
-        EqualsForbidden[] value();
+        GreaterThanOrEqualForbidden[] value();
     }
 }

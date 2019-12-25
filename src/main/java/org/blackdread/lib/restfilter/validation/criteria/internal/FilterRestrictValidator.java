@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria.internal;
 
 import org.blackdread.lib.restfilter.filter.Filter;
 import org.blackdread.lib.restfilter.filter.RangeFilter;
 import org.blackdread.lib.restfilter.filter.StringFilter;
+import org.blackdread.lib.restfilter.validation.criteria.FilterRestrict;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

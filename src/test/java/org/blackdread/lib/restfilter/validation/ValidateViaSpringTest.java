@@ -2,6 +2,12 @@ package org.blackdread.lib.restfilter.validation;
 
 import org.blackdread.lib.restfilter.List2;
 import org.blackdread.lib.restfilter.filter.LongFilter;
+import org.blackdread.lib.restfilter.validation.criteria.EqualsForbidden;
+import org.blackdread.lib.restfilter.validation.criteria.FilterRestrict;
+import org.blackdread.lib.restfilter.validation.criteria.GreaterThanForbidden;
+import org.blackdread.lib.restfilter.validation.criteria.InForbidden;
+import org.blackdread.lib.restfilter.validation.criteria.LessThanForbidden;
+import org.blackdread.lib.restfilter.validation.criteria.NotInForbidden;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

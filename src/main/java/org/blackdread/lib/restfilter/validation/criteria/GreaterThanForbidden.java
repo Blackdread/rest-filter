@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria;
+
+import org.blackdread.lib.restfilter.validation.criteria.internal.GreaterThanForbiddenValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -32,7 +34,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.blackdread.lib.restfilter.validation.ContainsForbidden.List;
+import static org.blackdread.lib.restfilter.validation.criteria.GreaterThanForbidden.List;
 
 /**
  *
@@ -41,27 +43,27 @@ import static org.blackdread.lib.restfilter.validation.ContainsForbidden.List;
  * @author Yoann CAPLAIN
  */
 @Documented
-@Constraint(validatedBy = ContainsForbiddenValidator.class)
+@Constraint(validatedBy = GreaterThanForbiddenValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Repeatable(List.class)
-public @interface ContainsForbidden {
+public @interface GreaterThanForbidden {
 
-    String message() default "{org.blackdread.lib.restfilter.validation.ContainsForbidden.message}";
+    String message() default "{org.blackdread.lib.restfilter.validation.GreaterThanForbidden.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Defines several {@code @ContainsForbidden} constraints on the same element.
+     * Defines several {@code @GreaterThanForbidden} constraints on the same element.
      *
-     * @see ContainsForbidden
+     * @see GreaterThanForbidden
      */
     @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
     @Retention(RUNTIME)
     @Documented
     public @interface List {
-        ContainsForbidden[] value();
+        GreaterThanForbidden[] value();
     }
 }

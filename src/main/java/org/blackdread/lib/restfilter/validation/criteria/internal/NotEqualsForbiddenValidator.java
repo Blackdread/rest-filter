@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria.internal;
 
-import org.blackdread.lib.restfilter.filter.RangeFilter;
+import org.blackdread.lib.restfilter.filter.Filter;
+import org.blackdread.lib.restfilter.validation.criteria.NotEqualsForbidden;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,20 +34,20 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author Yoann CAPLAIN
  */
-public class LessThanForbiddenValidator implements ConstraintValidator<LessThanForbidden, RangeFilter<?>> {
+public class NotEqualsForbiddenValidator implements ConstraintValidator<NotEqualsForbidden, Filter<?>> {
 
-//    private static final Logger log = LoggerFactory.getLogger(LessThanForbiddenValidator.class);
+//    private static final Logger log = LoggerFactory.getLogger(NotEqualsForbiddenValidator.class);
 
     @Override
-    public void initialize(LessThanForbidden constraintAnnotation) {
+    public void initialize(NotEqualsForbidden constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(RangeFilter<?> value, ConstraintValidatorContext context) {
+    public boolean isValid(Filter<?> value, ConstraintValidatorContext context) {
         if (value == null)
             return true;
 
-        return value.getLessThan() == null;
+        return value.getNotEquals() == null;
     }
 
 }

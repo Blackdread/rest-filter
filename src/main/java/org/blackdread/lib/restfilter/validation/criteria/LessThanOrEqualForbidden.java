@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria;
+
+import org.blackdread.lib.restfilter.validation.criteria.internal.LessThanOrEqualForbiddenValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -32,7 +34,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.blackdread.lib.restfilter.validation.LessThanOrEqualForbidden.List;
+import static org.blackdread.lib.restfilter.validation.criteria.LessThanOrEqualForbidden.List;
 
 /**
  *

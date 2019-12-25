@@ -28,6 +28,8 @@ import org.blackdread.lib.restfilter.criteria.Criteria;
 import org.blackdread.lib.restfilter.criteria.CriteriaUtil;
 import org.blackdread.lib.restfilter.criteria.CriteriaUtilTest;
 import org.blackdread.lib.restfilter.filter.LongFilter;
+import org.blackdread.lib.restfilter.validation.criteria.NotInForbidden;
+import org.blackdread.lib.restfilter.validation.criteria.internal.NotInForbiddenValidator;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

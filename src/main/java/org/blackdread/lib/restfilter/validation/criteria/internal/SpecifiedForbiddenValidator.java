@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria.internal;
 
-import org.blackdread.lib.restfilter.filter.StringFilter;
+import org.blackdread.lib.restfilter.filter.Filter;
+import org.blackdread.lib.restfilter.validation.criteria.SpecifiedForbidden;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -33,20 +34,20 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author Yoann CAPLAIN
  */
-public class ContainsForbiddenValidator implements ConstraintValidator<ContainsForbidden, StringFilter> {
+public class SpecifiedForbiddenValidator implements ConstraintValidator<SpecifiedForbidden, Filter<?>> {
 
-//    private static final Logger log = LoggerFactory.getLogger(ContainsForbiddenValidator.class);
+//    private static final Logger log = LoggerFactory.getLogger(SpecifiedForbiddenValidator.class);
 
     @Override
-    public void initialize(ContainsForbidden constraintAnnotation) {
+    public void initialize(SpecifiedForbidden constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(StringFilter value, ConstraintValidatorContext context) {
+    public boolean isValid(Filter<?> value, ConstraintValidatorContext context) {
         if (value == null)
             return true;
 
-        return value.getContains() == null;
+        return value.getSpecified() == null;
     }
 
 }

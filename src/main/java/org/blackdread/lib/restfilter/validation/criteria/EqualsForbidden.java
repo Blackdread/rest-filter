@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package org.blackdread.lib.restfilter.validation;
+package org.blackdread.lib.restfilter.validation.criteria;
+
+import org.blackdread.lib.restfilter.validation.criteria.internal.EqualsForbiddenValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -32,7 +34,7 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import static org.blackdread.lib.restfilter.validation.InForbidden.List;
+import static org.blackdread.lib.restfilter.validation.criteria.EqualsForbidden.List;
 
 /**
  *
@@ -41,27 +43,27 @@ import static org.blackdread.lib.restfilter.validation.InForbidden.List;
  * @author Yoann CAPLAIN
  */
 @Documented
-@Constraint(validatedBy = InForbiddenValidator.class)
+@Constraint(validatedBy = EqualsForbiddenValidator.class)
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 @Repeatable(List.class)
-public @interface InForbidden {
+public @interface EqualsForbidden {
 
-    String message() default "{org.blackdread.lib.restfilter.validation.InForbidden.message}";
+    String message() default "{org.blackdread.lib.restfilter.validation.EqualsForbidden.message}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
     /**
-     * Defines several {@code @InForbidden} constraints on the same element.
+     * Defines several {@code @EqualsForbidden} constraints on the same element.
      *
-     * @see InForbidden
+     * @see EqualsForbidden
      */
     @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
     @Retention(RUNTIME)
     @Documented
     public @interface List {
-        InForbidden[] value();
+        EqualsForbidden[] value();
     }
 }
