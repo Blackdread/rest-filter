@@ -35,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Asserts that the annotated File or Path is an absolute path.
- * <p>Created on 2018/4/4.</p>
+ * <p>Created on 2018/04/04</p>
  *
  * @author Yoann CAPLAIN
  * @since 2.2.1

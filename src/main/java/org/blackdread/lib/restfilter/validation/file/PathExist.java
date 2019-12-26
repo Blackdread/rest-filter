@@ -35,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Asserts that the annotated File or Path exist.
- * <p>Created on 2018/4/5.</p>
+ * <p>Created on 2018/04/05.</p>
  *
  * @author Yoann CAPLAIN
  * @since 2.2.1
