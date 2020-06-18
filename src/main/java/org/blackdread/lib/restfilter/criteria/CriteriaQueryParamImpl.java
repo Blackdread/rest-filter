@@ -284,7 +284,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private Optional<QueryParam> getQueryParamForIterable(final CriteriaFieldData fieldData, final String paramName, final Iterable iterable) {
         final Class<?> wrappedType = fieldData.getWrappedType()
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(() -> new NoSuchElementException(String.format("Iterable field '%s' was not provided wrapped type class", fieldData.getFieldName())));
 //                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
 
         final Function<Object, String> objectStringFormatter;
@@ -304,7 +304,7 @@ final class CriteriaQueryParamImpl implements CriteriaQueryParam {
 
     private Optional<QueryParam> getQueryParamForIterable(final CriteriaMethodData methodData, final String paramName, final Iterable iterable) {
         final Class<?> wrappedType = methodData.getWrappedType()
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(() -> new NoSuchElementException(String.format("Iterable method '%s' was not provided wrapped type class", methodData.getMethodName())));
 //                    .orElseGet(() -> CriteriaFieldParserUtil.getFirstValue()) // todo later
 
         final Function<Object, String> objectStringFormatter;
