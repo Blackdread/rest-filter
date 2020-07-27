@@ -56,7 +56,7 @@
 
         <guava.version>28.0-jre</guava.version>
 
-        <commons-text.version>1.8</commons-text.version>
+        <commons-text.version>1.9</commons-text.version>
         <commons-lang3.version>3.8.1</commons-lang3.version>
 
         <!-- Those 3 below only used in test for now for entity/jpa generation-->
