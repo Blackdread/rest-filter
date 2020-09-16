@@ -48,7 +48,7 @@
 
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
         <spring-context.version>5.2.9.RELEASE</spring-context.version>
-        <spring-web.version>5.2.8.RELEASE</spring-web.version>
+        <spring-web.version>5.2.9.RELEASE</spring-web.version>
         <spring-data-jpa.version>2.3.3.RELEASE</spring-data-jpa.version>
         <spring-boot-starter.version>2.3.3.RELEASE</spring-boot-starter.version>
 
@@ -89,7 +89,7 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
 
 
-        <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
 
         <!-- Deploy versions -->
