@@ -50,7 +50,7 @@
         <spring-context.version>5.2.9.RELEASE</spring-context.version>
         <spring-web.version>5.2.9.RELEASE</spring-web.version>
         <spring-data-jpa.version>2.3.4.RELEASE</spring-data-jpa.version>
-        <spring-boot-starter.version>2.3.3.RELEASE</spring-boot-starter.version>
+        <spring-boot-starter.version>2.3.4.RELEASE</spring-boot-starter.version>
 
         <jooq.version>3.13.4</jooq.version>
 
