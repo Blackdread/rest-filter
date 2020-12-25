@@ -277,7 +277,7 @@
             <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>6.1.7.Final</version>
+            <version>7.0.0.Final</version>
             <scope>test</scope>
         </dependency>
 
