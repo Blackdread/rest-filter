@@ -52,7 +52,7 @@
         <spring-data-jpa.version>2.4.5</spring-data-jpa.version>
         <spring-boot-starter.version>2.4.3</spring-boot-starter.version>
 
-        <jooq.version>3.14.7</jooq.version>
+        <jooq.version>3.14.8</jooq.version>
 
         <guava.version>28.0-jre</guava.version>
 
