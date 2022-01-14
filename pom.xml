@@ -69,7 +69,7 @@
         <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
 
         <!-- Logging versions -->
-        <slf4j.version>1.7.32</slf4j.version>
+        <slf4j.version>1.7.33</slf4j.version>
         <logback-classic.version>1.2.4</logback-classic.version>
         <log4j.version>2.11.1</log4j.version>
 
