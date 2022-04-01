@@ -50,7 +50,7 @@
         <spring-context.version>5.3.17</spring-context.version>
         <spring-web.version>5.3.17</spring-web.version>
         <spring-data-jpa.version>2.6.3</spring-data-jpa.version>
-        <spring-boot-starter.version>2.6.5</spring-boot-starter.version>
+        <spring-boot-starter.version>2.6.6</spring-boot-starter.version>
 
         <jooq.version>3.16.5</jooq.version>
 
