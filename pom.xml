@@ -48,7 +48,7 @@
 
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
         <spring-context.version>5.3.22</spring-context.version>
-        <spring-web.version>5.3.22</spring-web.version>
+        <spring-web.version>5.3.23</spring-web.version>
         <spring-data-jpa.version>2.7.2</spring-data-jpa.version>
         <spring-boot-starter.version>2.7.3</spring-boot-starter.version>
 
