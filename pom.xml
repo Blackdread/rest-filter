@@ -49,7 +49,7 @@
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
         <spring-context.version>5.3.23</spring-context.version>
         <spring-web.version>5.3.23</spring-web.version>
-        <spring-data-jpa.version>2.7.3</spring-data-jpa.version>
+        <spring-data-jpa.version>2.7.5</spring-data-jpa.version>
         <spring-boot-starter.version>2.7.4</spring-boot-starter.version>
 
         <jooq.version>3.17.4</jooq.version>
