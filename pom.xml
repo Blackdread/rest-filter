@@ -75,7 +75,7 @@
 
         <!-- Test versions -->
         <junit.jupiter.version>5.9.2</junit.jupiter.version>
-        <mockito.version>4.11.0</mockito.version>
+        <mockito.version>5.0.0</mockito.version>
 
         <!-- Plugin versions -->
         <maven-surefire-plugin.version>3.0.0-M8</maven-surefire-plugin.version>
