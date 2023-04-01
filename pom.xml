@@ -62,7 +62,7 @@
         <!-- Those 3 below only used in test for now for entity/jpa generation-->
         <hibernate.version>5.3.10.Final</hibernate.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jaxb-impl.version>2.3.2</jaxb-impl.version>
+        <jaxb-impl.version>4.0.2</jaxb-impl.version>
 
         <javax.persistence-api.version>2.2</javax.persistence-api.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
