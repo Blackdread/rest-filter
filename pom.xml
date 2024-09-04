@@ -44,15 +44,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--        <java.version>1.8</java.version>-->
         <java.version>12</java.version>
-        <kotlin.version>2.0.0</kotlin.version>
+        <kotlin.version>2.0.20</kotlin.version>
 
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
-        <spring-context.version>6.1.11</spring-context.version>
-        <spring-web.version>6.1.11</spring-web.version>
-        <spring-data-jpa.version>3.3.2</spring-data-jpa.version>
-        <spring-boot-starter.version>3.3.2</spring-boot-starter.version>
+        <spring-context.version>6.1.12</spring-context.version>
+        <spring-web.version>6.1.12</spring-web.version>
+        <spring-data-jpa.version>3.3.3</spring-data-jpa.version>
+        <spring-boot-starter.version>3.3.3</spring-boot-starter.version>
 
-        <jooq.version>3.19.10</jooq.version>
+        <jooq.version>3.19.11</jooq.version>
 
         <guava.version>28.0-jre</guava.version>
 
@@ -69,23 +69,23 @@
         <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
 
         <!-- Logging versions -->
-        <slf4j.version>2.0.13</slf4j.version>
-        <logback-classic.version>1.5.6</logback-classic.version>
+        <slf4j.version>2.0.16</slf4j.version>
+        <logback-classic.version>1.5.7</logback-classic.version>
         <log4j.version>2.11.1</log4j.version>
 
         <!-- Test versions -->
-        <junit.jupiter.version>5.10.3</junit.jupiter.version>
-        <mockito.version>5.12.0</mockito.version>
+        <junit.jupiter.version>5.11.0</junit.jupiter.version>
+        <mockito.version>5.13.0</mockito.version>
 
         <!-- Plugin versions -->
-        <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
-        <maven-site-plugin.version>3.12.1</maven-site-plugin.version>
+        <maven-site-plugin.version>3.20.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.8.0</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.10.0</maven-javadoc-plugin.version>
         <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
         <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
-        <maven-gpg-plugin.version>3.2.4</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.2.5</maven-gpg-plugin.version>
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
 
 
@@ -292,7 +292,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>2.3.230</version>
+            <version>2.3.232</version>
             <scope>test</scope>
         </dependency>
         <dependency>
