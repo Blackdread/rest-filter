@@ -47,7 +47,7 @@
         <kotlin.version>2.0.20</kotlin.version>
 
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
-        <spring-context.version>6.1.13</spring-context.version>
+        <spring-context.version>6.1.14</spring-context.version>
         <spring-web.version>6.1.13</spring-web.version>
         <spring-data-jpa.version>3.3.4</spring-data-jpa.version>
         <spring-boot-starter.version>3.3.4</spring-boot-starter.version>
