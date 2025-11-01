@@ -44,15 +44,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--        <java.version>1.8</java.version>-->
         <java.version>12</java.version>
-        <kotlin.version>2.2.20</kotlin.version>
+        <kotlin.version>2.2.21</kotlin.version>
 
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
-        <spring-context.version>6.2.11</spring-context.version>
-        <spring-web.version>6.2.11</spring-web.version>
-        <spring-data-jpa.version>3.5.4</spring-data-jpa.version>
-        <spring-boot-starter.version>3.5.6</spring-boot-starter.version>
+        <spring-context.version>6.2.12</spring-context.version>
+        <spring-web.version>6.2.12</spring-web.version>
+        <spring-data-jpa.version>3.5.5</spring-data-jpa.version>
+        <spring-boot-starter.version>3.5.7</spring-boot-starter.version>
 
-        <jooq.version>3.20.7</jooq.version>
+        <jooq.version>3.20.8</jooq.version>
 
         <guava.version>28.0-jre</guava.version>
 
@@ -70,11 +70,11 @@
 
         <!-- Logging versions -->
         <slf4j.version>2.0.17</slf4j.version>
-        <logback-classic.version>1.5.19</logback-classic.version>
+        <logback-classic.version>1.5.20</logback-classic.version>
         <log4j.version>2.11.1</log4j.version>
 
         <!-- Test versions -->
-        <junit.jupiter.version>6.0.0</junit.jupiter.version>
+        <junit.jupiter.version>6.0.1</junit.jupiter.version>
         <mockito.version>5.20.0</mockito.version>
 
         <!-- Plugin versions -->
@@ -89,7 +89,7 @@
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
 
 
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <coveralls-plugin.version>4.3.0</coveralls-plugin.version>
 
         <!-- Deploy versions -->
