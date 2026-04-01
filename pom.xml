@@ -44,15 +44,15 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!--        <java.version>1.8</java.version>-->
         <java.version>12</java.version>
-        <kotlin.version>2.3.0</kotlin.version>
+        <kotlin.version>2.3.20</kotlin.version>
 
         <spring-framework.version>5.2.7.RELEASE</spring-framework.version>
-        <spring-context.version>7.0.2</spring-context.version>
-        <spring-web.version>7.0.2</spring-web.version>
-        <spring-data-jpa.version>4.0.1</spring-data-jpa.version>
-        <spring-boot-starter.version>4.0.1</spring-boot-starter.version>
+        <spring-context.version>7.0.6</spring-context.version>
+        <spring-web.version>7.0.6</spring-web.version>
+        <spring-data-jpa.version>4.0.4</spring-data-jpa.version>
+        <spring-boot-starter.version>4.0.5</spring-boot-starter.version>
 
-        <jooq.version>3.20.10</jooq.version>
+        <jooq.version>3.21.1</jooq.version>
 
         <guava.version>28.0-jre</guava.version>
 
@@ -62,7 +62,7 @@
         <!-- Those 3 below only used in test for now for entity/jpa generation-->
         <hibernate.version>5.6.15.Final</hibernate.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
-        <jaxb-impl.version>4.0.6</jaxb-impl.version>
+        <jaxb-impl.version>4.0.7</jaxb-impl.version>
 
         <javax.persistence-api.version>2.2</javax.persistence-api.version>
         <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
@@ -70,16 +70,16 @@
 
         <!-- Logging versions -->
         <slf4j.version>2.0.17</slf4j.version>
-        <logback-classic.version>1.5.23</logback-classic.version>
+        <logback-classic.version>1.5.32</logback-classic.version>
         <log4j.version>2.11.1</log4j.version>
 
         <!-- Test versions -->
-        <junit.jupiter.version>6.0.1</junit.jupiter.version>
-        <mockito.version>5.21.0</mockito.version>
+        <junit.jupiter.version>6.0.3</junit.jupiter.version>
+        <mockito.version>5.23.0</mockito.version>
 
         <!-- Plugin versions -->
-        <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <maven-surefire-plugin.version>3.5.5</maven-surefire-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-site-plugin.version>3.21.0</maven-site-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
